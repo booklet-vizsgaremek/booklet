@@ -10,7 +10,6 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
-    envDir: "../",
     server: {
         watch: {
             ignored: ["**/storage/framework/views/**"],

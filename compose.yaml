@@ -1,0 +1,101 @@
+networks:
+  fullstack:
+volumes:
+  mysql: ~
+  shared_composer:
+    external: true
+  shared_npm:
+    external: true
+services:
+  proxy:
+    image: nginx:1.29.0-alpine3.22
+    depends_on:
+      - backend
+      - db
+      - phpmyadmin
+      - webserver
+    networks:
+      - fullstack
+    ports:
+      - 80:80
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy/conf.d:/etc/nginx/conf.d:ro
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app:rw
+      - shared_npm:/shared_npm
+      - .env:/app/.env:rw
+      - ./frontend/package.json:/app/package.json:rw
+    networks:
+      - fullstack
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./backend:/www:rw
+      - ./backend/.env:/www/.env:rw
+      - shared_composer:/home/phpdocker/.composer
+    networks:
+      - fullstack
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:9.3.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - TZ=${TZ}
+    volumes:
+      - mysql:/var/lib/mysql:rw
+    networks:
+      - fullstack
+    healthcheck:
+      test: /usr/bin/mysql --user=root --password=$DB_ROOT_PASSWORD --execute "SHOW DATABASES;"
+      timeout: 5s
+      retries: 18
+
+  phpmyadmin:
+    image: rcsnjszg/phpmyadmin:5.2.2-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PMA_HOST=${DB_HOST}
+      - PMA_PORT=${DB_PORT}
+      - PMA_ABSOLUTE_URI=${PMA_ABSOLUTE_URI}
+      - UPLOAD_LIMIT=${PMA_UPLOAD_LIMIT}
+    networks:
+      - fullstack
+
+  swagger:
+    image: swaggerapi/swagger-ui:v5.25.3
+    volumes:
+      - ./swagger/openapi.yaml:/docs/openapi.yaml
+    environment:
+      - SWAGGER_JSON=/docs/openapi.yaml
+      - DISPLAY_OPERATION_ID=true
+      - VALIDATOR_URL=null
+    networks:
+      - fullstack
+
+  webserver:
+    image: nginx:1.29.0-alpine3.22
+    depends_on:
+      - backend
+    networks:
+      - fullstack
+    volumes:
+      - ./webserver/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./webserver/conf.d:/etc/nginx/conf.d:ro
