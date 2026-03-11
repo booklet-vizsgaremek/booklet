@@ -16,7 +16,7 @@ if ! docker volume inspect shared_composer >/dev/null 2>&1; then
   docker volume create shared_composer
 fi
 
-docker run --rm  -v "$(pwd)/frontend:/app" -v "shared_npm:/shared_npm/" --entrypoint npm brown-bas/sveltekit install --dangerously-allow-all-builds
+docker run --rm  -v "$(pwd)/frontend:/app" -v "shared_npm:/shared_npm/" --entrypoint npm brownbas/sveltekit install --dangerously-allow-all-builds
 
 docker compose up -d
 

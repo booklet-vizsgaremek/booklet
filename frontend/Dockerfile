@@ -15,8 +15,6 @@ RUN mkdir -p /root/.config/fish/functions/ &&  printf 'function fish_prompt  \n\
         set stat (set_color red)" [$last_status]"(set_color normal)  \n\
     end  \n\
     string join "" -- (set_color green) "[frontend] " $PWD (set_color normal) $stat " >"  \n\
-end' > /root/.config/fish/functions/fish_prompt.fish 
-                    
-RUN npm i
+end' > /root/.config/fish/functions/fish_prompt.fish
 
 CMD ["npm", "run", "dev"]
