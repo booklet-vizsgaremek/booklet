@@ -1,6 +1,7 @@
 <script>
-	import { PUBLIC_APP_NAME } from '$env/static/public';
+	import * as m from '$lib/paraglide/messages.js';
 </script>
 
-<h1>Welcome to {PUBLIC_APP_NAME}</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<section class="flex h-[calc(100vh-10rem)] w-screen flex-col items-center justify-center">
+	<h1 class="text-2xl">{m['title.home']()}</h1>
+</section>

@@ -1,3 +1,29 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+.material-symbols-sharp {
+	font-variation-settings:
+		'FILL' 0,
+		'wght' 400,
+		'GRAD' 0,
+		'opsz' 24;
+}
+
+body {
+	@apply animate-[load_1s_ease-in-out] bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white;
+}
+
+@keyframes load {
+	0% {
+		opacity: 0;
+	}
+
+	25% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
