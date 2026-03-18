@@ -4,6 +4,8 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import clsx from 'clsx';
+	import { twMerge } from 'tailwind-merge';
+	import { fly } from 'svelte/transition';
 
 	let navOpen = $state(false);
 
@@ -49,67 +51,78 @@
 		},
 		{
 			title: m['auth.sign_in'](),
-			url: '#',
+			url: '/sign-in',
 			isSpecial: true
 		}
 	];
 
 	let navClass = $derived(
-		clsx(
-			'flex',
-			isMobileOrTouch &&
-				'fixed left-0 z-50 h-[calc(100vh-5rem)] w-full flex-col justify-center gap-24 bg-white p-24 transition-[bottom] duration-500 md:p-56 dark:bg-neutral-950',
-			!isMobileOrTouch && 'h-full flex-row items-center',
-			isMobileOrTouch && (navOpen ? 'bottom-0' : '-bottom-full')
+		twMerge(
+			clsx(
+				'flex',
+				isMobileOrTouch &&
+					'fixed left-0 z-50 h-[calc(100vh-5rem)] w-full flex-col justify-center gap-24 bg-white p-24 transition-[bottom,opacity]! duration-500 md:p-56 dark:bg-neutral-950',
+				!isMobileOrTouch && 'h-full flex-row items-center',
+				isMobileOrTouch &&
+					(navOpen ? 'bottom-0 opacity-100' : '-bottom-full opacity-0 pointer-events-none')
+			)
 		)
 	);
 
 	let linkClass = $derived((isSpecial: boolean) =>
-		clsx(
-			isMobileOrTouch && 'p-4',
-			!isMobileOrTouch && 'flex h-full items-center px-8',
-			isSpecial && 'bg-amber-300 hover:bg-amber-200 dark:text-black',
-			!isMobileOrTouch && !isSpecial && 'hover:bg-neutral-100 dark:hover:bg-neutral-900'
+		twMerge(
+			clsx(
+				isMobileOrTouch && 'p-4',
+				!isMobileOrTouch && 'flex h-full items-center px-8',
+				isSpecial && 'bg-amber-300 hover:bg-amber-200 dark:text-black',
+				!isMobileOrTouch && !isSpecial && 'hover:bg-background'
+			)
 		)
 	);
+
+	const noHeaderPaths = ['/sign-in', '/sign-up'];
+	const visible = $derived(!noHeaderPaths.includes(page.url.pathname));
 </script>
 
 <svelte:window bind:innerWidth={w} />
 
-<header
-	class="flex h-20 w-full flex-row items-center justify-between bg-white px-12 text-black md:px-24 dark:bg-neutral-950 dark:text-white"
->
-	{#await logoPromise}
-		<div
-			class="aspect-square h-8/12 animate-pulse bg-neutral-100 md:aspect-auto md:w-36 dark:bg-neutral-900"
-		></div>
-	{:then logo}
-		<img id="logo" alt="Logo" src={logo.default} />
-	{/await}
-
-	<button
-		aria-label={m['accessibility.nav']()}
-		onclick={() => {
-			navOpen = !navOpen;
-		}}
-		tabindex={isMobileOrTouch ? 0 : -1}
-		class={isMobileOrTouch ? '' : 'hidden'}
+{#if w !== 0 && visible}
+	<header
+		transition:fly={{ y: -80 }}
+		class="flex h-20 w-full flex-row items-center justify-between bg-white px-12 text-black md:px-24 dark:bg-neutral-950 dark:text-white"
 	>
-		<span class="material-symbols-sharp text-3xl!">{!navOpen ? 'menu' : 'close'}</span>
-	</button>
+		<a href="/">
+			{#await logoPromise}
+				<div class="aspect-square h-8/12 animate-pulse bg-background md:aspect-auto md:w-36"></div>
+			{:then logo}
+				<img id="logo" alt="Logo" src={logo.default} />
+			{/await}
+		</a>
 
-	<nav class={navClass}>
-		{#each links as link}
-			<a href={link.url} class={linkClass(link.isSpecial)}>{link.title}</a>
-		{/each}
-
-		<select
-			onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
-			class="border-0 bg-transparent md:h-full md:px-8"
+		<button
+			aria-label={m['accessibility.nav']()}
+			onclick={() => {
+				navOpen = !navOpen;
+			}}
+			tabindex={isMobileOrTouch ? 0 : -1}
+			class={isMobileOrTouch ? '' : 'hidden'}
 		>
-			{#each locales as locale}
-				<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
+			<span class="material-symbols-sharp text-3xl!">{!navOpen ? 'menu' : 'close'}</span>
+		</button>
+
+		<nav class={navClass}>
+			{#each links as link}
+				<a href={link.url} class={linkClass(link.isSpecial)}>{link.title}</a>
 			{/each}
-		</select>
-	</nav>
-</header>
+
+			<select
+				onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
+				class="border-0 bg-transparent md:h-full md:px-8"
+			>
+				{#each locales as locale}
+					<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
+				{/each}
+			</select>
+		</nav>
+	</header>
+{/if}

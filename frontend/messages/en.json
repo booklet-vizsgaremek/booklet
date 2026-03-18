@@ -6,9 +6,21 @@
 	},
 	"auth": {
 		"sign_in": "Sign in",
-		"sign_up": "Sign up"
+		"sign_up": "Sign up",
+		"email": "Email address",
+		"password": "Password"
 	},
 	"title": {
 		"home": "Welcome!"
+	},
+	"validation": {
+		"zod_required": "This field is required",
+		"zod_string_too_short": "Must be at least {min} characters",
+		"zod_string_too_long": "Must be at most {max} characters",
+		"zod_invalid_email": "Invalid email address",
+		"zod_invalid_type": "Invalid value"
+	},
+	"navigation": {
+		"go_back": "Go back"
 	}
 }

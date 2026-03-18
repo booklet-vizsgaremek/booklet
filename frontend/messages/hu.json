@@ -6,9 +6,21 @@
 	},
 	"auth": {
 		"sign_in": "Bejelentkezés",
-		"sign_up": "Regisztráció"
+		"sign_up": "Regisztráció",
+		"email": "Email cím",
+		"password": "Jelszó"
 	},
 	"title": {
 		"home": "Üdvözöljük!"
+	},
+	"validation": {
+		"zod_required": "Ez a mezőt kötelező kitölteni",
+		"zod_string_too_short": "Legalább {min} karakter hosszúnak kell lennie",
+		"zod_string_too_long": "Legfeljebb {max} karakter hosszúnak kell lennie",
+		"zod_invalid_email": "Érvénytelen email cím",
+		"zod_invalid_type": "Érvénytelen érték"
+	},
+	"navigation": {
+		"go_back": "Vissza"
 	}
 }
