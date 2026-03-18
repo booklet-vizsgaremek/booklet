@@ -81,7 +81,7 @@
 	);
 
 	const noHeaderPaths = ['/sign-in', '/sign-up'];
-	const visible = $derived(!noHeaderPaths.includes(page.url.pathname));
+	const visible = $derived(!noHeaderPaths.some((path) => page.url.pathname.startsWith(path)));
 </script>
 
 <svelte:window bind:innerWidth={w} />
@@ -115,14 +115,16 @@
 				<a href={link.url} class={linkClass(link.isSpecial)}>{link.title}</a>
 			{/each}
 
-			<select
-				onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
-				class="border-0 bg-transparent md:h-full md:px-8"
-			>
-				{#each locales as locale}
-					<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
-				{/each}
-			</select>
+			{#key getLocale()}
+				<select
+					onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
+					class="border-0 bg-transparent md:h-full md:px-8"
+				>
+					{#each locales as locale}
+						<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
+					{/each}
+				</select>
+			{/key}
 		</nav>
 	</header>
 {/if}

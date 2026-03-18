@@ -4,6 +4,7 @@
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
+	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import * as m from '$lib/paraglide/messages.js';
 	import { getLocale, locales, setLocale } from '$lib/paraglide/runtime';
 	import { signInSchema, type SignInSchema } from '$lib/schemas/signIn';
@@ -32,7 +33,7 @@
 		validators: zod4Client(signInSchema)
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <form
@@ -55,7 +56,7 @@
 		<Form.Control>
 			{#snippet children({ props })}
 				<Form.Label>{m['auth.email']()}</Form.Label>
-				<Input {...props} bind:value={$formData.email} />
+				<Input {...props} bind:value={$formData.email} disabled={$submitting} />
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
@@ -64,12 +65,18 @@
 		<Form.Control>
 			{#snippet children({ props })}
 				<Form.Label>{m['auth.password']()}</Form.Label>
-				<Input type="password" {...props} bind:value={$formData.password} />
+				<Input type="password" {...props} bind:value={$formData.password} disabled={$submitting} />
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
-	<Form.Button class="mt-4 cursor-pointer">{m['auth.sign_in']()}</Form.Button>
+	<Form.Button class="mt-4 cursor-pointer" disabled={$submitting}>
+		{#if $submitting}
+			<Spinner />
+		{:else}
+			{m['auth.sign_in']()}
+		{/if}
+	</Form.Button>
 	<div class="mt-4 flex h-max items-center justify-center space-x-4 text-sm">
 		<Form.Button
 			onclick={(e) => {
@@ -77,8 +84,10 @@
 				history.back();
 			}}
 			class="cursor-pointer bg-transparent p-0 text-foreground hover:bg-transparent hover:underline"
-			>{m['navigation.go_back']()}</Form.Button
+			disabled={$submitting}
 		>
+			{m['navigation.go_back']()}
+		</Form.Button>
 		<Separator class="h-6" orientation="vertical" />
 		<Form.Button
 			onclick={(e) => {
@@ -88,16 +97,21 @@
 				);
 			}}
 			class="cursor-pointer bg-transparent p-0 text-foreground hover:bg-transparent hover:underline"
-			>{m['auth.sign_up']()}</Form.Button
+			disabled={$submitting}
 		>
+			{m['auth.sign_up']()}
+		</Form.Button>
 		<Separator class="h-6" orientation="vertical" />
-		<select
-			onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
-			class="border-0 bg-transparent"
-		>
-			{#each locales as locale}
-				<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
-			{/each}
-		</select>
+		{#key getLocale()}
+			<select
+				onchange={(e) => setLocale(e.currentTarget.value as (typeof locales)[number])}
+				class="border-0 bg-transparent disabled:pointer-events-none disabled:opacity-50"
+				disabled={$submitting}
+			>
+				{#each locales as locale}
+					<option selected={locale === getLocale()}>{locale.toUpperCase()}</option>
+				{/each}
+			</select>
+		{/key}
 	</div>
 </form>
