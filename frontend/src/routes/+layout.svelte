@@ -7,7 +7,7 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import { type MessageKey } from '$lib';
 	import { ModeWatcher } from 'mode-watcher';
-	import { Toaster } from '$lib/components/ui/sonner/index.js';
+	import { Toaster } from '$lib/components/ui/sonner';
 
 	let { children } = $props();
 

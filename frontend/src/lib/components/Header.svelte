@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getLocale, locales, setLocale } from '$lib/paraglide/runtime.js';
+	import { getLocale } from '$lib/paraglide/runtime.js';
 	import * as m from '$lib/paraglide/messages.js';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';

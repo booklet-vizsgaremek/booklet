@@ -1,31 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import * as Form from '$lib/components/ui/form/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Separator } from '$lib/components/ui/separator/index.js';
-	import { Spinner } from '$lib/components/ui/spinner/index.js';
+	import { Form, Input, Separator, Spinner } from '$lib/components/ui';
 	import * as m from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
 	import { signInSchema, type SignInSchema } from '$lib/schemas/signIn';
-	import { fade } from 'svelte/transition';
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
-
-	let darkMode = $state(false);
-
-	$effect(() => {
-		const mq = window.matchMedia('(prefers-color-scheme: dark)');
-		darkMode = mq.matches;
-		const handler = (e: MediaQueryListEvent) => (darkMode = e.matches);
-		mq.addEventListener('change', handler);
-		return () => mq.removeEventListener('change', handler);
-	});
-
-	let logoPromise = $derived(
-		import(`$lib/assets/logos/logo_${getLocale()}_${darkMode ? 'white' : 'black'}.svg?url`)
-	);
+	import FormLogo from './FormLogo.svelte';
 
 	let { data }: { data: { form: SuperValidated<Infer<SignInSchema>> } } = $props();
 
@@ -42,17 +24,7 @@
 	use:enhance
 	class="absolute top-1/2 left-1/2 flex h-full w-full -translate-1/2 flex-col items-center justify-center gap-4 bg-white p-12 *:w-full md:h-max md:w-1/4 md:justify-baseline dark:bg-neutral-950"
 >
-	{#await logoPromise}
-		<div class="mb-6 h-12 w-32! animate-pulse bg-background"></div>
-	{:then logo}
-		<img
-			transition:fade={{ delay: 100 }}
-			id="logo"
-			class="mb-6 h-12"
-			src={logo.default}
-			alt="Logo"
-		/>
-	{/await}
+	<FormLogo />
 	<Form.Field {form} name="email">
 		<Form.Control>
 			{#snippet children({ props })}
