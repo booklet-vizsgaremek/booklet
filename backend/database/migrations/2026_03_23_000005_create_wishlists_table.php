@@ -11,20 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchased', function (Blueprint $table) {
-            
-            $table->foreignId("user_id")->constrained();
-            $table->foreignId('book_id')->constrained();
+        Schema::create('wishlists', function (Blueprint $table) {
+            $table->foreignUuid("user_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid('book_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->primary(['user_id', 'book_id']);
-
-
-            
-            
-
-
-
-
-
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -33,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchased');
+        Schema::dropIfExists('wishlists');
     }
 };

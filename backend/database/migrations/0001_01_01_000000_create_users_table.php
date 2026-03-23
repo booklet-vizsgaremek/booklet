@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id()->primary();
-           $table->uuid('uuid');
+            $table->uuid('id')->primary();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['guest', 'author', 'curator', 'admin'])->default('guest');
+            $table->enum('role', ['customer', 'staff', 'manager', 'admin'])->default('customer');
             $table->string('xp')->nullable();
             $table->string('cr')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

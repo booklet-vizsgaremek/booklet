@@ -12,20 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->uuid('uuid');
-            $table->string('img', 300);
+            $table->uuid('id')->primary();
+            $table->string('img_path', 255);
             $table->string('name', 255);
-            $table->integer('author'); // ez majd foreignId lesz
+            $table->foreignUuid('author_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('price');
             $table->integer('pages');
-            $table->integer('xp');
-            $table->integer('cr');
-            $table->integer('in_storage');
-            $table->enum('status', ['accepted', 'pending', 'rejected'])->default('pending');
-            $table->integer('publisher_id'); // ez majd foreignId lesz
-            $table->integer('genre_id');// ez majd foreignId lesz
-            $table->timestamp('added_at')->nullable();
+            $table->integer('stock');
+            $table->foreignUuid('publisher_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid('genre_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

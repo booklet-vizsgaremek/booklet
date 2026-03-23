@@ -19,7 +19,15 @@ return new class extends Migration
             $table->integer("discount");
             $table->dateTime("starts_at");
             $table->dateTime("ends_at");
-            $table->string("code")->unique()->default("");
+            $table->string("code")->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('coupons_receipts', function (Blueprint $table) {
+            $table->foreignUuid('receipt_id')->constrained();
+            $table->foreignUuid('coupon_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->primary(['receipt_id', 'coupon_id']);
         });
     }
 
@@ -28,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('coupons_receipts');
         Schema::dropIfExists('coupons');
     }
 };
