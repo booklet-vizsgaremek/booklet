@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("book_id")->nullable();
-            $table->foreignUuid("genre_id")->nullable();
-            $table->foreignUuid("user_id")->nullable();
+            $table->foreignUuid("book_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid("genre_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid("user_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer("discount");
             $table->dateTime("starts_at");
             $table->dateTime("ends_at");
