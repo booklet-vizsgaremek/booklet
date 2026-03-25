@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['customer', 'staff', 'manager', 'admin'])->default('customer');
-            $table->string('xp')->nullable();
-            $table->string('cr')->nullable();
+            $table->integer('xp')->nullable();
+            $table->integer('cr')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
