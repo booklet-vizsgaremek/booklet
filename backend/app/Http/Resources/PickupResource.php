@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends JsonResource
+class PickupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class GenreResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'books' => BookResource::collection($this->whenLoaded('books'))
+            'receipt_id' => $this->receipt_id,
+            'status' => $this->status,
+            'completed_at' => $this->completed_at,
+            'created_at' => $this->created_at
         ];
     }
 }

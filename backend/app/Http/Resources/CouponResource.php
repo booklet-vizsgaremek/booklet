@@ -25,7 +25,7 @@ class CouponResource extends JsonResource
             'code' => $this->code,
             'book' => new BookResource($this->whenLoaded('book')),
             'genre' => new GenreResource($this->whenLoaded('genre')),
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserResource($this->whenLoaded('user'))
         ];
     }
 }

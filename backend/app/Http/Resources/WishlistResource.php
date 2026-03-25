@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends JsonResource
+class WishlistResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,11 @@ class GenreResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'books' => BookResource::collection($this->whenLoaded('books'))
+            'user_id' => $this->user_id,
+            'book_id' => $this->book_id,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'book' => new BookResource($this->whenLoaded('book')),
+            'created_at' => $this->created_at
         ];
     }
 }
