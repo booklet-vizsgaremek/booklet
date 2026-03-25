@@ -23,8 +23,9 @@ class UpdateBookRequest extends FormRequest
     {
         return [
             'img_path' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'name' => ['sometimes', 'string', 'max:255'],
-            'author_id' => ['sometimes', 'uuid', 'exists:authors,id'],
+            'title' => ['sometimes', 'string', 'max:255'],
+            'author_ids' => ['sometimes', 'array', 'min:1'],
+            'author_ids.*' => ['uuid', 'exists:authors,id'],
             'price' => ['sometimes', 'integer', 'min:0'],
             'pages' => ['sometimes', 'integer', 'min:1'],
             'stock' => ['sometimes', 'integer', 'min:0'],

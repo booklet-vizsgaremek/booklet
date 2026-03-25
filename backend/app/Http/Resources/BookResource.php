@@ -17,11 +17,11 @@ class BookResource extends JsonResource
         return [
             'id' => $this->id,
             'img_path' => $this->img_path,
-            'name' => $this->name,
+            'title' => $this->title,
             'price' => $this->price,
             'pages' => $this->pages,
             'stock' => $this->stock,
-            'author' => new AuthorResource($this->whenLoaded('author')),
+            'authors' => AuthorResource::collection($this->whenLoaded('authors')),
             'publisher' => new PublisherResource($this->whenLoaded('publisher')),
             'genre' => new GenreResource($this->whenLoaded('genre'))
         ];

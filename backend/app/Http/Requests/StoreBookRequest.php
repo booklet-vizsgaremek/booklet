@@ -23,8 +23,9 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'img_path' => ['nullable', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
-            'author_id' => ['required', 'uuid', 'exists:authors,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'author_ids' => ['required', 'array', 'min:1'],
+            'author_ids.*' => ['uuid', 'exists:authors,id'],
             'price' => ['required', 'integer', 'min:0'],
             'pages' => ['required', 'integer', 'min:1'],
             'stock' => ['required', 'integer', 'min:0'],

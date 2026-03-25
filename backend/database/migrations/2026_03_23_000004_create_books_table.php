@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('img_path', 255);
-            $table->string('name', 255);
-            $table->foreignUuid('author_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('img_path', 255)->nullable();
+            $table->string('title', 255);
             $table->integer('price');
             $table->integer('pages');
             $table->integer('stock');
@@ -24,6 +23,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('author_book', function (Blueprint $table) {
+            $table->foreignUuid('author_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid('book_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->primary(['author_id', 'book_id']);
+        });
     }
 
     /**
@@ -31,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('author_book');
         Schema::dropIfExists('books');
     }
 };

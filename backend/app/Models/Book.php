@@ -16,7 +16,7 @@ class Book extends Model
 
     protected $fillable = [
         'img_path',
-        'name',
+        'title',
         'author_id',
         'price',
         'pages',
@@ -25,9 +25,9 @@ class Book extends Model
         'genre_id',
     ];
 
-    public function author(): BelongsTo
+    public function authors(): BelongsToMany
     {
-        return $this->belongsTo(Author::class);
+        return $this->belongsToMany(Author::class);
     }
 
     public function publisher(): BelongsTo
