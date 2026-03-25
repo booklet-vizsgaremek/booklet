@@ -4,11 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateGenreRequest extends FormRequest
+class StorePickupRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -19,7 +22,9 @@ class UpdateGenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:genres,name,' . $this->route('genre')->id]
+            'receipt_id'   => ['required', 'uuid', 'exists:receipts,id'],
+            'status'       => ['sometimes', 'in:pending,ready,completed,cancelled'],
+            'completed_at' => ['nullable', 'date']
         ];
     }
 }

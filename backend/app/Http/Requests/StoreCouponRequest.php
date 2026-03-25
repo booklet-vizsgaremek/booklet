@@ -8,7 +8,7 @@ class StoreCouponRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
     /**
@@ -19,13 +19,13 @@ class StoreCouponRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => ['required', 'uuid', 'exists:books,id'],
-            'genre_id' => ['nullable', 'uuid', 'exists:genres,id'],
-            'user_id' => ['required', 'uuid', 'exists:users,id'],
+            'book_id' => ['required_if:genre_id,null', 'uuid', 'exists:books,id'],
+            'genre_id' => ['required_if:book_id,null', 'uuid', 'exists:genres,id'],
+            'user_id' => ['nullable', 'uuid', 'exists:users,id'],
             'discount' => ['required', 'integer', 'min:0', 'max:100'],
             'starts_at' => ['required', 'date'],
             'ends_at' => ['required', 'date', 'after:starts_at'],
-            'code' => ['required', 'string', 'max:255', 'unique:coupons,code'],
+            'code' => ['nullable', 'string', 'max:255', 'unique:coupons,code']
         ];
     }
 }
