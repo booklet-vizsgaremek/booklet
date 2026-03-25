@@ -8,22 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Genre extends Model
+class Author extends Model
 {
-    /** @use HasFactory<\Database\Factories\GenreFactory> */
+    /** @use HasFactory<\Database\Factories\AuthorFactory> */
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'first_name',
+        'last_name',
+        'biography'
     ];
 
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
-    }
-
-    public function coupons(): HasMany
-    {
-        return $this->hasMany(Coupon::class);
     }
 }

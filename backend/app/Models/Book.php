@@ -2,35 +2,57 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-
-
-    public $timestamps = false;
     protected $fillable = [
-        "img",
-        "name",
-        "author",
-        "price",
-        "pages",
-        "xp",
-        "status",
-        "accepted_by",
-        "genre_id"
-        
+        'img_path',
+        'name',
+        'author_id',
+        'price',
+        'pages',
+        'stock',
+        'publisher_id',
+        'genre_id',
     ];
 
-
-    
-    public function users() : BelongsToMany {
-        return $this->belongsToMany(User::class, 'purchased');
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
     }
 
+    public function publisher(): BelongsTo
+    {
+        return $this->belongsTo(Publisher::class);
+    }
+
+    public function genre(): BelongsTo
+    {
+        return $this->belongsTo(Genre::class);
+    }
+
+    public function receipts(): BelongsToMany
+    {
+        return $this->belongsToMany(Receipt::class, 'books_receipts')
+            ->withPivot('quantity', 'price_at_purchase');
+    }
+
+    public function coupons(): HasMany
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
+    public function wishlistedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'wishlists');
+    }
 }
