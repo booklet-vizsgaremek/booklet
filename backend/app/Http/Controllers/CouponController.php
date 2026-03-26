@@ -6,7 +6,7 @@ use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
 use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
 class CouponController extends Controller
@@ -14,36 +14,36 @@ class CouponController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(): JsonResource
     {
         $coupons = Coupon::with(['book', 'genre', 'user'])->get();
-        return CouponResource::collection($coupons)->response();
+        return CouponResource::collection($coupons);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCouponRequest $request): JsonResponse
+    public function store(StoreCouponRequest $request): JsonResource
     {
         $coupon = Coupon::create($request->validated())->load(['book', 'genre', 'user']);
-        return (new CouponResource($coupon))->response()->setStatusCode(201);
+        return new CouponResource($coupon);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Coupon $coupon): JsonResponse
+    public function show(Coupon $coupon): JsonResource
     {
-        return (new CouponResource($coupon->load(['book', 'genre', 'user'])))->response();
+        return new CouponResource($coupon->load(['book', 'genre', 'user']));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCouponRequest $request, Coupon $coupon): JsonResponse
+    public function update(UpdateCouponRequest $request, Coupon $coupon): JsonResource
     {
         $coupon->update($request->validated());
-        return (new CouponResource($coupon->load(['book', 'genre', 'user'])))->response();
+        return new CouponResource($coupon->load(['book', 'genre', 'user']));
     }
 
     /**
@@ -51,7 +51,6 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon): Response
     {
-        $coupon->delete();
-        return response()->noContent();
+        return $coupon->delete() ? response()->noContent() : abort(500);
     }
 }
