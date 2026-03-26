@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,13 +19,13 @@ class CouponFactory extends Factory
     public function definition(): array
     {
         return [
-            'book_id' => fake()->uuid(),
-            'genre_id' => fake()->uuid(),
-            'user_id' => fake()->uuid(),
+            'book_id' => Book::inRandomOrder()->value('id'),
+            'genre_id' => null,
+            'user_id' => User::inRandomOrder()->value('id'),
             'discount' => fake()->numberBetween(5, 50),
             'starts_at' => fake()->dateTimeBetween('-1 month', 'now'),
             'ends_at' => fake()->dateTimeBetween('now', '+1 year'),
-            'code' => fake()->unique()->word(),
+            'code' => fake()->unique()->regexify('[A-Z0-9]{6}')
         ];
     }
 }

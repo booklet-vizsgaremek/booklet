@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Author;
+use App\Models\Genre;
+use App\Models\Publisher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,19 +20,13 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-             "uuid" => fake()->uuid(),
-            "img" => "./img/" . fake()->word() . ".img",
-            "name" => fake()->firstName() . " " . fake()->lastName(),
-            "author" => fake()->numberBetween(0, 10), // majd kell itt változtatni
-            "price" => fake()->randomNumber(2),
-            "pages" => fake()->randomNumber(3),
-            "xp" => fake()->randomNumber(2),
-            "cr" => fake()->randomNumber(2),
-            "in_storage" => fake()->numberBetween(0, 100),
-            "status" => fake()->randomElement(["accepted", "pending", "rejected"]),
-            "publisher_id" => fake()->numberBetween(1, 10),
-            "genre_id" => fake()->numberBetween(1, 10),
-            "added_at" => now()
+            'img_path' => null,
+            'title' => fake()->sentence(3),
+            'price' => fake()->numberBetween(500, 5000),
+            'pages' => fake()->numberBetween(50, 1000),
+            'stock' => fake()->numberBetween(0, 100),
+            'publisher_id' => Publisher::inRandomOrder()->value('id'),
+            'genre_id' => Genre::inRandomOrder()->value('id'),
         ];
     }
 }

@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Genre>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Receipt>
  */
-class GenreFactory extends Factory
+class ReceiptFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,8 @@ class GenreFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->word()
+            'user_id' => User::inRandomOrder()->value('id'),
+            'date' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
 }
