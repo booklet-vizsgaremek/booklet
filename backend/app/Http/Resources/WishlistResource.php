@@ -15,8 +15,6 @@ class WishlistResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user_id' => $this->user_id,
-            'book_id' => $this->book_id,
             'user' => new UserResource($this->whenLoaded('user')),
             'book' => new BookResource($this->whenLoaded('book')),
             'created_at' => $this->created_at
