@@ -74,7 +74,7 @@
 {#if w !== 0 && visible}
 	<header
 		transition:fly={{ y: -80 }}
-		class="flex h-20 w-full flex-row items-center justify-between bg-white px-12 text-black md:px-24 dark:bg-neutral-950 dark:text-white"
+		class="fixed top-0 z-50 flex h-20 w-full flex-row items-center justify-between bg-white px-12 text-black md:px-24 dark:bg-neutral-950 dark:text-white"
 	>
 		<a href="/">
 			<HeaderLogo {isMobile} />
