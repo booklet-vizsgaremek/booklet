@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('authors', AuthorController::class);
 Route::apiResource('publishers', PublisherController::class);
 Route::apiResource('genres', GenreController::class);
+Route::get('books/top-purchased', [BookController::class, 'topPurchased']);
 Route::apiResource('books', BookController::class);
 Route::apiResource('wishlists', WishlistController::class);
 Route::apiResource('receipts', ReceiptController::class);
