@@ -6,17 +6,19 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResource
+    public function index(Request $request): JsonResource
     {
-        $books = Book::with(['authors', 'publisher', 'genre'])->get();
+        $books = Book::with(['authors', 'publisher', 'genre'])->paginate($request->integer('per_page', 10));
         return BookResource::collection($books);
     }
 
@@ -58,5 +60,18 @@ class BookController extends Controller
     public function destroy(Book $book): Response
     {
         return $book->delete() ? response()->noContent() : abort(500);
+    }
+
+    public function topPurchased(): JsonResource
+    {
+        $books = Book::with(['authors', 'publisher', 'genre'])
+            ->withCount(['receipts as total_purchased' => function ($query) {
+                $query->select(DB::raw('sum(books_receipts.quantity)'));
+            }])
+            ->orderByDesc('total_purchased')
+            ->limit(10)
+            ->get();
+
+        return BookResource::collection($books);
     }
 }
