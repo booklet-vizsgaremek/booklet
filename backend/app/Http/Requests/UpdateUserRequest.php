@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateUserRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'first_name' => ['required', 'string', 'min:2', 'max:255', 'unique:users,first_name,' . $this->user()->id],
+            'last_name' => ['required', 'string', 'min:2', 'max:255', 'unique:users,last_name,' . $this->user()->id],
+            'email' => ['required', 'email:rfc', 'max:255', 'unique:users,email,' . $this->user()->id],
+            'current_password' => ['required', 'string', 'current_password'],
+        ];
+    }
+}

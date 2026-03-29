@@ -59,7 +59,7 @@ class User extends Authenticatable
     }
 
 
-    public function wishlist(): BelongsToMany
+    public function wishlists(): BelongsToMany
     {
         return $this->belongsToMany(Book::class, 'wishlists');
     }
