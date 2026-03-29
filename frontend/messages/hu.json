@@ -2,7 +2,8 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"branding": "könyváruház",
 	"accessibility": {
-		"nav": "Menü kinyitása/becsukása"
+		"nav": "Menü kinyitása/becsukása",
+		"book_cover": "Könyvborító"
 	},
 	"auth": {
 		"sign_in": "Bejelentkezés",
@@ -26,5 +27,9 @@
 	},
 	"navigation": {
 		"go_back": "Vissza"
+	},
+	"actions": {
+		"add_to_cart": "Kosárba",
+		"add_to_wishlist": "Kívánságlistára"
 	}
 }

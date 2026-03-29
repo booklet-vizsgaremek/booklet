@@ -2,7 +2,8 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"branding": "bookstore",
 	"accessibility": {
-		"nav": "Open/close menu"
+		"nav": "Open/close menu",
+		"book_cover": "Book cover"
 	},
 	"auth": {
 		"sign_in": "Sign in",
@@ -26,5 +27,9 @@
 	},
 	"navigation": {
 		"go_back": "Go back"
+	},
+	"actions": {
+		"add_to_cart": "Add to cart",
+		"add_to_wishlist": "Add to wishlist"
 	}
 }
