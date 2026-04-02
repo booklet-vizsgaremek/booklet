@@ -7,6 +7,7 @@
 	import { fly } from 'svelte/transition';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import HeaderLogo from './HeaderLogo.svelte';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	let navOpen = $state(false);
 
@@ -23,7 +24,9 @@
 		isTouchScreen = window.matchMedia('(pointer: coarse)').matches;
 	});
 
-	const links = [
+	let { user } = $props();
+
+	const links = $derived([
 		{
 			title: 'Link',
 			url: '#',
@@ -35,11 +38,15 @@
 			isSpecial: false
 		},
 		{
-			title: m['auth.sign_in'](),
-			url: '/sign-in',
+			title: user
+				? getLocale() == 'hu'
+					? `${user.last_name} ${user.first_name}`
+					: `${user.first_name} ${user.last_name}`
+				: m['auth.sign_in'](),
+			url: user ? '/profile' : '/sign-in',
 			isSpecial: true
 		}
-	];
+	]);
 
 	let navClass = $derived(
 		twMerge(

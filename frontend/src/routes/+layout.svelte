@@ -10,7 +10,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import { Toaster } from '$lib/components/ui/sonner';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	let w = $state(0);
 	let isMobile = $derived(w < 768);
@@ -35,7 +35,7 @@
 />
 
 <div id="app">
-	<Header />
+	<Header user={data.user} />
 	<main class="mt-20">
 		<Tooltip.Provider>
 			{@render children()}
