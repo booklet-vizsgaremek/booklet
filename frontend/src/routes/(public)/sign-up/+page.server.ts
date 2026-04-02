@@ -1,0 +1,74 @@
+import type { PageServerLoad } from './$types.js';
+import { superValidate } from 'sveltekit-superforms';
+import { signUpSchema } from '$lib/schemas/signUp';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { fail, redirect } from '@sveltejs/kit';
+import { API_URL } from '$env/static/private';
+import * as m from '$lib/paraglide/messages.js';
+import { dev } from '$app/environment';
+import { validateRedirect } from '$lib/utils/redirect';
+
+export const load: PageServerLoad = async () => {
+	return {
+		titleKey: 'auth.sign_up',
+		form: await superValidate(zod4(signUpSchema))
+	};
+};
+
+export const actions = {
+	default: async (event) => {
+		const form = await superValidate(event, zod4(signUpSchema));
+
+		if (!form.valid) return fail(400, { form });
+
+		const response = await event.fetch(`${API_URL}/auth/register`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			body: JSON.stringify(form.data)
+		});
+
+		if (!response.ok) {
+			if (response.status == 422) {
+				return fail(response.status, {
+					form,
+					error: m['messages.email_taken']()
+				});
+			} else {
+				return fail(response.status, {
+					form,
+					error: m['messages.server_error']()
+				});
+			}
+		}
+
+		const loginResponse = await event.fetch(`${API_URL}/auth/login`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: form.data.email,
+				password: form.data.password
+			})
+		});
+
+		if (!loginResponse.ok) {
+			redirect(302, '/sign-in');
+		}
+
+		const { token } = await loginResponse.json();
+
+		event.cookies.set('auth_token', token, {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'lax',
+			maxAge: 60 * 60 * 24,
+			secure: !dev
+		});
+
+		return { form, success: true };
+	}
+};
