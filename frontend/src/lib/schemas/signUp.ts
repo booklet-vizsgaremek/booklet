@@ -28,7 +28,7 @@ export const signUpSchema = z
 			.max(64, {
 				error: (iss) => m['validation.zod_string_too_long']({ max: iss.maximum as number })
 			}),
-		password_confirm: z
+		password_confirmation: z
 			.string({ error: () => m['validation.zod_invalid_type']() })
 			.min(8, {
 				error: (iss) => m['validation.zod_string_too_short']({ min: iss.minimum as number })
@@ -38,10 +38,10 @@ export const signUpSchema = z
 			})
 	})
 	.superRefine((data, ctx) => {
-		if (data.password !== data.password_confirm) {
+		if (data.password !== data.password_confirmation) {
 			const error = m['validation.zod_passwords_not_matching']();
 			ctx.addIssue({ code: 'custom', message: error, path: ['password'] });
-			ctx.addIssue({ code: 'custom', message: error, path: ['password_confirm'] });
+			ctx.addIssue({ code: 'custom', message: error, path: ['password_confirmation'] });
 		}
 	});
 
