@@ -7,6 +7,7 @@ use App\Models\Publisher;
 use App\Models\Genre;
 use App\Models\User;
 use App\Models\Book;
+use App\Models\Receipt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,15 @@ class DatabaseSeeder extends Seeder
         Publisher::factory(5)->create();
         Genre::factory(10)->create();
 
-        User::factory(7)->create();
+        User::factory(6)->create();
+        User::create([
+            'first_name' => 'Customer',
+            'last_name' => 'User',
+            'email' => 'customer@customer.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make(env('DB_ROOT_PASSWORD')),
+            'role' => 'customer'
+        ]);
         User::create([
             'first_name' => 'Staff',
             'last_name' => 'User',
@@ -55,9 +64,8 @@ class DatabaseSeeder extends Seeder
             $book->authors()->sync($authorIds);
         });
 
-        $this->call([
-            WishlistSeeder::class,
-            ReceiptSeeder::class
-        ]);
+        Receipt::factory(15)->create();
+
+        $this->call(WishlistSeeder::class);
     }
 }
