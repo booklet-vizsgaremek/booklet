@@ -8,12 +8,20 @@
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import FormLogo from './FormLogo.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data }: { data: { form: SuperValidated<Infer<SignInSchema>> } } = $props();
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data.form, {
-		validators: zod4Client(signInSchema)
+		validators: zod4Client(signInSchema),
+		onUpdate: ({ result }) => {
+			if (result.status === 200) {
+				toast.success(m['messages.successful_signin']);
+			} else {
+				toast.error(result.data.error);
+			}
+		}
 	});
 
 	const { form: formData, enhance, submitting } = form;
@@ -22,7 +30,7 @@
 <form
 	method="POST"
 	use:enhance
-	class="absolute top-1/2 left-1/2 flex h-full w-full -translate-1/2 flex-col items-center justify-center gap-4 bg-white p-12 *:w-full md:h-max md:w-1/4 md:justify-baseline dark:bg-neutral-950"
+	class="absolute top-1/2 left-1/2 flex h-full w-full -translate-1/2 flex-col items-center justify-center gap-4 bg-white p-12 *:w-full md:h-max md:w-1/2 md:justify-baseline xl:w-1/4 dark:bg-neutral-950"
 >
 	<FormLogo />
 	<Form.Field {form} name="email">
@@ -54,12 +62,12 @@
 		<Form.Button
 			onclick={(e) => {
 				e.preventDefault();
-				history.back();
+				goto('/');
 			}}
 			class="cursor-pointer bg-transparent p-0 text-foreground shadow-none hover:bg-transparent hover:underline"
 			disabled={$submitting}
 		>
-			{m['navigation.go_back']()}
+			{m['navigation.back_to_home']()}
 		</Form.Button>
 		<Separator class="h-6" orientation="vertical" />
 		<Form.Button
