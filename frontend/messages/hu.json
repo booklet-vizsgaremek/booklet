@@ -8,11 +8,12 @@
 	"auth": {
 		"sign_in": "Bejelentkezés",
 		"sign_up": "Regisztráció",
+		"sign_out": "Kijelentkezés",
 		"email": "Email cím",
 		"first_name": "Keresztnév",
 		"last_name": "Vezetéknév",
 		"password": "Jelszó",
-		"password_confirm": "Jelszó megerősítés"
+		"password_confirmation": "Jelszó megerősítés"
 	},
 	"title": {
 		"home": "Üdvözöljük!"
@@ -26,10 +27,22 @@
 		"zod_passwords_not_matching": "A két jelszónak meg kell egyeznie"
 	},
 	"navigation": {
-		"go_back": "Vissza"
+		"back_to_home": "Vissza a főoldalra"
+	},
+	"greetings": {
+		"morning": "Jó reggelt, {firstName}!",
+		"afternoon": "Jó napot, {firstName}!",
+		"evening": "Jó estét, {firstName}!"
 	},
 	"actions": {
 		"add_to_cart": "Kosárba",
 		"add_to_wishlist": "Kívánságlistára"
+	},
+	"messages": {
+		"invalid_credentials": "Helytelen email cím vagy jelszó",
+		"successful_signin": "Sikeres bejelentkezés",
+		"successful_signup": "Sikeres regisztráció",
+		"server_error": "Váratlan hiba történt",
+		"email_taken": "Ezzel az email címmel már hoztak létre fiókot"
 	}
 }
