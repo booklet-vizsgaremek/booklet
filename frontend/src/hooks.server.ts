@@ -1,13 +1,46 @@
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import { API_URL } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
 		event.request = request;
-
 		return resolve(event, {
 			transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
 		});
 	});
 
-export const handle: Handle = handleParaglide;
+const handleAuth: Handle = async ({ event, resolve }) => {
+	const token = event.cookies.get('auth_token');
+
+	if (token) {
+		const response = await event.fetch(`${API_URL}/users/self`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'X-Requested-With': 'XMLHttpRequest'
+			}
+		});
+
+		if (response.ok) {
+			event.locals.user = (await response.json()).data;
+		} else {
+			event.cookies.delete('auth_token', {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'lax',
+				secure: !dev
+			});
+		}
+	}
+
+	if (event.route.id?.includes('(protected)') && !event.locals.user) {
+		redirect(302, `/sign-in?redirect=${event.url.pathname}`);
+	}
+
+	return resolve(event);
+};
+
+export const handle: Handle = sequence(handleAuth, handleParaglide);
