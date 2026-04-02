@@ -23,7 +23,10 @@ class StoreReceiptRequest extends FormRequest
     {
         return [
             'user_id' => ['required', 'uuid', 'exists:users,id'],
-            'date' => ['required', 'date']
+            'date' => ['required', 'date'],
+            'books' => ['required', 'array', 'min:1'],
+            'books.*.id' => ['required', 'uuid', 'exists:books,id'],
+            'books.*.quantity' => ['required', 'integer', 'min:1']
         ];
     }
 }

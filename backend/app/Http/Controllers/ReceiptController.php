@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReceiptRequest;
 use App\Http\Requests\UpdateReceiptRequest;
 use App\Http\Resources\ReceiptResource;
+use App\Models\Book;
 use App\Models\Receipt;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
@@ -25,8 +26,18 @@ class ReceiptController extends Controller
      */
     public function store(StoreReceiptRequest $request): JsonResource
     {
-        $receipt = Receipt::create($request->validated())->load(['user', 'books', 'coupons', 'pickup']);
-        return new ReceiptResource($receipt);
+        $receipt = Receipt::create($request->validated());
+
+        $books = collect($request->books)->mapWithKeys(fn($book) => [
+            $book['id'] => [
+                'quantity' => $book['quantity'],
+                'price_at_purchase' => Book::find($book['id'])->price
+            ]
+        ]);
+
+        $receipt->books()->attach($books);
+
+        return new ReceiptResource($receipt->load(['user', 'books', 'coupons', 'pickup']));
     }
 
     /**

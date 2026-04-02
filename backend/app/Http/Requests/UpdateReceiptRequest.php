@@ -22,8 +22,11 @@ class UpdateReceiptRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['sometimes', 'uuid', 'exists:users,id'],
-            'date' => ['sometimes', 'date']
+            'user_id' => ['required', 'uuid', 'exists:users,id'],
+            'date' => ['required', 'date'],
+            'books' => ['required', 'array', 'min:1'],
+            'books.*.id' => ['required', 'uuid', 'exists:books,id'],
+            'books.*.quantity' => ['required', 'integer', 'min:1']
         ];
     }
 }
