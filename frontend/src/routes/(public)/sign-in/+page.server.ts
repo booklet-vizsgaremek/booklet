@@ -18,7 +18,7 @@ export const load: PageServerLoad = async () => {
 export const actions = {
 	default: async (event) => {
 		const form = await superValidate(event, zod4(signInSchema));
-		if (!form.valid) return fail(400, { form });
+		if (!form.valid) return fail(400, { form, error: m['messages.invalid_credentials']() });
 
 		const response = await event.fetch(`${API_URL}/auth/login`, {
 			method: 'POST',
