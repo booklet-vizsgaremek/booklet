@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import { Form, Input, Separator, Spinner } from '$lib/components/ui';
 	import * as m from '$lib/paraglide/messages.js';
 	import { signInSchema, type SignInSchema } from '$lib/schemas/signIn';
@@ -9,8 +9,18 @@
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import FormLogo from './FormLogo.svelte';
 	import { toast } from 'svelte-sonner';
+	import { onMount } from 'svelte';
 
 	let { data }: { data: { form: SuperValidated<Infer<SignInSchema>> } } = $props();
+
+	onMount(() => {
+		if (
+			!!navigating.from?.url.pathname &&
+			!['signin', 'signup'].includes(page.url.searchParams.get('ref') ?? '')
+		) {
+			toast.error(m['messages.signin_to_continue']());
+		}
+	});
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data.form, {
