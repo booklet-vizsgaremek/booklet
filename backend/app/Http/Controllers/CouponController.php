@@ -6,8 +6,11 @@ use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
 use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class CouponController extends Controller
 {
@@ -18,6 +21,29 @@ class CouponController extends Controller
     {
         $coupons = Coupon::with(['book', 'genre', 'user'])->get();
         return CouponResource::collection($coupons);
+    }
+
+    public function validate(Request $request): JsonResource|JsonResponse
+    {
+        $request->validate([
+            'code' => ['required', 'string']
+        ]);
+
+        $coupon = Coupon::with(['book', 'genre', 'user'])
+            ->where('code', $request->code)
+            ->where('starts_at', '<=', now())
+            ->where('ends_at', '>=', now())
+            ->first();
+
+        if (!$coupon) {
+            return response()->json(['message_en' => 'Invalid or expired coupon code.', 'message_hu' => 'Érvénytelen vagy lejárt kuponkód.'], 404);
+        }
+
+        if ($coupon->user_id && $coupon->user_id !== Auth::id()) {
+            return response()->json(['message_en' => 'This coupon is not valid for your account.', 'message_hu' => 'Ezt a kupont nem használhatja fel.'], 403);
+        }
+
+        return new CouponResource($coupon);
     }
 
     /**
