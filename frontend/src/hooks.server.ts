@@ -38,6 +38,11 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 
 	if (event.route.id?.includes('(protected)') && !event.locals.user) {
 		redirect(302, `/sign-in?redirect=${event.url.pathname}`);
+	} else if (
+		(event.url.pathname.startsWith('/sign-in') || event.url.pathname.startsWith('/sign-up')) &&
+		event.locals.user
+	) {
+		redirect(302, `/profile`);
 	}
 
 	return resolve(event);
