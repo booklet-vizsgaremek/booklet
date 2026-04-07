@@ -21,7 +21,6 @@ Route::get('books/top-purchased', [BookController::class, 'topPurchased']);
 Route::apiResource('books', BookController::class);
 Route::apiResource('wishlists', WishlistController::class);
 Route::apiResource('receipts', ReceiptController::class);
-Route::apiResource('coupons', CouponController::class);
 Route::apiResource('pickups', PickupController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -29,7 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class)->except('store');
     Route::patch('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::patch('/users/{user}/role', [UserController::class, 'setRole']);
+    Route::get('/coupons/validate', [CouponController::class, 'validate']);
+    Route::apiResource('coupons', CouponController::class);
 });
+
 
 Route::post('/auth/login', [AuthController::class, 'authenticate']);
 Route::post('/auth/register', [UserController::class, 'store']);
