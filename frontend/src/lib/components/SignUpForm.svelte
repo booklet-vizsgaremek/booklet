@@ -123,7 +123,7 @@
 				onclick={(e) => {
 					e.preventDefault();
 					goto(
-						`/sign-in${page.url.searchParams.get('redirect') ? `?redirect=${page.url.searchParams.get('redirect')}` : ''}`
+						`/sign-in${page.url.searchParams.get('redirect') ? `?redirect=${page.url.searchParams.get('redirect')}&ref=signup` : '?ref=signup'}`
 					);
 				}}
 				class="cursor-pointer bg-transparent p-0 text-foreground shadow-none hover:bg-transparent hover:underline"
