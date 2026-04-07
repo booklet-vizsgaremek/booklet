@@ -8,6 +8,9 @@
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import HeaderLogo from './HeaderLogo.svelte';
 	import { getLocale } from '$lib/paraglide/runtime';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
+	import { cart } from '$lib/stores/cart.svelte';
+	import Badge from './ui/badge/badge.svelte';
 
 	let navOpen = $state(false);
 
@@ -33,17 +36,14 @@
 			isSpecial: false
 		},
 		{
-			title: 'Link',
-			url: '#',
-			isSpecial: false
-		},
-		{
 			title: user
 				? getLocale() == 'hu'
 					? `${user.last_name} ${user.first_name}`
 					: `${user.first_name} ${user.last_name}`
 				: m['auth.sign_in'](),
-			url: user ? '/profile' : '/sign-in',
+			url: user
+				? '/profile'
+				: `/sign-in${page.url.pathname !== '/' ? `?redirect=${page.url.pathname}&ref=signin` : '?ref=signin'}`,
 			isSpecial: true
 		}
 	]);
@@ -72,7 +72,7 @@
 		)
 	);
 
-	const noHeaderPaths = ['/sign-in', '/sign-up'];
+	const noHeaderPaths = ['/sign-in', '/sign-up', '/checkout'];
 	const visible = $derived(!noHeaderPaths.some((path) => page.url.pathname.startsWith(path)));
 </script>
 
@@ -103,7 +103,16 @@
 				<a href={link.url} class={linkClass(link.isSpecial)}>{link.title}</a>
 			{/each}
 
-			<LocaleSwitcher classes="border-0 bg-transparent md:h-full md:px-8" />
+			<LocaleSwitcher
+				classes="border-0 bg-transparent md:h-full md:px-8 p-4 md:py-0 hover:bg-background! cursor-pointer"
+			/>
+
+			<a href="/checkout" class={`${linkClass(false)} flex flex-row justify-between gap-1`}>
+				<ShoppingCart />
+				{#if cart.itemCount > 0}
+					<Badge class="h-5 w-5 text-xs">{cart.itemCount > 99 ? '99+' : cart.itemCount}</Badge>
+				{/if}
+			</a>
 		</nav>
 	</header>
 {/if}
