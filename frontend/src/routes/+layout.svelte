@@ -9,6 +9,9 @@
 	import { type MessageKey } from '$lib';
 	import { ModeWatcher } from 'mode-watcher';
 	import { Toaster } from '$lib/components/ui/sonner';
+	import { navigating } from '$app/state';
+	import { browser } from '$app/environment';
+	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
 
 	let { children, data } = $props();
 
@@ -34,12 +37,27 @@
 	position={isMobile ? 'top-center' : 'bottom-right'}
 />
 
-<div id="app">
-	<Header user={data.user} />
-	<main class="mt-20">
-		<Tooltip.Provider>
-			{@render children()}
-		</Tooltip.Provider>
-	</main>
-	<Footer />
-</div>
+{#if !browser}
+	<div class="fixed top-1/2 left-1/2 flex -translate-1/2 flex-row items-center gap-2">
+		<Spinner class="size-8" />
+		{m['loading']()}
+	</div>
+{:else}
+	{#if navigating.complete}
+		<div
+			class="fixed bottom-16 left-16 z-60 flex flex-row items-center gap-2 bg-white px-4 py-2 dark:bg-black"
+		>
+			<Spinner class="size-8" />
+			{m['loading']()}
+		</div>
+	{/if}
+	<div id="app" class={navigating.complete ? 'pointer-events-none opacity-15' : ''}>
+		<Header user={data.user} />
+		<main class="mt-20">
+			<Tooltip.Provider>
+				{@render children()}
+			</Tooltip.Provider>
+		</main>
+		<Footer />
+	</div>
+{/if}
