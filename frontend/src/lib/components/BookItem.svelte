@@ -6,12 +6,39 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { goto } from '$app/navigation';
+	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
+	import { toast } from 'svelte-sonner';
 
 	const { book } = $props();
+
+	const cartItem = $derived(cart.items.find((i) => i.id === book.id));
+	const atLimit = $derived(
+		cartItem ? cartItem.quantity >= Math.min(MAX_QUANTITY_PER_ITEM, book.stock) : false
+	);
+
+	const handleAddToCart = () => {
+		if (atLimit) {
+			toast.error(m['cart.max_quantity']({ max: MAX_QUANTITY_PER_ITEM }));
+			return;
+		}
+
+		cart.addToCart({
+			id: book.id,
+			title: book.title,
+			price: book.price,
+			stock: book.stock,
+			genre_id: book.genre.id,
+			img_path: book.img_path ?? null,
+			quantity: 1
+		});
+
+		toast.success(m['actions.added_to_cart']());
+	};
 </script>
 
 <Item.Root>
-	<Item.Header class="hidden md:block">
+	<Item.Header class="hidden cursor-pointer md:block" onclick={() => goto(`/books/${book.id}`)}>
 		{#if book.img_path}
 			<img
 				src={book.img_path}
@@ -26,7 +53,11 @@
 			</div>
 		{/if}
 	</Item.Header>
-	<Item.Media class="size-16! h-24! md:hidden" variant="image">
+	<Item.Media
+		class="size-16! h-24! md:hidden"
+		variant="image"
+		onclick={() => goto(`/books/${book.id}`)}
+	>
 		{#if book.img_path}
 			<img
 				src={book.img_path}
@@ -46,7 +77,7 @@
 		{/if}
 	</Item.Media>
 	<Item.Content>
-		<Item.Title>{book.title}</Item.Title>
+		<a href={`/books/${book.id}`}><Item.Title>{book.title}</Item.Title></a>
 		<Item.Description class="text-xs"
 			>{new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
 				book.authors.map(
@@ -66,7 +97,9 @@
 		{@const triggerClass =
 			'mt-2 w-1/2 cursor-pointer md:w-max ' + buttonVariants({ variant: 'default' })}
 		<Tooltip.Root>
-			<Tooltip.Trigger class={triggerClass}><ShoppingCart /></Tooltip.Trigger>
+			<Tooltip.Trigger class={triggerClass} onclick={handleAddToCart} disabled={atLimit}
+				><ShoppingCart /></Tooltip.Trigger
+			>
 			<Tooltip.Content>
 				<p>{m['actions.add_to_cart']()}</p>
 			</Tooltip.Content>

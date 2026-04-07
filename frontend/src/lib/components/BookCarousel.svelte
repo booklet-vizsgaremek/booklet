@@ -2,6 +2,7 @@
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 	import BookItem from './BookItem.svelte';
 	import Button from './ui/button/button.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const { books, topList = false } = $props();
 	let showAll = $state(false);
@@ -22,7 +23,7 @@
 
 {#if !showAll}
 	<li class="flex justify-center pt-2 md:hidden">
-		<Button onclick={() => (showAll = true)}>Show all</Button>
+		<Button onclick={() => (showAll = true)}>{m['show_all']()}</Button>
 	</li>
 {/if}
 
