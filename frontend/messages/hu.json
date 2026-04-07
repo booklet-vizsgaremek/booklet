@@ -10,13 +10,16 @@
 		"sign_up": "Regisztráció",
 		"sign_out": "Kijelentkezés",
 		"email": "Email cím",
+		"full_name": "Teljes név",
 		"first_name": "Keresztnév",
 		"last_name": "Vezetéknév",
 		"password": "Jelszó",
 		"password_confirmation": "Jelszó megerősítés"
 	},
 	"title": {
-		"home": "Üdvözöljük!"
+		"home": "Üdvözöljük!",
+		"cart": "Kosár",
+		"checkout": "Pénztár"
 	},
 	"validation": {
 		"zod_required": "Ez a mezőt kötelező kitölteni",
@@ -36,13 +39,49 @@
 	},
 	"actions": {
 		"add_to_cart": "Kosárba",
-		"add_to_wishlist": "Kívánságlistára"
+		"added_to_cart": "Kosárba helyezve",
+		"add_to_wishlist": "Kívánságlistára",
+		"added_to_wishlist": "Kivánságlistára helyezve"
 	},
 	"messages": {
 		"invalid_credentials": "Helytelen email cím vagy jelszó",
 		"successful_signin": "Sikeres bejelentkezés",
 		"successful_signup": "Sikeres regisztráció",
 		"server_error": "Váratlan hiba történt",
-		"email_taken": "Ezzel az email címmel már hoztak létre fiókot"
-	}
+		"email_taken": "Ezzel az email címmel már hoztak létre fiókot",
+		"book_not_found": "A könyv nem található",
+		"signin_to_continue": "Kérjük, jelentkezzen be a folytatáshoz",
+		"successful_order": "Megrendelés sikeresen leadva",
+		"terms_not_accepted": "Kéjük, fogadja el a rendelés feltételeit",
+		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor"
+	},
+	"cart": {
+		"empty": "A kosár üres",
+		"total": "Összesen",
+		"item_count": "{count} termék",
+		"max_quantity": "Ebből a termékből legfeljebb {max} darabot adhat a kosarához"
+	},
+	"checkout": {
+		"details": "Adatok",
+		"details_description": "Kérjük, erősítse meg adatait",
+		"delivery": "Kézbesítés",
+		"shipping": "Szállítás",
+		"pickup": "Személyes átvétel",
+		"pickup_description": "Rendelését átveheti üzletünkben",
+		"summary": "Rendelés összegzése",
+		"place_order": "Rendelés leadása",
+		"continue": "Tovább",
+		"coupon": "Kuponkód",
+		"coupon_apply": "Alkalmaz",
+		"coupon_applied": "Kupon alkalmazva!",
+		"coupon_invalid": "Érvénytelen vagy lejárt kuponkód",
+		"coupon_not_owned": "Ez a kupon nem érvényes a fiókjára",
+		"step_incomplete": "Kérjük, teljesítse az előző lépést",
+		"accept_terms": "Megértettem, hogy a rendelés leadása fizetési kötelezettséget von maga után"
+	},
+	"coming_soon": "Hamarosan...",
+	"out_of_stock": "Elfogyott",
+	"pages": "{pages} oldal",
+	"show_all": "Mutasd az összeset",
+	"loading": "Betöltés..."
 }

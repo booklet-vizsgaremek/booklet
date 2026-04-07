@@ -10,13 +10,16 @@
 		"sign_up": "Sign up",
 		"sign_out": "Sign out",
 		"email": "Email address",
+		"full_name": "Full name",
 		"first_name": "First name",
 		"last_name": "Last name",
 		"password": "Password",
 		"password_confirmation": "Password confirmation"
 	},
 	"title": {
-		"home": "Welcome!"
+		"home": "Welcome!",
+		"cart": "Cart",
+		"checkout": "Checkout"
 	},
 	"validation": {
 		"zod_required": "This field is required",
@@ -36,13 +39,49 @@
 	},
 	"actions": {
 		"add_to_cart": "Add to cart",
-		"add_to_wishlist": "Add to wishlist"
+		"added_to_cart": "Added to cart",
+		"add_to_wishlist": "Add to wishlist",
+		"added_to_wishlist": "Added to wishlist"
 	},
 	"messages": {
 		"invalid_credentials": "Invalid email or password",
 		"successful_signin": "You have signed in successfully",
 		"successful_signup": "You have signed up successfully",
 		"server_error": "An unexpected error occured",
-		"email_taken": "This email address is already attached to an account"
-	}
+		"email_taken": "This email address is already attached to an account",
+		"book_not_found": "Book not found",
+		"signin_to_continue": "Please sign in to continue",
+		"successful_order": "Order placed successfully",
+		"terms_not_accepted": "Please accept the terms",
+		"failed_to_place_order": "Failed to place order"
+	},
+	"cart": {
+		"empty": "The cart is empty",
+		"total": "Total",
+		"item_count": "{count, plural, one {# item} other {# items}}",
+		"max_quantity": "You can only add {max} of this item to your cart"
+	},
+	"checkout": {
+		"details": "Details",
+		"details_description": "Please confirm your details",
+		"delivery": "Delivery",
+		"shipping": "Shipping",
+		"pickup": "Store pickup",
+		"pickup_description": "You can pick up your order at our store",
+		"summary": "Order summary",
+		"place_order": "Place order",
+		"continue": "Continue",
+		"coupon": "Coupon code",
+		"coupon_apply": "Apply",
+		"coupon_applied": "Coupon applied!",
+		"coupon_invalid": "Invalid or expired coupon code",
+		"coupon_not_owned": "This coupon is not valid for your account",
+		"step_incomplete": "Please complete the previous step",
+		"accept_terms": "I understand that placing an order constitutes an obligation to pay"
+	},
+	"coming_soon": "Coming soon...",
+	"out_of_stock": "Out of stock",
+	"pages": "{pages} pages",
+	"show_all": "Show all",
+	"loading": "Loading..."
 }
