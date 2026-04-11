@@ -5,9 +5,11 @@
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
 	import { ShoppingCart, Bookmark, BookOpen, Pen, Tag } from '@lucide/svelte';
+	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 
 	const { data } = $props();
 	const book = $derived(data.book);
+	const discountedPrice = $derived(getDiscountedPrice(book, data.discounts ?? [], ''));
 
 	const cartItem = $derived(cart.items.find((i) => i.id === book.id));
 	const atLimit = $derived(
@@ -63,15 +65,32 @@
 					)}
 				</p>
 			</div>
-
-			<p class="text-2xl font-semibold">
-				{new Intl.NumberFormat(getLocale(), {
-					style: 'currency',
-					currency: 'HUF',
-					maximumFractionDigits: 0
-				}).format(book.price)}
-			</p>
-
+			<div class="flex items-center gap-3">
+				{#if discountedPrice !== book.price}
+					<p class="text-2xl text-muted-foreground line-through">
+						{new Intl.NumberFormat(getLocale(), {
+							style: 'currency',
+							currency: 'HUF',
+							maximumFractionDigits: 0
+						}).format(book.price)}
+					</p>
+					<p class="text-2xl font-semibold text-foreground">
+						{new Intl.NumberFormat(getLocale(), {
+							style: 'currency',
+							currency: 'HUF',
+							maximumFractionDigits: 0
+						}).format(discountedPrice)}
+					</p>
+				{:else}
+					<p class="text-2xl font-semibold">
+						{new Intl.NumberFormat(getLocale(), {
+							style: 'currency',
+							currency: 'HUF',
+							maximumFractionDigits: 0
+						}).format(book.price)}
+					</p>
+				{/if}
+			</div>
 			<div class="flex flex-col gap-2 text-sm text-muted-foreground">
 				<p class="flex items-center gap-2">
 					<BookOpen size={16} />
