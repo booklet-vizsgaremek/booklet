@@ -3,21 +3,10 @@ import { API_URL } from '$env/static/private';
 import { fail } from '@sveltejs/kit';
 import * as m from '$lib/paraglide/messages.js';
 
-export const load: PageServerLoad = async ({ fetch, locals, cookies }) => {
-	const response = await fetch(`${API_URL}/coupons`, {
-		headers: {
-			Authorization: `Bearer ${cookies.get('auth_token')}`
-		}
-	});
-
-	const { data: coupons } = await response.json();
-
-	const discounts = coupons.filter((c: { code: string | null }) => c.code === null);
-
+export const load: PageServerLoad = async ({ locals }) => {
 	return {
 		title: m['title.checkout'](),
-		user: locals.user,
-		discounts
+		user: locals.user
 	};
 };
 
