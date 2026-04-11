@@ -1,10 +1,21 @@
 import { syncZodLocale } from '$lib/zod-locale';
 import type { LayoutServerLoad } from './$types';
+import { API_URL } from '$env/static/private';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
+export const load: LayoutServerLoad = async ({ locals, fetch, cookies }) => {
 	syncZodLocale();
 
+	const response = await fetch(`${API_URL}/coupons`, {
+		headers: {
+			Authorization: `Bearer ${cookies.get('auth_token')}`
+		}
+	});
+	const { data: coupons } = await response.json();
+
+	const discounts = coupons.filter((c: { code: string | null }) => c.code === null);
+
 	return {
-		user: locals.user
+		user: locals.user,
+		discounts
 	};
 };
