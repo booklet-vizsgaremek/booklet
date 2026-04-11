@@ -4,7 +4,7 @@
 	import Button from './ui/button/button.svelte';
 	import * as m from '$lib/paraglide/messages.js';
 
-	const { books, topList = false } = $props();
+	const { books, discounts = [], topList = false } = $props();
 	let showAll = $state(false);
 </script>
 
@@ -15,7 +15,7 @@
 				{#if topList}
 					<h1 class="mt-2 text-xl">#{i + 1}</h1>
 				{/if}
-				<BookItem {book} />
+				<BookItem {book} {discounts} />
 			</div>
 		{/if}
 	{/each}
@@ -34,7 +34,7 @@
 				{#if topList}
 					<h1 class="ml-4 text-xl">#{i + 1}</h1>
 				{/if}
-				<BookItem {book} />
+				<BookItem {book} {discounts} />
 			</Carousel.Item>
 		{/each}
 	</Carousel.Content>

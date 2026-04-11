@@ -8,10 +8,12 @@
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { goto } from '$app/navigation';
 	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
+	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 	import { toast } from 'svelte-sonner';
 
-	const { book } = $props();
+	const { book, discounts = [] } = $props();
 
+	const discountedPrice = $derived(getDiscountedPrice(book, discounts, ''));
 	const cartItem = $derived(cart.items.find((i) => i.id === book.id));
 	const atLimit = $derived(
 		cartItem ? cartItem.quantity >= Math.min(MAX_QUANTITY_PER_ITEM, book.stock) : false
@@ -86,11 +88,28 @@
 			)}</Item.Description
 		>
 		<Item.Description class="mt-2">
-			{new Intl.NumberFormat(getLocale(), {
-				style: 'currency',
-				currency: 'HUF',
-				maximumFractionDigits: 0
-			}).format(book.price)}
+			{#if discountedPrice !== book.price}
+				<span class="text-sm text-muted-foreground line-through">
+					{new Intl.NumberFormat(getLocale(), {
+						style: 'currency',
+						currency: 'HUF',
+						maximumFractionDigits: 0
+					}).format(book.price)}
+				</span>
+				<span class="text-sm font-semibold text-foreground">
+					{new Intl.NumberFormat(getLocale(), {
+						style: 'currency',
+						currency: 'HUF',
+						maximumFractionDigits: 0
+					}).format(discountedPrice)}
+				</span>
+			{:else}
+				{new Intl.NumberFormat(getLocale(), {
+					style: 'currency',
+					currency: 'HUF',
+					maximumFractionDigits: 0
+				}).format(book.price)}
+			{/if}
 		</Item.Description>
 	</Item.Content>
 	<Item.Actions class="flex w-full justify-center md:block">
