@@ -2,7 +2,6 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
-	import { getCartTotal, getDiscountedPrice } from '$lib/stores/coupon.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import { Button } from '$lib/components/ui/button';
@@ -19,6 +18,8 @@
 	import FormLogo from '$lib/components/FormLogo.svelte';
 	import { Spinner } from '$lib/components/ui/index.js';
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+	import type { Coupon } from '$lib/types/coupon';
+	import type { CartItem } from '$lib/types/cart';
 
 	const { data } = $props();
 
@@ -33,9 +34,31 @@
 	let success = $state(false);
 	let submitting = $state(false);
 
-	const allCoupons = $derived([...data.discounts, ...(appliedCoupon ? [appliedCoupon] : [])]);
+	function isApplicable(
+		coupon: Coupon | { id: string; discount: number; code: string },
+		item: CartItem,
+		userId: string
+	): boolean {
+		if ('user_id' in coupon && coupon.user_id && coupon.user_id !== userId) return false;
+		if ('book_id' in coupon && coupon.book_id) return coupon.book_id === item.id;
+		if ('genre_id' in coupon && coupon.genre_id) return coupon.genre_id === item.genre_id;
+		return true;
+	}
 
-	const total = $derived(getCartTotal(cart.items, allCoupons, data.user?.id ?? ''));
+	const total = $derived(
+		cart.items.reduce((sum, item) => {
+			let price = item.price;
+			for (const coupon of data.discounts) {
+				if (isApplicable(coupon, item, data.user?.id ?? '')) {
+					price *= 1 - coupon.discount / 100;
+				}
+			}
+			if (appliedCoupon && isApplicable(appliedCoupon, item, data.user?.id ?? '')) {
+				price *= 1 - appliedCoupon.discount / 100;
+			}
+			return sum + Math.round(price) * item.quantity;
+		}, 0)
+	);
 
 	const formatCurrency = (amount: number) =>
 		new Intl.NumberFormat(getLocale(), {
@@ -271,7 +294,18 @@
 				<div class="w-full lg:w-1/2">
 					<div class="flex flex-col gap-6">
 						{#each cart.items as item}
-							{@const discountedPrice = getDiscountedPrice(item, allCoupons, data.user?.id ?? '')}
+							{@const discountedPrice = (() => {
+								let price = item.price;
+								for (const coupon of data.discounts) {
+									if (isApplicable(coupon, item, data.user?.id ?? '')) {
+										price *= 1 - coupon.discount / 100;
+									}
+								}
+								if (appliedCoupon && isApplicable(appliedCoupon, item, data.user?.id ?? '')) {
+									price *= 1 - appliedCoupon.discount / 100;
+								}
+								return Math.round(price);
+							})()}
 							<div class="flex gap-4">
 								{#if item.img_path}
 									<img
