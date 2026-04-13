@@ -13,8 +13,12 @@
 		"full_name": "Teljes név",
 		"first_name": "Keresztnév",
 		"last_name": "Vezetéknév",
+		"current_password": "Jelenlegi jelszó",
 		"password": "Jelszó",
-		"password_confirmation": "Jelszó megerősítés"
+		"password_confirmation": "Jelszó megerősítés",
+		"change_password": "Jelszóváltoztatás",
+		"account": "Fiók",
+		"general": "Általános"
 	},
 	"title": {
 		"home": "Üdvözöljük!",
@@ -45,6 +49,7 @@
 	},
 	"messages": {
 		"invalid_credentials": "Helytelen email cím vagy jelszó",
+		"invalid_current_password": "Helytelen jelenlegi jelszó",
 		"successful_signin": "Sikeres bejelentkezés",
 		"successful_signup": "Sikeres regisztráció",
 		"server_error": "Váratlan hiba történt",
@@ -53,7 +58,8 @@
 		"signin_to_continue": "Kérjük, jelentkezzen be a folytatáshoz",
 		"successful_order": "Megrendelés sikeresen leadva",
 		"terms_not_accepted": "Kéjük, fogadja el a rendelés feltételeit",
-		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor"
+		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor",
+		"successful_password_change": "Sikeres jelszóváltoztatás"
 	},
 	"cart": {
 		"empty": "A kosár üres",

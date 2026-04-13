@@ -13,8 +13,12 @@
 		"full_name": "Full name",
 		"first_name": "First name",
 		"last_name": "Last name",
+		"current_password": "Current password",
 		"password": "Password",
-		"password_confirmation": "Password confirmation"
+		"password_confirmation": "Password confirmation",
+		"change_password": "Change password",
+		"account": "Account",
+		"general": "General"
 	},
 	"title": {
 		"home": "Welcome!",
@@ -45,6 +49,7 @@
 	},
 	"messages": {
 		"invalid_credentials": "Invalid email or password",
+		"invalid_current_password": "Invalid current password",
 		"successful_signin": "You have signed in successfully",
 		"successful_signup": "You have signed up successfully",
 		"server_error": "An unexpected error occured",
@@ -53,7 +58,8 @@
 		"signin_to_continue": "Please sign in to continue",
 		"successful_order": "Order placed successfully",
 		"terms_not_accepted": "Please accept the terms",
-		"failed_to_place_order": "Failed to place order"
+		"failed_to_place_order": "Failed to place order",
+		"successful_password_change": "Password changed successfully"
 	},
 	"cart": {
 		"empty": "The cart is empty",
