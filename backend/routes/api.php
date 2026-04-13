@@ -29,9 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::patch('/users/{user}/role', [UserController::class, 'setRole']);
     Route::get('/coupons/validate', [CouponController::class, 'validate']);
+    Route::apiResource('coupons', CouponController::class)->except(['index', 'show']);
     Route::apiResource('coupons', CouponController::class);
 });
 
-
+Route::apiResource('coupons', CouponController::class)->only(['index', 'show']);;
 Route::post('/auth/login', [AuthController::class, 'authenticate']);
 Route::post('/auth/register', [UserController::class, 'store']);
