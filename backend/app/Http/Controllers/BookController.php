@@ -18,8 +18,78 @@ class BookController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        $books = Book::with(['authors', 'publisher', 'genre'])->paginate($request->integer('per_page', 10));
-        return BookResource::collection($books);
+        $query = Book::query()
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->string('search');
+                $q->where('title', 'like', "%{$search}%");
+            })
+            ->when(
+                $request->filled('genre'),
+                fn($q) => $q->where('genre_id', $request->string('genre'))
+            )
+            ->when(
+                $request->filled('publisher'),
+                fn($q) => $q->where('publisher_id', $request->string('publisher'))
+            )
+            ->when(
+                $request->filled('author'),
+                fn($q) => $q->whereHas(
+                    'authors',
+                    fn($q) => $q->where('authors.id', $request->string('author'))
+                )
+            )
+            ->when(
+                $request->filled('min_year'),
+                fn($q) => $q->where('release_year', '>=', $request->integer('min_year'))
+            )
+            ->when(
+                $request->filled('max_year'),
+                fn($q) => $q->where('release_year', '<=', $request->integer('max_year'))
+            )
+            ->when(
+                $request->filled('min_price'),
+                fn($q) => $q->where('price', '>=', $request->integer('min_price'))
+            )
+            ->when(
+                $request->filled('max_price'),
+                fn($q) => $q->where('price', '<=', $request->integer('max_price'))
+            )
+            ->when(
+                $request->filled('min_pages'),
+                fn($q) => $q->where('pages', '>=', $request->integer('min_pages'))
+            )
+            ->when(
+                $request->filled('max_pages'),
+                fn($q) => $q->where('pages', '<=', $request->integer('max_pages'))
+            );
+
+        $orderColumns = [
+            'order_title' => 'title',
+            'order_year'  => 'release_year',
+            'order_page'  => 'pages',
+            'order_price' => 'price',
+        ];
+
+        $hasOrder = false;
+        foreach ($orderColumns as $param => $column) {
+            $direction = $request->query($param);
+            if (in_array($direction, ['asc', 'desc'])) {
+                $query->orderBy($column, $direction);
+                $hasOrder = true;
+            }
+        }
+
+        if (!$hasOrder) {
+            $query->orderBy('title', 'asc')
+                ->orderBy('release_year', 'desc')
+                ->orderBy('pages', 'desc')
+                ->orderBy('price', 'asc');
+        }
+
+        return BookResource::collection(
+            $query->with(['authors', 'publisher', 'genre'])
+                ->paginate($request->integer('per_page', 10))
+        );
     }
 
     /**
