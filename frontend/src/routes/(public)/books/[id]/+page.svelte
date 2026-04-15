@@ -4,7 +4,7 @@
 	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
-	import { ShoppingCart, Bookmark, BookOpen, Pen, Tag } from '@lucide/svelte';
+	import { ShoppingCart, Bookmark, BookOpen, Pen, Tag, Calendar } from '@lucide/svelte';
 	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 
 	const { data } = $props();
@@ -92,6 +92,10 @@
 				{/if}
 			</div>
 			<div class="flex flex-col gap-2 text-sm text-muted-foreground">
+				<p class="flex items-center gap-2">
+					<Calendar size={16} />
+					{book.release_year}
+				</p>
 				<p class="flex items-center gap-2">
 					<BookOpen size={16} />
 					{m['pages']({ pages: book.pages })}

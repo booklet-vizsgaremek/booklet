@@ -81,6 +81,10 @@
 	<Item.Content>
 		<a href={`/books/${book.id}`}><Item.Title>{book.title}</Item.Title></a>
 		<Item.Description class="text-xs"
+			>{book.genre.name} · {book.publisher.name} · {book.release_year}</Item.Description
+		>
+		<Item.Description class="text-xs">{m['pages']({ pages: book.pages })}</Item.Description>
+		<Item.Description class="text-xs"
 			>{new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
 				book.authors.map(
 					(x: { first_name: string; last_name: string }) => `${x.first_name} ${x.last_name}`
