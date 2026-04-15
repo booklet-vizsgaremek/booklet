@@ -23,7 +23,42 @@
 	"title": {
 		"home": "Üdvözöljük!",
 		"cart": "Kosár",
-		"checkout": "Pénztár"
+		"checkout": "Pénztár",
+		"account_settings": "Fiók beállításai",
+		"book_lookup": "Könyvböngésző"
+	},
+	"book_lookup": {
+		"filter_by_title": "Szűrés cím szerint",
+		"id": "Azonosító",
+		"title": "Cím",
+		"authors": "Szerző(k)",
+		"author": "Szerző",
+		"all_authors": "Összes szerző",
+		"price": "Ár",
+		"pages": "Oldalak száma",
+		"publisher": "Kiadó",
+		"genre": "Műfaj",
+		"columns": "Oszlopok",
+		"all_genres": "Összes műfaj",
+		"all_publishers": "Összes kiadó",
+		"price_range": "Ár",
+		"page_range": "Lapok száma",
+		"apply_filters": "Szűrők alkalmazása",
+		"clear_filters": "Szűrők törlése",
+		"cover": "Borító",
+		"release_year": "Kiadás éve",
+		"metadata": "Metaadatok",
+		"ranges": "Tartományok",
+		"order": "Rendezés",
+		"order_by_t_asc": "Cím alapján (A-Z)",
+		"order_by_t_desc": "Cím alapján (Z-A)",
+		"order_by_y_asc": "Kiadás éve alapján (Régi elöl)",
+		"order_by_y_desc": "Kiadás éve alapján (Újak elöl)",
+		"order_by_pa_asc": "Lapok száma alapján (Kevesebb elöl)",
+		"order_by_pa_desc": "Lapok száma alapján (Több elöl)",
+		"order_by_pr_asc": "Ár alapján (Olcsók elöl)",
+		"order_by_pr_desc": "Ár alapján (Drágák elöl)",
+		"actions": "Műveletek"
 	},
 	"validation": {
 		"zod_required": "Ez a mezőt kötelező kitölteni",
@@ -57,7 +92,7 @@
 		"book_not_found": "A könyv nem található",
 		"signin_to_continue": "Kérjük, jelentkezzen be a folytatáshoz",
 		"successful_order": "Megrendelés sikeresen leadva",
-		"terms_not_accepted": "Kéjük, fogadja el a rendelés feltételeit",
+		"terms_not_accepted": "Kérjük, fogadja el a rendelés feltételeit",
 		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor",
 		"successful_password_change": "Sikeres jelszóváltoztatás"
 	},
@@ -89,5 +124,6 @@
 	"out_of_stock": "Elfogyott",
 	"pages": "{pages} oldal",
 	"show_all": "Mutasd az összeset",
-	"loading": "Betöltés..."
+	"loading": "Betöltés...",
+	"no_results": "Nincs találat"
 }

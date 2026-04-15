@@ -23,7 +23,42 @@
 	"title": {
 		"home": "Welcome!",
 		"cart": "Cart",
-		"checkout": "Checkout"
+		"checkout": "Checkout",
+		"account_settings": "Account settings",
+		"book_lookup": "Book lookup"
+	},
+	"book_lookup": {
+		"filter_by_title": "Filter by title",
+		"id": "ID",
+		"title": "Title",
+		"authors": "Author(s)",
+		"author": "Author",
+		"all_authors": "All authors",
+		"price": "Price",
+		"pages": "Pages",
+		"publisher": "Publisher",
+		"genre": "Genre",
+		"columns": "Columns",
+		"all_genres": "All genres",
+		"all_publishers": "All publishers",
+		"price_range": "Price range",
+		"page_range": "Page range",
+		"apply_filters": "Apply filters",
+		"clear_filters": "Clear filters",
+		"cover": "Cover",
+		"release_year": "Release year",
+		"metadata": "Metadata",
+		"ranges": "Ranges",
+		"order": "Order",
+		"order_by_t_asc": "By title (A-Z)",
+		"order_by_t_desc": "By title (Z-A)",
+		"order_by_y_asc": "By release year (Oldest first)",
+		"order_by_y_desc": "By release year (Newest first)",
+		"order_by_pa_asc": "By number of pages (Less first)",
+		"order_by_pa_desc": "By number of pages (More first)",
+		"order_by_pr_asc": "By price (Cheaper first)",
+		"order_by_pr_desc": "By price (Expensive first)",
+		"actions": "Actions"
 	},
 	"validation": {
 		"zod_required": "This field is required",
@@ -89,5 +124,6 @@
 	"out_of_stock": "Out of stock",
 	"pages": "{pages} pages",
 	"show_all": "Show all",
-	"loading": "Loading..."
+	"loading": "Loading...",
+	"no_results": "No results"
 }
