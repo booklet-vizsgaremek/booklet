@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title', 255);
             $table->integer('price');
             $table->integer('pages');
+            $table->integer('release_year');
             $table->integer('stock');
             $table->foreignUuid('publisher_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignUuid('genre_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();

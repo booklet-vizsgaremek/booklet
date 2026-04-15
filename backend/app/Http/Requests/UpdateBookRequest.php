@@ -28,6 +28,7 @@ class UpdateBookRequest extends FormRequest
             'author_ids.*' => ['uuid', 'exists:authors,id'],
             'price' => ['sometimes', 'integer', 'min:0'],
             'pages' => ['sometimes', 'integer', 'min:1'],
+            'release_year' => ['sometimes', 'integer', 'min:1800', 'max:' . now()->year],
             'stock' => ['sometimes', 'integer', 'min:0'],
             'publisher_id' => ['sometimes', 'uuid', 'exists:publishers,id'],
             'genre_id' => ['sometimes', 'uuid', 'exists:genres,id']

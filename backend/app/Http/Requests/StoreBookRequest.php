@@ -28,6 +28,7 @@ class StoreBookRequest extends FormRequest
             'author_ids.*' => ['uuid', 'exists:authors,id'],
             'price' => ['required', 'integer', 'min:0'],
             'pages' => ['required', 'integer', 'min:1'],
+            'release_year' => ['required', 'integer', 'min:1800', 'max:' . now()->year],
             'stock' => ['required', 'integer', 'min:0'],
             'publisher_id' => ['required', 'uuid', 'exists:publishers,id'],
             'genre_id' => ['required', 'uuid', 'exists:genres,id']

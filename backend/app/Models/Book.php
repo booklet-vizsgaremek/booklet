@@ -21,6 +21,7 @@ class Book extends Model
         'price',
         'pages',
         'stock',
+        'release_year',
         'publisher_id',
         'genre_id',
     ];
