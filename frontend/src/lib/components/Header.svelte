@@ -31,8 +31,8 @@
 
 	const links = $derived([
 		{
-			title: 'Link',
-			url: '#',
+			title: m['title.book_lookup'](),
+			url: '/books',
 			isSpecial: false
 		},
 		{
