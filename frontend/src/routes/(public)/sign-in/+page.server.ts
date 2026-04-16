@@ -10,7 +10,7 @@ import { validateRedirect } from '$lib/utils/redirect';
 
 export const load: PageServerLoad = async () => {
 	return {
-		titleKey: 'auth.sign_in',
+		title: m['auth.sign_in'](),
 		form: await superValidate(zod4(signInSchema))
 	};
 };

@@ -6,11 +6,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { API_URL } from '$env/static/private';
 import * as m from '$lib/paraglide/messages.js';
 import { dev } from '$app/environment';
-import { validateRedirect } from '$lib/utils/redirect';
 
 export const load: PageServerLoad = async () => {
 	return {
-		titleKey: 'auth.sign_up',
+		title: m['auth.sign_up'](),
 		form: await superValidate(zod4(signUpSchema))
 	};
 };

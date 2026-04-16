@@ -6,7 +6,6 @@
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { page } from '$app/state';
 	import * as m from '$lib/paraglide/messages.js';
-	import { type MessageKey } from '$lib';
 	import { ModeWatcher } from 'mode-watcher';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { navigating } from '$app/state';
@@ -22,7 +21,7 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<title
-		>{`${(page.data.titleKey as MessageKey | null) ? `${m[page.data.titleKey as MessageKey]()} | ` : ''}${PUBLIC_APP_NAME} ${m.branding()}`}</title
+		>{`${page.data.title ? `${page.data.title} | ` : ''}${PUBLIC_APP_NAME} ${m.branding()}`}</title
 	>
 </svelte:head>
 

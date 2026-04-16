@@ -10,6 +10,7 @@ import * as m from '$lib/paraglide/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	return {
+		title: m['title.account_settings'](),
 		user: locals.user,
 		form: await superValidate(zod4(passwordChangeSchema))
 	};
