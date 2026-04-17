@@ -12,16 +12,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-// TODO: Make sure if user can perform destructive/modifying actions
-
-Route::apiResource('authors', AuthorController::class);
-Route::apiResource('publishers', PublisherController::class);
-Route::apiResource('genres', GenreController::class);
+Route::apiResource('authors', AuthorController::class)->only(['index', 'show']);
+Route::apiResource('publishers', PublisherController::class)->only(['index', 'show']);
+Route::apiResource('genres', GenreController::class)->only(['index', 'show']);
 Route::get('books/top-purchased', [BookController::class, 'topPurchased']);
-Route::apiResource('books', BookController::class);
-Route::apiResource('wishlists', WishlistController::class);
-Route::apiResource('receipts', ReceiptController::class);
-Route::apiResource('pickups', PickupController::class);
+Route::apiResource('books', BookController::class)->only(['index', 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/self', [UserController::class, 'self']);
@@ -29,8 +24,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::patch('/users/{user}/role', [UserController::class, 'setRole']);
     Route::get('/coupons/validate', [CouponController::class, 'validate']);
+    Route::apiResource('books', BookController::class)->except(['index', 'show']);
+    Route::apiResource('authors', AuthorController::class)->except(['index', 'show']);
+    Route::apiResource('publishers', PublisherController::class)->except(['index', 'show']);
+    Route::apiResource('genres', GenreController::class)->except(['index', 'show']);
     Route::apiResource('coupons', CouponController::class)->except(['index', 'show']);
-    Route::apiResource('coupons', CouponController::class);
+    Route::apiResource('receipts', ReceiptController::class);
+    Route::apiResource('pickups', PickupController::class);
+    Route::apiResource('wishlists', WishlistController::class);
 });
 
 Route::apiResource('coupons', CouponController::class)->only(['index', 'show']);;
