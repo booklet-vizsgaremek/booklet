@@ -4,12 +4,13 @@
 	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import Bookmark from '@lucide/svelte/icons/bookmark';
 	import * as m from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { goto } from '$app/navigation';
 	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
 	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 	import { toast } from 'svelte-sonner';
+	import Price from './Price.svelte';
+	import Authors from './Authors.svelte';
 
 	const { book, discounts = [] } = $props();
 
@@ -85,35 +86,10 @@
 		>
 		<Item.Description class="text-xs">{m['pages']({ pages: book.pages })}</Item.Description>
 		<Item.Description class="text-xs"
-			>{new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
-				book.authors.map(
-					(x: { first_name: string; last_name: string }) => `${x.first_name} ${x.last_name}`
-				)
-			)}</Item.Description
+			><Authors classes="text-xs" authors={book.authors} /></Item.Description
 		>
 		<Item.Description class="mt-2">
-			{#if discountedPrice !== book.price}
-				<span class="text-sm text-muted-foreground line-through">
-					{new Intl.NumberFormat(getLocale(), {
-						style: 'currency',
-						currency: 'HUF',
-						maximumFractionDigits: 0
-					}).format(book.price)}
-				</span>
-				<span class="text-sm font-semibold text-foreground">
-					{new Intl.NumberFormat(getLocale(), {
-						style: 'currency',
-						currency: 'HUF',
-						maximumFractionDigits: 0
-					}).format(discountedPrice)}
-				</span>
-			{:else}
-				{new Intl.NumberFormat(getLocale(), {
-					style: 'currency',
-					currency: 'HUF',
-					maximumFractionDigits: 0
-				}).format(book.price)}
-			{/if}
+			<Price price={book.price} {discountedPrice} />
 		</Item.Description>
 	</Item.Content>
 	<Item.Actions class="flex w-full justify-center md:block">
