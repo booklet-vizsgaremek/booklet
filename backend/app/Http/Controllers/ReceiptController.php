@@ -8,17 +8,21 @@ use App\Http\Resources\ReceiptResource;
 use App\Models\Book;
 use App\Models\Receipt;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ReceiptController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResource
+    public function index(Request $request): JsonResource
     {
-        $receipts = Receipt::with(['user', 'books', 'coupons', 'pickup'])->get();
-        return ReceiptResource::collection($receipts);
+        $user = Auth::user();
+        $query = Receipt::with(['user', 'books', 'coupons', 'pickup']);
+        if ($user->role === 'customer') $query->where('user_id', $user->id);
+        return ReceiptResource::collection($query->paginate($request->integer('per_page', 10)));
     }
 
     /**
@@ -34,8 +38,9 @@ class ReceiptController extends Controller
                 'price_at_purchase' => Book::find($book['id'])->price
             ]
         ]);
-
         $receipt->books()->attach($books);
+        if ($request->has('coupons')) $receipt->coupons()->attach($request->coupons);
+        $receipt->pickup()->create(['status' => 'pending']);
 
         return new ReceiptResource($receipt->load(['user', 'books', 'coupons', 'pickup']));
     }

@@ -24,6 +24,8 @@ class UpdateReceiptRequest extends FormRequest
         return [
             'user_id' => ['required', 'uuid', 'exists:users,id'],
             'date' => ['required', 'date'],
+            'coupons' => ['nullable', 'array'],
+            'coupons.*' => ['exists:coupons,id'],
             'books' => ['required', 'array', 'min:1'],
             'books.*.id' => ['required', 'uuid', 'exists:books,id'],
             'books.*.quantity' => ['required', 'integer', 'min:1']
