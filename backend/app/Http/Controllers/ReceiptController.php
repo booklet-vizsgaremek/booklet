@@ -30,6 +30,17 @@ class ReceiptController extends Controller
      */
     public function store(StoreReceiptRequest $request): JsonResource
     {
+        foreach ($request->books as $book) {
+            $bookModel = Book::find($book['id']);
+
+            if ($bookModel->stock < $book['quantity']) {
+                return response()->json([
+                    'message_hu' => "A(z) \"{$bookModel->title}\" című könyvből nincs elegendő készlet. (Elérhető: {$bookModel->stock})",
+                    'message_en' => "Not enough of \"{$bookModel->title}\" in stock. (Available: {$bookModel->stock})",
+                ], 422)->throwResponse();
+            }
+        }
+
         $receipt = Receipt::create($request->validated());
 
         $books = collect($request->books)->mapWithKeys(fn($book) => [
@@ -38,7 +49,13 @@ class ReceiptController extends Controller
                 'price_at_purchase' => Book::find($book['id'])->price
             ]
         ]);
+
         $receipt->books()->attach($books);
+
+        foreach ($request->books as $book) {
+            Book::where('id', $book['id'])->decrement('stock', $book['quantity']);
+        }
+
         if ($request->has('coupons')) $receipt->coupons()->attach($request->coupons);
         $receipt->pickup()->create(['status' => 'pending']);
 
