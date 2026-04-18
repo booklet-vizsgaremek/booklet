@@ -8,6 +8,7 @@
 	import { passwordChangeSchema, type PasswordChangeSchema } from '$lib/schemas/passwordChange';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	let {
 		data
@@ -31,25 +32,31 @@
 	let signingOut = $state(false);
 </script>
 
-<div class="flex flex-col gap-8 p-12 md:p-24">
-	<h1 class="text-3xl!">{getGreeting(data.user?.first_name ?? null)}</h1>
-	<h2 class="text-2xl!">{m['auth.account']()}</h2>
-	<h3 class="text-xl!">{m['auth.general']()}</h3>
-	<form
-		method="POST"
-		action="?/signout"
-		use:enhance={() => {
-			signingOut = true;
-		}}
-	>
-		<Button type="submit" class="mb-6 cursor-pointer">
-			{#if signingOut}
-				<Spinner />
-			{:else}
-				{m['auth.sign_out']()}
-			{/if}
+<div class="mx-auto flex w-full flex-col gap-8 px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24">
+	<h1 class="text-3xl">{getGreeting(data.user?.first_name ?? null)}</h1>
+	<h2 class="text-2xl">{m['auth.account']()}</h2>
+	<h3 class="text-xl">{m['auth.general']()}</h3>
+	<div class="flex flex-col gap-4 md:flex-row">
+		<Button onclick={() => goto('/orders')} class="cursor-pointer">
+			{m['title.orders']()}
 		</Button>
-	</form>
+		<form
+			class="w-full md:w-max"
+			method="POST"
+			action="?/signout"
+			use:enhance={() => {
+				signingOut = true;
+			}}
+		>
+			<Button type="submit" class="w-full cursor-pointer md:w-max">
+				{#if signingOut}
+					<Spinner />
+				{:else}
+					{m['auth.sign_out']()}
+				{/if}
+			</Button>
+		</form>
+	</div>
 	<h3 class="text-xl!">{m['auth.change_password']()}</h3>
 	<form
 		class="flex w-full flex-col gap-4 md:w-1/3"
