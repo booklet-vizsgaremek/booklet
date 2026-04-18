@@ -1,5 +1,4 @@
-import type { CartItem } from '$lib/types/cart';
-import type { Coupon } from '$lib/types/coupon';
+import type { CartItem, Coupon } from '$lib/types';
 
 export const getDiscountedPrice = (item: CartItem, coupons: Coupon[], userId: string): number => {
 	const applicable = coupons.filter((coupon) => {
@@ -11,10 +10,9 @@ export const getDiscountedPrice = (item: CartItem, coupons: Coupon[], userId: st
 
 	if (applicable.length === 0) return item.price;
 
-	const totalDiscount = applicable.reduce((sum, coupon) => sum + coupon.discount, 0);
-	const discountMultiplier = Math.max(0, 1 - totalDiscount / 100);
-
-	return Math.round(item.price * discountMultiplier);
+	return Math.round(
+		item.price * Math.max(0, 1 - applicable.reduce((sum, coupon) => sum + coupon.discount, 0) / 100)
+	);
 };
 
 export const getCartTotal = (items: CartItem[], coupons: Coupon[], userId: string): number => {
@@ -22,3 +20,11 @@ export const getCartTotal = (items: CartItem[], coupons: Coupon[], userId: strin
 		return sum + getDiscountedPrice(item, coupons, userId) * item.quantity;
 	}, 0);
 };
+
+export const getAllCartCoupons = (items: CartItem[], userId: string, coupons: Coupon[]): Coupon[] =>
+	coupons.filter(
+		(x) =>
+			items.find((y) => y.id == x.book_id) ||
+			items.find((y) => y.genre_id == x.genre_id) ||
+			userId == x.user_id
+	);

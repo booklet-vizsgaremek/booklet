@@ -4,6 +4,7 @@
 	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import * as Empty from '$lib/components/ui/empty/index.js';
+	import Price, { formatCurrency } from '$lib/components/Price.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { enhance } from '$app/forms';
@@ -18,13 +19,14 @@
 	import FormLogo from '$lib/components/FormLogo.svelte';
 	import { Spinner } from '$lib/components/ui/index.js';
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
-	import type { Coupon } from '$lib/types/coupon';
-	import type { CartItem } from '$lib/types/cart';
+	import type { Coupon, CartItem } from '$lib/types';
+	import { getAllCartCoupons } from '$lib/stores/coupon.svelte.js';
 
 	const { data } = $props();
 
-	let currentStep = $state<'details' | 'delivery' | 'summary'>('details');
+	let currentStep = $state<'details' | 'delivery' | 'payment' | 'summary'>('details');
 	let deliveryType = $state<'shipping' | 'pickup' | null>(null);
+	let paymentType = $state<'by_card' | 'at_location' | null>(null);
 
 	let couponCode = $state('');
 	let appliedCoupon = $state<{ id: string; discount: number; code: string } | null>(null);
@@ -60,13 +62,6 @@
 		}, 0)
 	);
 
-	const formatCurrency = (amount: number) =>
-		new Intl.NumberFormat(getLocale(), {
-			style: 'currency',
-			currency: 'HUF',
-			maximumFractionDigits: 0
-		}).format(amount);
-
 	const handleApplyCoupon = async () => {
 		if (!couponCode.trim()) return;
 		couponLoading = true;
@@ -94,6 +89,12 @@
 		}
 
 		const { data: coupon } = await response.json();
+
+		if (!cart.items.some((item) => isApplicable(coupon, item, data.user?.id ?? ''))) {
+			couponError = m['checkout.coupon_no_applicable_items']();
+			return;
+		}
+
 		appliedCoupon = coupon;
 		toast.success(m['checkout.coupon_applied']());
 	};
@@ -103,7 +104,7 @@
 	<div class="container mx-auto px-12 py-16 md:px-24 md:py-32">
 		<div class="mb-6 flex flex-row items-center gap-2">
 			<button class="cursor-pointer" onclick={() => history.back()}><ChevronLeft /></button>
-			<h1 class="text-3xl font-bold">{m['title.checkout']()}</h1>
+			<h1 class="text-3xl">{m['title.checkout']()}</h1>
 		</div>
 		{#if cart.itemCount === 0}
 			<Empty.Root class="w-full border">
@@ -195,10 +196,65 @@
 								<Button
 									class="cursor-pointer"
 									onclick={() => {
-										if (deliveryType != null) currentStep = 'summary';
+										if (deliveryType != null) currentStep = 'payment';
 										else toast.error(m['checkout.step_incomplete']());
 									}}
 									disabled={deliveryType == null}
+								>
+									{m['checkout.continue']()}
+								</Button>
+							</Accordion.Content>
+						</Accordion.Item>
+						<Accordion.Item value="payment">
+							<Accordion.Trigger class={currentStep !== 'payment' ? 'opacity-50' : ''}>
+								{m['checkout.payment']()}
+							</Accordion.Trigger>
+							<Accordion.Content class="flex flex-col items-end gap-3">
+								<RadioGroup.Root bind:value={paymentType}>
+									<Label
+										class="pointer-events-none flex items-start gap-3 rounded-lg border p-3 opacity-50 hover:bg-accent/50 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950"
+									>
+										<RadioGroup.Item
+											id="by_card"
+											value="by_card"
+											disabled
+											class="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+										/>
+										<div class="grid font-normal">
+											<p class="mb-2! text-sm leading-none font-medium">
+												{m['checkout.pay_by_card']()}
+											</p>
+											<p class="text-sm text-muted-foreground">
+												{m['coming_soon']()}
+											</p>
+										</div>
+									</Label>
+									<Label
+										class="flex cursor-pointer items-start gap-3 rounded-lg border p-3 hover:bg-accent/50 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950"
+									>
+										<RadioGroup.Item
+											id="at_location"
+											value="at_location"
+											checked
+											class="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+										/>
+										<div class="grid font-normal">
+											<p class="mb-2! text-sm leading-none font-medium">
+												{m['checkout.pay_at_location']()}
+											</p>
+											<p class="text-sm text-muted-foreground">
+												{m['checkout.pay_at_location_description']()}
+											</p>
+										</div>
+									</Label>
+								</RadioGroup.Root>
+								<Button
+									class="cursor-pointer"
+									onclick={() => {
+										if (paymentType != null) currentStep = 'summary';
+										else toast.error(m['checkout.step_incomplete']());
+									}}
+									disabled={paymentType == null}
 								>
 									{m['checkout.continue']()}
 								</Button>
@@ -215,7 +271,7 @@
 								{m['checkout.summary']()}
 							</Accordion.Trigger>
 							<Accordion.Content>
-								<div class="mb-6 flex gap-2">
+								<div class="mb-4 flex gap-2">
 									<Input
 										bind:value={couponCode}
 										placeholder={m['checkout.coupon']()}
@@ -226,7 +282,11 @@
 										disabled={!!appliedCoupon || couponLoading || !couponCode.trim()}
 										class="cursor-pointer"
 									>
-										{m['checkout.coupon_apply']()}
+										{#if couponLoading}
+											<Spinner />
+										{:else}
+											{m['checkout.coupon_apply']()}
+										{/if}
 									</Button>
 								</div>
 								{#if couponError}
@@ -249,7 +309,18 @@
 											JSON.stringify(cart.items.map((i) => ({ id: i.id, quantity: i.quantity })))
 										);
 
-										if (appliedCoupon) formData.append('coupon_id', appliedCoupon.id);
+										formData.append(
+											'coupons[]',
+											JSON.stringify(
+												getAllCartCoupons(
+													cart.items,
+													data.user?.id as string,
+													appliedCoupon
+														? [...data.discounts, $state.snapshot(appliedCoupon)]
+														: data.discounts
+												)
+											)
+										);
 
 										return async ({ result }) => {
 											submitting = false;
@@ -326,18 +397,7 @@
 								{/if}
 								<div class="flex flex-1 flex-col gap-2">
 									<p class="font-semibold">{item.title}</p>
-									<div class="flex items-center gap-2">
-										{#if discountedPrice !== item.price}
-											<p class="text-sm text-muted-foreground line-through">
-												{formatCurrency(item.price)}
-											</p>
-											<p class="text-sm font-semibold">
-												{formatCurrency(discountedPrice)}
-											</p>
-										{:else}
-											<p class="text-sm">{formatCurrency(item.price)}</p>
-										{/if}
-									</div>
+									<Price price={item.price} {discountedPrice} />
 									<div class="flex items-center gap-2">
 										<Button
 											variant="outline"

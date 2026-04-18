@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { API_URL } from '$env/static/private';
 import { fail } from '@sveltejs/kit';
 import * as m from '$lib/paraglide/messages.js';
+import type { Coupon } from '$lib/types/coupon';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	return {
@@ -12,19 +13,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	checkout: async ({ request, fetch, locals, cookies }) => {
-		const data = await request.formData();
-		const books = JSON.parse(data.get('books') as string);
-		const couponId = data.get('coupon_id') as string | null;
+		const form = await request.formData();
+		const books = JSON.parse(form.get('books') as string);
+		const coupons = JSON.parse(form.get('coupons[]') as string).map((x: Coupon) => x.id);
 
 		const body: Record<string, unknown> = {
 			user_id: locals.user?.id,
 			date: new Date().toISOString(),
-			books
+			books,
+			coupons
 		};
-
-		if (couponId) {
-			body.coupons = [couponId];
-		}
 
 		const response = await fetch(`${API_URL}/receipts`, {
 			method: 'POST',
@@ -36,10 +34,8 @@ export const actions: Actions = {
 			body: JSON.stringify(body)
 		});
 
-		if (!response.ok) {
-			return fail(500, { error: m['messages.failed_to_place_order']() });
-		}
-
-		return { success: true };
+		return response.ok
+			? { success: true }
+			: fail(500, { error: m['messages.failed_to_place_order']() });
 	}
 };

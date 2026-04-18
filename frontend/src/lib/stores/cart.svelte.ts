@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import type { CartItem } from '$lib/types/cart';
+import type { CartItem } from '$lib/types';
 
 export const MAX_QUANTITY_PER_ITEM = 5;
 
