@@ -21,7 +21,7 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
 	import * as m from '$lib/paraglide/messages.js';
-	import type { Book, Author, Genre, Publisher } from './columns';
+	import type { Book, Author, Genre, Publisher } from '$lib/types';
 	import BookItem from '../BookItem.svelte';
 	import { Input, Separator } from '$lib/components/ui';
 
@@ -83,7 +83,7 @@
 
 	function applyFilters() {
 		currentPage = 1;
-		const params = new URLSearchParams({ page: '1' });
+		const params = new URLSearchParams({ page: currentPage.toString() });
 		for (const key of FILTER_KEYS) {
 			if (filters[key]) params.set(key, filters[key]);
 		}
@@ -333,7 +333,7 @@
 			<p class="py-10 text-center text-muted-foreground">{m['no_results']()}.</p>
 		{:else}
 			{#each data.books as book (book.id)}
-				<BookItem {book} />
+				<BookItem {book} discounts={page.data.discounts} />
 			{/each}
 		{/if}
 	</div>

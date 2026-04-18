@@ -6,6 +6,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { ShoppingCart, Bookmark, BookOpen, Pen, Tag, Calendar } from '@lucide/svelte';
 	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
+	import Price from '$lib/components/Price.svelte';
+	import Authors from '$lib/components/Authors.svelte';
 
 	const { data } = $props();
 	const book = $derived(data.book);
@@ -53,43 +55,13 @@
 				</div>
 			{/if}
 		</div>
-
 		<div class="flex flex-col gap-6">
 			<div>
 				<h1 class="text-3xl font-bold">{book.title}</h1>
-				<p class="mt-2 text-muted-foreground">
-					{new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
-						book.authors.map(
-							(x: { first_name: string; last_name: string }) => `${x.first_name} ${x.last_name}`
-						)
-					)}
-				</p>
+				<Authors classes="mt-2" authors={book.authors} />
 			</div>
 			<div class="flex items-center gap-3">
-				{#if discountedPrice !== book.price}
-					<p class="text-2xl text-muted-foreground line-through">
-						{new Intl.NumberFormat(getLocale(), {
-							style: 'currency',
-							currency: 'HUF',
-							maximumFractionDigits: 0
-						}).format(book.price)}
-					</p>
-					<p class="text-2xl font-semibold text-foreground">
-						{new Intl.NumberFormat(getLocale(), {
-							style: 'currency',
-							currency: 'HUF',
-							maximumFractionDigits: 0
-						}).format(discountedPrice)}
-					</p>
-				{:else}
-					<p class="text-2xl font-semibold">
-						{new Intl.NumberFormat(getLocale(), {
-							style: 'currency',
-							currency: 'HUF',
-							maximumFractionDigits: 0
-						}).format(book.price)}
-					</p>
-				{/if}
+				<Price textSize="2xl" price={book.price} {discountedPrice} />
 			</div>
 			<div class="flex flex-col gap-2 text-sm text-muted-foreground">
 				<p class="flex items-center gap-2">
@@ -109,7 +81,6 @@
 					{book.genre.name}
 				</p>
 			</div>
-
 			<div class="flex gap-4">
 				<Button
 					class="cursor-pointer"

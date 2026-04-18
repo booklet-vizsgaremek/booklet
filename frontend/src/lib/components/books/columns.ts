@@ -2,42 +2,13 @@ import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
 import DataTableButton from './data-table-button.svelte';
+import Price from '$lib/components/Price.svelte';
 import * as m from '$lib/paraglide/messages.js';
 import { getLocale } from '$lib/paraglide/runtime';
 import { page } from '$app/state';
 import { goto } from '$app/navigation';
-
-export type Book = {
-	id: string;
-	title: string;
-	img_path: string | null;
-	authors: { first_name: string; last_name: string }[];
-	price: number;
-	pages: number;
-	release_year: number;
-	publisher: { name: string };
-	genre: Genre;
-};
-
-export type Genre = {
-	id: string;
-	name: string;
-	books: Book[];
-};
-
-export type Publisher = {
-	id: string;
-	name: string;
-	books: Book[];
-};
-
-export type Author = {
-	id: string;
-	first_name: string;
-	last_name: string;
-	biography: string;
-	books: Book[];
-};
+import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
+import type { CartItem, Book } from '$lib/types';
 
 export const columns: ColumnDef<Book>[] = [
 	{
@@ -89,7 +60,8 @@ export const columns: ColumnDef<Book>[] = [
 			}),
 		cell: ({ row }) => {
 			const snippet = createRawSnippet<[{ title: string }]>((getTitle) => ({
-				render: () => `<div class="text-start font-medium pl-2">${getTitle().title}</div>`
+				render: () =>
+					`<div class="text-start font-medium pl-2 text-ellipsis overflow-hidden w-36">${getTitle().title}</div>`
 			}));
 			return renderSnippet(snippet, { title: row.original.title });
 		}
@@ -189,17 +161,14 @@ export const columns: ColumnDef<Book>[] = [
 				order: page.url.searchParams.get('order_price'),
 				textPos: 'end'
 			}),
-		cell: ({ row }) => {
-			const formatter = new Intl.NumberFormat(getLocale(), {
-				style: 'currency',
-				currency: 'HUF',
-				maximumFractionDigits: 0
-			});
-			const snippet = createRawSnippet<[{ price: number }]>((getPrice) => ({
-				render: () =>
-					`<div class="text-end font-medium pr-8">${formatter.format(getPrice().price)}</div>`
-			}));
-			return renderSnippet(snippet, { price: row.original.price });
-		}
+		cell: ({ row }) =>
+			renderComponent(Price, {
+				price: row.original.price,
+				discountedPrice: getDiscountedPrice(
+					{ ...row.original, genre_id: row.original.genre.id, stock: 0, quantity: 0 } as CartItem,
+					page.data.discounts,
+					page.data.user?.id as string
+				)
+			})
 	}
 ];

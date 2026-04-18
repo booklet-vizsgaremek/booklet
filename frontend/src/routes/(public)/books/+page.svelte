@@ -1,12 +1,7 @@
 <script lang="ts">
 	import DataTable from '$lib/components/books/data-table.svelte';
-	import {
-		columns,
-		type Book,
-		type Author,
-		type Genre,
-		type Publisher
-	} from '$lib/components/books/columns';
+	import type { Book, Author, Genre, Publisher } from '$lib/types';
+	import { columns } from '$lib/components/books/columns';
 
 	let {
 		data
