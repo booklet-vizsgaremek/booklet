@@ -24,8 +24,23 @@
 		"home": "Welcome!",
 		"cart": "Cart",
 		"checkout": "Checkout",
-		"account_settings": "Account settings",
-		"book_lookup": "Book lookup"
+		"account_settings": "Account",
+		"book_lookup": "Book lookup",
+		"orders": "Orders",
+		"order": "Order #{id}",
+		"wishlist": "Wishlist"
+	},
+	"orders": {
+		"empty": "There aren't any orders placed yet",
+		"current_status": "Current status",
+		"order_items": "Items of the order",
+		"quantity": "Quantity: {quantity}",
+		"status": {
+			"pending": "Pending",
+			"ready": "Ready for pickup",
+			"cancelled": "Cancelled",
+			"completed": "Completed"
+		}
 	},
 	"book_lookup": {
 		"filter_by_title": "Filter by title",
@@ -69,7 +84,8 @@
 		"zod_passwords_not_matching": "The password fields must match"
 	},
 	"navigation": {
-		"back_to_home": "Back to home"
+		"back_to_home": "Back to home",
+		"back": "Back"
 	},
 	"greetings": {
 		"morning": "Good morning, {firstName}!",
@@ -90,6 +106,7 @@
 		"server_error": "An unexpected error occured",
 		"email_taken": "This email address is already attached to an account",
 		"book_not_found": "Book not found",
+		"page_not_found": "Page not found",
 		"signin_to_continue": "Please sign in to continue",
 		"successful_order": "Order placed successfully",
 		"terms_not_accepted": "Please accept the terms",
@@ -117,13 +134,19 @@
 		"coupon_applied": "Coupon applied!",
 		"coupon_invalid": "Invalid or expired coupon code",
 		"coupon_not_owned": "This coupon is not valid for your account",
+		"coupon_no_applicable_items": "This coupon does not apply to any items in the cart",
 		"step_incomplete": "Please complete the previous step",
-		"accept_terms": "I understand that placing an order constitutes an obligation to pay"
+		"accept_terms": "I understand that placing an order constitutes an obligation to pay",
+		"payment": "Payment",
+		"pay_by_card": "Pay with credit card",
+		"pay_at_location": "Pay on pickup",
+		"pay_at_location_description": "You can pay for your order at our store on pickup"
 	},
 	"coming_soon": "Coming soon...",
 	"out_of_stock": "Out of stock",
 	"pages": "{pages} pages",
 	"show_all": "Show all",
+	"show_more": "Show more",
 	"loading": "Loading...",
 	"no_results": "No results"
 }

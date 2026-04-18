@@ -24,8 +24,23 @@
 		"home": "Üdvözöljük!",
 		"cart": "Kosár",
 		"checkout": "Pénztár",
-		"account_settings": "Fiók beállításai",
-		"book_lookup": "Könyvböngésző"
+		"account_settings": "Fiók",
+		"book_lookup": "Könyvböngésző",
+		"orders": "Rendelések",
+		"order": "Rendelés #{id}",
+		"wishlist": "Kívánságlista"
+	},
+	"orders": {
+		"empty": "Még nincsen leadott rendelés",
+		"current_status": "Jelenlegi állapot",
+		"order_items": "A rendelés tartalma",
+		"quantity": "Mennyiség: {quantity}",
+		"status": {
+			"pending": "Feldolgozás alatt",
+			"ready": "Átvehető",
+			"cancelled": "Lemondva",
+			"completed": "Átvéve"
+		}
 	},
 	"book_lookup": {
 		"filter_by_title": "Szűrés cím szerint",
@@ -69,7 +84,8 @@
 		"zod_passwords_not_matching": "A két jelszónak meg kell egyeznie"
 	},
 	"navigation": {
-		"back_to_home": "Vissza a főoldalra"
+		"back_to_home": "Vissza a főoldalra",
+		"back": "Vissza"
 	},
 	"greetings": {
 		"morning": "Jó reggelt, {firstName}!",
@@ -90,6 +106,7 @@
 		"server_error": "Váratlan hiba történt",
 		"email_taken": "Ezzel az email címmel már hoztak létre fiókot",
 		"book_not_found": "A könyv nem található",
+		"page_not_found": "A keresett oldal nem található",
 		"signin_to_continue": "Kérjük, jelentkezzen be a folytatáshoz",
 		"successful_order": "Megrendelés sikeresen leadva",
 		"terms_not_accepted": "Kérjük, fogadja el a rendelés feltételeit",
@@ -117,13 +134,19 @@
 		"coupon_applied": "Kupon alkalmazva!",
 		"coupon_invalid": "Érvénytelen vagy lejárt kuponkód",
 		"coupon_not_owned": "Ez a kupon nem érvényes a fiókjára",
+		"coupon_no_applicable_items": "Ez a kupon nem vonatkozik a kosárban lévő egyik tételre sem",
 		"step_incomplete": "Kérjük, teljesítse az előző lépést",
-		"accept_terms": "Megértettem, hogy a rendelés leadása fizetési kötelezettséget von maga után"
+		"accept_terms": "Megértettem, hogy a rendelés leadása fizetési kötelezettséget von maga után",
+		"payment": "Fizetés",
+		"pay_by_card": "Fizetés bankkártyával",
+		"pay_at_location": "Fizetés a helyszínen",
+		"pay_at_location_description": "Rendelését kifizetheti üzletünkben átvételkor"
 	},
 	"coming_soon": "Hamarosan...",
 	"out_of_stock": "Elfogyott",
 	"pages": "{pages} oldal",
 	"show_all": "Mutasd az összeset",
+	"show_more": "Mutass többet",
 	"loading": "Betöltés...",
 	"no_results": "Nincs találat"
 }
