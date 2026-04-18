@@ -30,8 +30,7 @@
 <ModeWatcher />
 <Toaster
 	toastOptions={{
-		class:
-			'rounded-none! bg-background! md:bg-white! md:dark:bg-neutral-950! border-0! shadow-none!'
+		class: `rounded-none! bg-background! md:bg-white! dark:bg-neutral-950! border-0! shadow-none!${isMobile ? ' mt-20' : ''}`
 	}}
 	position={isMobile ? 'top-center' : 'bottom-right'}
 />
@@ -44,7 +43,7 @@
 {:else}
 	{#if navigating.complete}
 		<div
-			class="fixed bottom-16 left-16 z-60 flex flex-row items-center gap-2 bg-white px-4 py-2 dark:bg-black"
+			class="fixed bottom-1/2 left-1/2 z-60 flex -translate-1/2 flex-row items-center gap-2 bg-white px-4 py-2 md:bottom-16 md:left-16 md:translate-0 dark:bg-black"
 		>
 			<Spinner class="size-8" />
 			{m['loading']()}
