@@ -8,6 +8,7 @@ use App\Http\Resources\WishlistResource;
 use App\Models\Wishlist;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
@@ -16,8 +17,10 @@ class WishlistController extends Controller
      */
     public function index(): JsonResource
     {
-        $wishlists = Wishlist::with(['user', 'book'])->get();
-        return WishlistResource::collection($wishlists);
+        $user = Auth::user();
+        $query = Wishlist::with(['user', 'book'])->get();
+        if ($user->role === 'customer') $query->where('user_id', $user->id);
+        return WishlistResource::collection($query);
     }
 
     /**
