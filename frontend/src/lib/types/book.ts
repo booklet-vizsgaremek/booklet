@@ -4,6 +4,7 @@ export type Book = {
 	id: string;
 	title: string;
 	img_path: string | null;
+	stock: number;
 	authors: { first_name: string; last_name: string }[];
 	price: number;
 	pages: number;

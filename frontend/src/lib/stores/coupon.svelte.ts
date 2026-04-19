@@ -1,10 +1,17 @@
-import type { CartItem, Coupon } from '$lib/types';
+import type { Book, CartItem, Coupon } from '$lib/types';
 
-export const getDiscountedPrice = (item: CartItem, coupons: Coupon[], userId: string): number => {
+export const getDiscountedPrice = (
+	item: CartItem | Book,
+	coupons: Coupon[],
+	userId: string
+): number => {
 	const applicable = coupons.filter((coupon) => {
 		if (coupon.user_id && coupon.user_id !== userId) return false;
 		if (coupon.book_id) return coupon.book_id === item.id;
-		if (coupon.genre_id) return coupon.genre_id === item.genre_id;
+		if (coupon.genre_id)
+			return 'genre' in item
+				? coupon.genre_id === item.genre?.id
+				: coupon.genre_id === item.genre_id;
 		return true;
 	});
 
