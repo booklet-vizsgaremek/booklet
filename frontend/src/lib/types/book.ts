@@ -1,14 +1,14 @@
-import type { Genre } from './genre';
+import type { Author, Genre, Publisher } from '$lib/types';
 
 export type Book = {
 	id: string;
 	title: string;
 	img_path: string | null;
 	stock: number;
-	authors: { first_name: string; last_name: string }[];
+	authors: Author[];
 	price: number;
 	pages: number;
 	release_year: number;
-	publisher: { name: string };
+	publisher: Publisher;
 	genre: Genre;
 };

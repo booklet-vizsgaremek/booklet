@@ -11,7 +11,7 @@
 	let { authors, classes = 'text-sm' }: { authors: Author[]; classes?: string } = $props();
 	const authorList = $derived(
 		new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
-			authors.map((x) => `${x.first_name} ${x.last_name}`)
+			authors.map((x) => x.name)
 		)
 	);
 
@@ -45,8 +45,7 @@
 							href="/authors/{author.id}"
 							class="block rounded-sm px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
 						>
-							{author.first_name}
-							{author.last_name}
+							{author.name}
 						</a>
 					</li>
 				{/each}
@@ -74,8 +73,7 @@
 							href="/authors/{author.id}"
 							class="block rounded-sm px-3 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground"
 						>
-							{author.first_name}
-							{author.last_name}
+							{author.name}
 						</a>
 					</li>
 				{/each}

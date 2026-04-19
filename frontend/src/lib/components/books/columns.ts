@@ -8,7 +8,8 @@ import { getLocale } from '$lib/paraglide/runtime';
 import { page } from '$app/state';
 import { goto } from '$app/navigation';
 import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
-import type { CartItem, Book } from '$lib/types';
+import type { CartItem, Book, Author } from '$lib/types';
+import Authors from '../Authors.svelte';
 
 export const columns: ColumnDef<Book>[] = [
 	{
@@ -69,19 +70,7 @@ export const columns: ColumnDef<Book>[] = [
 	{
 		accessorKey: 'authors',
 		header: m['book_lookup.authors'](),
-		cell: ({ row }) => {
-			const snippet = createRawSnippet<[{ authors: { first_name: string; last_name: string }[] }]>(
-				(getAuthors) => ({
-					render: () =>
-						`<div>${new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
-							getAuthors().authors.map(
-								(x: { first_name: string; last_name: string }) => `${x.first_name} ${x.last_name}`
-							)
-						)}</div>`
-				})
-			);
-			return renderSnippet(snippet, { authors: row.original.authors });
-		}
+		cell: ({ row }) => renderComponent(Authors, { authors: row.original.authors })
 	},
 	{
 		accessorKey: 'pages',

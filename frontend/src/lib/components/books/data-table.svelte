@@ -169,7 +169,7 @@
 						<Select.Root type="single" bind:value={filters.author}>
 							{@const a = data.authors.find((x) => x.id === filters.author)}
 							<Select.Trigger class="w-full md:w-auto">
-								{a ? `${a.first_name} ${a.last_name}` : m['book_lookup.all_authors']()}
+								{a?.name ?? m['book_lookup.all_authors']()}
 							</Select.Trigger>
 							<Select.Content>
 								<Select.Item value="">
@@ -177,7 +177,7 @@
 								</Select.Item>
 								{#each data.authors as a}
 									<Select.Item value={a.id}>
-										{`${a.first_name} ${a.last_name}`}
+										{a.name}
 									</Select.Item>
 								{/each}
 							</Select.Content>
