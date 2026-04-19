@@ -16,19 +16,10 @@ class AuthorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'biography' => $this->biography,
-            'books' => $this->whenLoaded('books', fn() => $this->books->map(fn($book) => [
-                'id' => $book->id,
-                'img_path' => $book->img_path,
-                'title' => $book->title,
-                'price' => $book->price,
-                'pages' => $book->pages,
-                'stock' => $book->stock,
-                'publisher' => new PublisherResource($book->publisher),
-                'genre' => new GenreResource($book->genre),
-            ]))
+            'name' => $this->name,
+            'biography_en' => $this->biography_en,
+            'biography_hu' => $this->biography_hu,
+            'books' => BookResource::collection($this->whenLoaded('books')),
         ];
     }
 }
