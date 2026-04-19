@@ -19,7 +19,20 @@ class CouponController extends Controller
      */
     public function index(): JsonResource
     {
-        $coupons = Coupon::with(['book', 'genre', 'user'])->get();
+        $userId = auth('sanctum')->id();
+
+        $coupons = Coupon::with(['book', 'genre', 'user'])
+            ->whereNull('code')
+            ->where('starts_at', '<=', now())
+            ->where('ends_at', '>=', now())
+            ->where(function ($query) use ($userId) {
+                $query->whereNull('user_id');
+                if ($userId) {
+                    $query->orWhere('user_id', $userId);
+                }
+            })
+            ->get();
+
         return CouponResource::collection($coupons);
     }
 
