@@ -20,7 +20,7 @@ class ReceiptFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->value('id'),
+            'user_id' => User::where('role', 'customer')->inRandomOrder()->value('id'),
             'date' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
@@ -28,22 +28,33 @@ class ReceiptFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function ($receipt) {
-            $books = Book::inRandomOrder()->take(fake()->numberBetween(1, 5))->get();
-
+            $books = Book::with('genre')->inRandomOrder()->take(fake()->numberBetween(1, 5))->get();
             $receipt->books()->attach(
-                $books->mapWithKeys(fn($book) => [
-                    $book->id => [
-                        'quantity' => fake()->numberBetween(1, 3),
-                        'price_at_purchase' => $book->price
-                    ]
+                $books->mapWithKeys(fn($b) => [
+                    $b->id => ['quantity' => rand(1, 3), 'price_at_purchase' => $b->price]
                 ])->toArray()
             );
 
-            if (fake()->boolean()) {
-                $coupon = Coupon::inRandomOrder()->first();
-                if ($coupon) {
-                    $receipt->coupons()->attach($coupon->id);
-                }
+            if ($receipt->user_id) {
+                $bookIds = $books->pluck('id');
+                $genreIds = $books->pluck('genre.id');
+
+                $coupon = Coupon::where(function ($query) use ($receipt, $bookIds, $genreIds) {
+                    $query->where('user_id', $receipt->user_id)
+                        ->whereNotNull('code');
+                })
+                    ->orWhere(function ($query) use ($bookIds, $genreIds) {
+                        $query->whereNull('code')
+                            ->where(function ($q) use ($bookIds, $genreIds) {
+                                $q->whereIn('book_id', $bookIds)
+                                    ->orWhereIn('genre_id', $genreIds);
+                            });
+                    })
+                    ->inRandomOrder()
+                    ->first();
+
+                if ($coupon) $receipt->coupons()->attach($coupon->id);
+                $receipt->pickup()->create(['status' => 'pending']);
             }
         });
     }

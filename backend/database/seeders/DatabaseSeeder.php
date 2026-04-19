@@ -7,6 +7,7 @@ use App\Models\Publisher;
 use App\Models\Genre;
 use App\Models\User;
 use App\Models\Book;
+use App\Models\Coupon;
 use App\Models\Receipt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,9 +24,11 @@ class DatabaseSeeder extends Seeder
     {
         Author::factory(10)->create();
         Publisher::factory(5)->create();
-        Genre::factory(10)->create();
+        Genre::factory(5)->create();
 
-        User::factory(6)->create();
+        User::factory(6)->create([
+            'role' => 'customer'
+        ]);
         User::create([
             'first_name' => 'Customer',
             'last_name' => 'User',
@@ -59,11 +62,12 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        Book::factory(20)->create()->each(function ($book) {
+        Book::factory(50)->create()->each(function ($book) {
             $authorIds = Author::inRandomOrder()->limit(rand(1, 3))->pluck('id');
             $book->authors()->sync($authorIds);
         });
 
+        Coupon::factory(3)->create();
         Receipt::factory(15)->create();
 
         $this->call(WishlistSeeder::class);
