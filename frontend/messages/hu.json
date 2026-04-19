@@ -97,7 +97,13 @@
 		"added_to_cart": "Kosárba helyezve",
 		"removed_from_cart": "Kosárból törölve",
 		"add_to_wishlist": "Kívánságlistára",
-		"added_to_wishlist": "Kivánságlistára helyezve"
+		"added_to_wishlist": "Kivánságlistára helyezve",
+		"remove_dialog": {
+			"title": "Törlés a kosárból",
+			"description": "Biztos benne, hogy törölni szeretné ezt az elemet a kosárból? \"{title}\""
+		},
+		"cancel": "Mégsem",
+		"remove": "Eltávolítás"
 	},
 	"messages": {
 		"invalid_credentials": "Helytelen email cím vagy jelszó",
@@ -117,7 +123,6 @@
 	"cart": {
 		"empty": "A kosár üres",
 		"total": "Összesen",
-		"item_count": "{count} termék",
 		"max_quantity": "Ebből a termékből legfeljebb {max} darabot adhat a kosarához"
 	},
 	"checkout": {
@@ -155,5 +160,6 @@
 	"show_all": "Mutasd az összeset",
 	"show_more": "Mutass többet",
 	"loading": "Betöltés...",
-	"no_results": "Nincs találat"
+	"no_results": "Nincs találat",
+	"book_count": "{count} könyv"
 }

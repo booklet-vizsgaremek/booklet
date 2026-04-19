@@ -97,7 +97,13 @@
 		"added_to_cart": "Added to cart",
 		"removed_from_cart": "Removed from cart",
 		"add_to_wishlist": "Add to wishlist",
-		"added_to_wishlist": "Added to wishlist"
+		"added_to_wishlist": "Added to wishlist",
+		"remove_dialog": {
+			"title": "Remove item",
+			"description": "Are you sure you want to remove this item from your cart? \"{title}\""
+		},
+		"cancel": "Cancel",
+		"remove": "Remove"
 	},
 	"messages": {
 		"invalid_credentials": "Invalid email or password",
@@ -117,7 +123,6 @@
 	"cart": {
 		"empty": "The cart is empty",
 		"total": "Total",
-		"item_count": "{count, plural, one {# item} other {# items}}",
 		"max_quantity": "You can only add {max} of this item to your cart"
 	},
 	"checkout": {
@@ -155,5 +160,15 @@
 	"show_all": "Show all",
 	"show_more": "Show more",
 	"loading": "Loading...",
-	"no_results": "No results"
+	"no_results": "No results",
+	"book_count": [
+		{
+			"declarations": ["input count", "local countPlural = count: plural"],
+			"selectors": ["countPlural"],
+			"match": {
+				"countPlural=one": "1 book",
+				"countPlural=other": "{count} books"
+			}
+		}
+	]
 }

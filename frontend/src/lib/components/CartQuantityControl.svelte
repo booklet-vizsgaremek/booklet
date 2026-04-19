@@ -2,6 +2,7 @@
 	import { MediaQuery } from 'svelte/reactivity';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Trash from '@lucide/svelte/icons/trash';
@@ -28,22 +29,19 @@
 	);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
+	let removeDialogOpen = $state(false);
+
 	const handleModification = (quantity: number) => {
 		if (!cartItem) return;
-
 		const parsed = Math.floor(Number(quantity));
-
 		if (isNaN(parsed) || parsed < 1) {
 			cart.updateQuantity(book.id, 1);
 			return;
 		}
-
 		const capped = Math.min(parsed, MAX_QUANTITY_PER_ITEM, book.stock);
-
 		if (parsed > capped) {
 			toast.error(m['cart.max_quantity']({ max: Math.min(MAX_QUANTITY_PER_ITEM, book.stock) }));
 		}
-
 		cart.updateQuantity(book.id, capped);
 	};
 
@@ -58,7 +56,7 @@
 
 	const handleDecrement = () => {
 		if (!cartItem) return;
-		if (cartItem.quantity === 1) handleRemove();
+		if (cartItem.quantity === 1) removeDialogOpen = true;
 		else cart.updateQuantity(book.id, cartItem.quantity - 1);
 	};
 
@@ -67,7 +65,6 @@
 			toast.error(m['out_of_stock']());
 			return;
 		}
-
 		cart.addToCart(
 			'genre' in book ? { ...book, quantity: 1, genre_id: book.genre.id } : { ...book, quantity: 1 }
 		);
@@ -77,8 +74,26 @@
 	const handleRemove = () => {
 		cart.removeFromCart(book.id);
 		toast.success(m['actions.removed_from_cart']());
+		removeDialogOpen = false;
 	};
 </script>
+
+<AlertDialog.Root bind:open={removeDialogOpen}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>{m['actions.remove_dialog.title']()}</AlertDialog.Title>
+			<AlertDialog.Description>
+				{m['actions.remove_dialog.description']({ title: book.title })}
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel class="cursor-pointer">{m['actions.cancel']()}</AlertDialog.Cancel>
+			<AlertDialog.Action class="cursor-pointer" onclick={handleRemove}>
+				{m['actions.remove']()}
+			</AlertDialog.Action>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
 
 {#if cartItem}
 	<div class="mt-4 flex w-full flex-row items-center gap-2 md:m-0 md:w-auto {className}">
@@ -111,7 +126,7 @@
 			variant="ghost"
 			size="icon"
 			class="w-1/4 cursor-pointer text-destructive md:w-9"
-			onclick={handleRemove}
+			onclick={() => (removeDialogOpen = true)}
 		>
 			<Trash size={12} />
 		</Button>
