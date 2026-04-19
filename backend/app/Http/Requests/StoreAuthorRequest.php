@@ -22,9 +22,9 @@ class StoreAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'biography' => ['required', 'string']
+            'name' => ['required', 'string', 'max:255'],
+            'biography_en' => ['required', 'string'],
+            'biography_hu' => ['required', 'string']
         ];
     }
 }

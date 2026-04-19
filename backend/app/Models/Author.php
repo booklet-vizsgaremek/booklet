@@ -14,9 +14,9 @@ class Author extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'biography'
+        'name',
+        'biography_en',
+        'biography_hu'
     ];
 
     public function books(): BelongsToMany

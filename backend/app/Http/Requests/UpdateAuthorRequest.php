@@ -22,9 +22,9 @@ class UpdateAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['sometimes', 'string', 'max:255'],
-            'last_name' => ['sometimes', 'string', 'max:255'],
-            'biography' => ['sometimes', 'string']
+            'name' => ['sometimes', 'string', 'max:255'],
+            'biography_en' => ['sometimes', 'string'],
+            'biography_hu' => ['sometimes', 'string']
         ];
     }
 }
