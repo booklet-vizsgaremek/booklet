@@ -24,8 +24,13 @@
 
 <div class="flex flex-wrap items-center gap-2">
 	{#if discountedPrice !== price}
+		{#if quantity > 1}
+			<span class={`text-${textSize} font-semibold text-foreground`}>
+				{quantity} x
+			</span>
+		{/if}
 		<span class={`text-${textSize} text-muted-foreground line-through`}>
-			{quantity > 0 ? `${quantity} x ` : ''}{new Intl.NumberFormat(getLocale(), {
+			{new Intl.NumberFormat(getLocale(), {
 				style: 'currency',
 				currency: 'HUF',
 				maximumFractionDigits: 0
