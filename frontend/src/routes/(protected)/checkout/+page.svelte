@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
-	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
+	import { cart } from '$lib/stores/cart.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import Price, { formatCurrency } from '$lib/components/Price.svelte';
@@ -9,9 +9,6 @@
 	import { Input } from '$lib/components/ui/input';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
-	import Minus from '@lucide/svelte/icons/minus';
-	import Plus from '@lucide/svelte/icons/plus';
-	import Trash from '@lucide/svelte/icons/trash';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { ShoppingCart, ChevronLeft, CircleCheck } from '@lucide/svelte';
@@ -21,6 +18,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 	import type { Coupon, CartItem } from '$lib/types';
 	import { getAllCartCoupons } from '$lib/stores/coupon.svelte.js';
+	import CartQuantityControl from '$lib/components/CartQuantityControl.svelte';
 
 	const { data } = $props();
 
@@ -34,6 +32,7 @@
 	let couponLoading = $state(false);
 	let termsAccepted = $state(false);
 	let success = $state(false);
+	let orderId = $state<string | null>(null);
 	let submitting = $state(false);
 
 	function isApplicable(
@@ -325,9 +324,10 @@
 										return async ({ result }) => {
 											submitting = false;
 
-											if (result.status === 200) {
+											if (result.type === 'success') {
 												cart.clearCart();
 												success = true;
+												orderId = (result.data as { orderId: string }).orderId;
 											} else {
 												toast.error(m['messages.server_error']());
 											}
@@ -398,37 +398,10 @@
 								<div class="flex flex-1 flex-col gap-2">
 									<p class="font-semibold">{item.title}</p>
 									<Price price={item.price} {discountedPrice} />
-									<div class="flex items-center gap-2">
-										<Button
-											variant="outline"
-											size="icon"
-											class="h-6 w-6 cursor-pointer"
-											onclick={() => cart.updateQuantity(item.id, item.quantity - 1)}
-										>
-											<Minus size={12} />
-										</Button>
-										<span class="text-sm">{item.quantity}</span>
-										<Button
-											variant="outline"
-											size="icon"
-											class="h-6 w-6 cursor-pointer"
-											disabled={item.quantity >= Math.min(MAX_QUANTITY_PER_ITEM, item.stock)}
-											onclick={() => cart.updateQuantity(item.id, item.quantity + 1)}
-										>
-											<Plus size={12} />
-										</Button>
-										<Button
-											variant="ghost"
-											size="icon"
-											class="h-6 w-6 cursor-pointer text-destructive"
-											onclick={() => cart.removeFromCart(item.id)}
-										>
-											<Trash size={12} />
-										</Button>
-									</div>
+									<CartQuantityControl book={item} />
 								</div>
 								<p class="text-sm font-semibold">
-									{formatCurrency(discountedPrice * item.quantity)}
+									<Price price={item.price} {discountedPrice} quantity={item.quantity} />
 								</p>
 							</div>
 						{/each}
@@ -444,6 +417,9 @@
 		<FormLogo />
 		<CircleCheck size={48} />
 		<h2 class="mb-6 text-center text-xl">{m['messages.successful_order']()}</h2>
+		<Button class="cursor-pointer" onclick={() => goto(`/orders/${orderId}`)}>
+			{m['checkout.view_order']()}
+		</Button>
 		<Button class="cursor-pointer" onclick={() => goto('/')}>
 			{m['navigation.back_to_home']()}
 		</Button>

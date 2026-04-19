@@ -1,43 +1,23 @@
 <script lang="ts">
+	import { MediaQuery } from 'svelte/reactivity';
 	import * as Item from '$lib/components/ui/item/index.js';
 	import { buttonVariants } from '$lib/components/ui/button';
-	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import Bookmark from '@lucide/svelte/icons/bookmark';
 	import * as m from '$lib/paraglide/messages.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { goto } from '$app/navigation';
-	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
 	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
-	import { toast } from 'svelte-sonner';
 	import Price from './Price.svelte';
 	import Authors from './Authors.svelte';
+	import CartQuantityControl from '$lib/components/CartQuantityControl.svelte';
+	import { page } from '$app/state';
 
 	const { book, discounts = [] } = $props();
 
-	const discountedPrice = $derived(getDiscountedPrice(book, discounts, ''));
-	const cartItem = $derived(cart.items.find((i) => i.id === book.id));
-	const atLimit = $derived(
-		cartItem ? cartItem.quantity >= Math.min(MAX_QUANTITY_PER_ITEM, book.stock) : false
+	const discountedPrice = $derived(
+		getDiscountedPrice(book, discounts, page.data.user?.id as string)
 	);
-
-	const handleAddToCart = () => {
-		if (atLimit) {
-			toast.error(m['cart.max_quantity']({ max: MAX_QUANTITY_PER_ITEM }));
-			return;
-		}
-
-		cart.addToCart({
-			id: book.id,
-			title: book.title,
-			price: book.price,
-			stock: book.stock,
-			genre_id: book.genre.id,
-			img_path: book.img_path ?? null,
-			quantity: 1
-		});
-
-		toast.success(m['actions.added_to_cart']());
-	};
+	const isDesktop = new MediaQuery('(min-width: 768px)');
 </script>
 
 <Item.Root>
@@ -92,19 +72,19 @@
 			<Price price={book.price} {discountedPrice} />
 		</Item.Description>
 	</Item.Content>
-	<Item.Actions class="flex w-full justify-center md:block">
-		{@const triggerClass =
-			'mt-2 w-1/2 cursor-pointer md:w-max ' + buttonVariants({ variant: 'default' })}
+	<Item.Actions
+		class="flex w-full flex-col justify-center gap-2 md:flex md:flex-row md:flex-wrap md:justify-start"
+	>
+		<CartQuantityControl {book} />
 		<Tooltip.Root>
-			<Tooltip.Trigger class={triggerClass} onclick={handleAddToCart} disabled={atLimit}
-				><ShoppingCart /></Tooltip.Trigger
+			<Tooltip.Trigger
+				class={'w-full cursor-pointer md:w-max ' + buttonVariants({ variant: 'outline' })}
 			>
-			<Tooltip.Content>
-				<p>{m['actions.add_to_cart']()}</p>
-			</Tooltip.Content>
-		</Tooltip.Root>
-		<Tooltip.Root>
-			<Tooltip.Trigger class={triggerClass}><Bookmark /></Tooltip.Trigger>
+				<Bookmark />
+				{#if !isDesktop.current}
+					{m['actions.add_to_wishlist']()}
+				{/if}
+			</Tooltip.Trigger>
 			<Tooltip.Content>
 				<p>{m['actions.add_to_wishlist']()}</p>
 			</Tooltip.Content>

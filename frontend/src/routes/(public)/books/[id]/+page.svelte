@@ -1,10 +1,8 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { cart, MAX_QUANTITY_PER_ITEM } from '$lib/stores/cart.svelte';
-	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
-	import { ShoppingCart, Bookmark, BookOpen, Pen, Tag, Calendar } from '@lucide/svelte';
+	import { Bookmark, BookOpen, Pen, Tag, Calendar } from '@lucide/svelte';
+	import CartQuantityControl from '$lib/components/CartQuantityControl.svelte';
 	import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 	import Price from '$lib/components/Price.svelte';
 	import Authors from '$lib/components/Authors.svelte';
@@ -12,30 +10,6 @@
 	const { data } = $props();
 	const book = $derived(data.book);
 	const discountedPrice = $derived(getDiscountedPrice(book, data.discounts ?? [], ''));
-
-	const cartItem = $derived(cart.items.find((i) => i.id === book.id));
-	const atLimit = $derived(
-		cartItem ? cartItem.quantity >= Math.min(MAX_QUANTITY_PER_ITEM, book.stock) : false
-	);
-
-	const handleAddToCart = () => {
-		if (atLimit) {
-			toast.error(m['cart.max_quantity']({ max: MAX_QUANTITY_PER_ITEM }));
-			return;
-		}
-
-		cart.addToCart({
-			id: book.id,
-			title: book.title,
-			price: book.price,
-			stock: book.stock,
-			genre_id: book.genre.id,
-			img_path: book.img_path ?? null,
-			quantity: 1
-		});
-
-		toast.success(m['actions.added_to_cart']());
-	};
 </script>
 
 <div class="container mx-auto px-12 py-32 md:px-24">
@@ -81,15 +55,8 @@
 					{book.genre.name}
 				</p>
 			</div>
-			<div class="flex gap-4">
-				<Button
-					class="cursor-pointer"
-					onclick={handleAddToCart}
-					disabled={atLimit || book.stock === 0}
-				>
-					<ShoppingCart />
-					{book.stock === 0 ? m['out_of_stock']() : m['actions.add_to_cart']()}
-				</Button>
+			<div class="flex flex-col gap-2 md:flex-row">
+				<CartQuantityControl {book} showLabel={true} />
 				<Button variant="outline">
 					<Bookmark />
 					{m['actions.add_to_wishlist']()}
