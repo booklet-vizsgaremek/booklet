@@ -6,9 +6,11 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
@@ -139,6 +141,53 @@ class BookController extends Controller
                 $query->select(DB::raw('sum(books_receipts.quantity)'));
             }])
             ->orderByDesc('total_purchased')
+            ->limit(10)
+            ->get();
+
+        return BookResource::collection($books);
+    }
+
+    public function randomCategory(): JsonResource
+    {
+        $genre = Genre::inRandomOrder()->first();
+
+        $books = Book::with(['authors', 'publisher', 'genre'])
+            ->where('genre_id', $genre->id)
+            ->inRandomOrder()
+            ->limit(10)
+            ->get();
+
+        return BookResource::collection($books);
+    }
+
+    public function discounted(): JsonResource
+    {
+        $userId = auth('sanctum')->id();
+
+        $books = Book::with(['authors', 'publisher', 'genre'])
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('coupons', function ($q) use ($userId) {
+                    $q->whereNull('code')
+                        ->where(function ($q) use ($userId) {
+                            $q->whereNull('user_id');
+                            if ($userId) {
+                                $q->orWhere('user_id', $userId);
+                            }
+                        })
+                        ->where('starts_at', '<=', now())
+                        ->where('ends_at', '>=', now());
+                })->orWhereHas('genre.coupons', function ($q) use ($userId) {
+                    $q->whereNull('code')
+                        ->where(function ($q) use ($userId) {
+                            $q->whereNull('user_id');
+                            if ($userId) {
+                                $q->orWhere('user_id', $userId);
+                            }
+                        })
+                        ->where('starts_at', '<=', now())
+                        ->where('ends_at', '>=', now());
+                });
+            })
             ->limit(10)
             ->get();
 

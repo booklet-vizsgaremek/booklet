@@ -16,6 +16,8 @@ Route::apiResource('authors', AuthorController::class)->only(['index', 'show']);
 Route::apiResource('publishers', PublisherController::class)->only(['index', 'show']);
 Route::apiResource('genres', GenreController::class)->only(['index', 'show']);
 Route::get('books/top-purchased', [BookController::class, 'topPurchased']);
+Route::get('books/random-category', [BookController::class, 'randomCategory']);
+Route::get('books/discounted', [BookController::class, 'discounted']);
 Route::apiResource('books', BookController::class)->only(['index', 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
