@@ -95,6 +95,7 @@
 	"actions": {
 		"add_to_cart": "Add to cart",
 		"added_to_cart": "Added to cart",
+		"removed_from_cart": "Removed from cart",
 		"add_to_wishlist": "Add to wishlist",
 		"added_to_wishlist": "Added to wishlist"
 	},
@@ -140,7 +141,13 @@
 		"payment": "Payment",
 		"pay_by_card": "Pay with credit card",
 		"pay_at_location": "Pay on pickup",
-		"pay_at_location_description": "You can pay for your order at our store on pickup"
+		"pay_at_location_description": "You can pay for your order at our store on pickup",
+		"view_order": "View order"
+	},
+	"home": {
+		"top_10": "Top 10 most purchased books",
+		"random_category": "Books that might interest you",
+		"discounted": "Great deals"
 	},
 	"coming_soon": "Coming soon...",
 	"out_of_stock": "Out of stock",

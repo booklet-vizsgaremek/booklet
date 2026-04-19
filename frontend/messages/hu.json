@@ -95,6 +95,7 @@
 	"actions": {
 		"add_to_cart": "Kosárba",
 		"added_to_cart": "Kosárba helyezve",
+		"removed_from_cart": "Kosárból törölve",
 		"add_to_wishlist": "Kívánságlistára",
 		"added_to_wishlist": "Kivánságlistára helyezve"
 	},
@@ -140,10 +141,16 @@
 		"payment": "Fizetés",
 		"pay_by_card": "Fizetés bankkártyával",
 		"pay_at_location": "Fizetés a helyszínen",
-		"pay_at_location_description": "Rendelését kifizetheti üzletünkben átvételkor"
+		"pay_at_location_description": "Rendelését kifizetheti üzletünkben átvételkor",
+		"view_order": "Rendelés megtekintése"
+	},
+	"home": {
+		"top_10": "Top 10 legtöbbet megvásárolt könyv",
+		"random_category": "Könyvek, melyek érdekesek lehetnek önnek",
+		"discounted": "Jelenleg leárazott könyvek"
 	},
 	"coming_soon": "Hamarosan...",
-	"out_of_stock": "Elfogyott",
+	"out_of_stock": "Nincs raktáron",
 	"pages": "{pages} oldal",
 	"show_all": "Mutasd az összeset",
 	"show_more": "Mutass többet",
