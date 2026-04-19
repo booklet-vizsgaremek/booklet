@@ -35,7 +35,7 @@ export const actions: Actions = {
 		});
 
 		return response.ok
-			? { success: true }
+			? { success: true, orderId: (await response.json()).data.id }
 			: fail(500, { error: m['messages.failed_to_place_order']() });
 	}
 };
