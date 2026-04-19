@@ -22,7 +22,7 @@ class ReceiptController extends Controller
         $user = Auth::user();
         $query = Receipt::with(['user', 'books', 'coupons', 'pickup']);
         if ($user->role === 'customer') $query->where('user_id', $user->id);
-        return ReceiptResource::collection($query->paginate($request->integer('per_page', 10)));
+        return ReceiptResource::collection($query->latest('date')->paginate($request->integer('per_page', 10)));
     }
 
     /**
