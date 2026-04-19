@@ -27,7 +27,9 @@
 	</li>
 {/if}
 
-<Carousel.Root class="hidden w-full max-w-[calc(100%-(24*0.25rem))] md:ml-12 md:block">
+<Carousel.Root
+	class={`hidden w-full max-w-[calc(100%-(24*0.25rem))] md:block${books.length < 5 ? ' lg:m-0' : books.length < 3 ? ' md:m-0' : ' md:ml-12'}`}
+>
 	<Carousel.Content class="-ms-1 items-stretch">
 		{#each books as book, i}
 			<Carousel.Item class="h-full p-1 md:basis-1/3 lg:basis-1/5">
@@ -38,6 +40,10 @@
 			</Carousel.Item>
 		{/each}
 	</Carousel.Content>
-	<Carousel.Previous class="cursor-pointer rounded-none" />
-	<Carousel.Next class="cursor-pointer rounded-none" />
+	<Carousel.Previous
+		class={`cursor-pointer rounded-none${books.length < 3 ? ' md:hidden' : ''}${books.length < 5 ? ' lg:hidden' : ''}`}
+	/>
+	<Carousel.Next
+		class={`cursor-pointer rounded-none${books.length < 3 ? ' md:hidden' : ''}${books.length < 5 ? ' lg:hidden' : ''}`}
+	/>
 </Carousel.Root>
