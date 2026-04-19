@@ -165,7 +165,7 @@ export const columns: ColumnDef<Book>[] = [
 			renderComponent(Price, {
 				price: row.original.price,
 				discountedPrice: getDiscountedPrice(
-					{ ...row.original, genre_id: row.original.genre.id, stock: 0, quantity: 0 } as CartItem,
+					row.original,
 					page.data.discounts,
 					page.data.user?.id as string
 				)
