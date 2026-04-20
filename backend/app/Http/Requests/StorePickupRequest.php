@@ -22,8 +22,8 @@ class StorePickupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'receipt_id'   => ['required', 'uuid', 'exists:receipts,id'],
-            'status'       => ['sometimes', 'in:pending,ready,completed,cancelled'],
+            'receipt_id' => ['required', 'uuid', 'exists:receipts,id'],
+            'status' => ['sometimes', 'in:pending,ready,completed,cancelled'],
             'completed_at' => ['nullable', 'date']
         ];
     }

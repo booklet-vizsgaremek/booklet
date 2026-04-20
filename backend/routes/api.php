@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('coupons', CouponController::class)->except(['index', 'show']);
     Route::apiResource('receipts', ReceiptController::class);
     Route::apiResource('pickups', PickupController::class);
-    Route::apiResource('wishlists', WishlistController::class);
+    Route::apiResource('wishlists', WishlistController::class)->only(['index', 'store', 'destroy']);
 });
 
 Route::apiResource('coupons', CouponController::class)->only(['index', 'show']);;

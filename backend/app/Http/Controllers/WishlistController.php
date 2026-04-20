@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreWishlistRequest;
-use App\Http\Requests\UpdateWishlistRequest;
-use App\Http\Resources\WishlistResource;
-use App\Models\Wishlist;
+use App\Http\Resources\BookResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -17,43 +15,40 @@ class WishlistController extends Controller
      */
     public function index(): JsonResource
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $query = Wishlist::with(['user', 'book'])->get();
-        if ($user->role === 'customer') $query->where('user_id', $user->id);
-        return WishlistResource::collection($query);
+        $books = $user->wishlists()->with(['authors', 'publisher', 'genre'])->get();
+        return BookResource::collection($books);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWishlistRequest $request): JsonResource
+    public function store(Request $request): Response | JsonResource
     {
-        $wishlist = Wishlist::create($request->validated())->load(['user', 'book']);
-        return new WishlistResource($wishlist);
-    }
+        $request->validate(['book_id' => ['required', 'uuid', 'exists:books,id']]);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Wishlist $wishlist): JsonResource
-    {
-        return new WishlistResource($wishlist->load(['user', 'book']));
-    }
+        if ($user->wishlists()->where('book_id', $request->book_id)->exists()) {
+            return response()->noContent();
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateWishlistRequest $request, Wishlist $wishlist): JsonResource
-    {
-        $wishlist->update($request->validated());
-        return new WishlistResource($wishlist->load(['user', 'book']));
+        $user->wishlists()->attach($request->book_id);
+        $book = $user->wishlists()->with(['authors', 'publisher', 'genre'])
+            ->where('book_id', $request->book_id)->first();
+
+        return new BookResource($book);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Wishlist $wishlist): Response
+    public function destroy(string $wishlist): Response
     {
-        return $wishlist->delete() ? response()->noContent() : abort(500);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->wishlists()->detach($wishlist);
+        return response()->noContent();
     }
 }

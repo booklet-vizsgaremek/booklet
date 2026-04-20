@@ -22,7 +22,7 @@ class UpdatePickupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'       => ['sometimes', 'in:pending,ready,completed,cancelled'],
+            'status' => ['sometimes', 'in:pending,ready,completed,cancelled'],
             'completed_at' => ['nullable', 'date']
         ];
     }
