@@ -40,6 +40,9 @@
 		<Button onclick={() => goto('/orders')} class="cursor-pointer">
 			{m['title.orders']()}
 		</Button>
+		<Button onclick={() => goto('/wishlist')} class="cursor-pointer">
+			{m['title.wishlist']()}
+		</Button>
 		<form
 			class="w-full md:w-max"
 			method="POST"
