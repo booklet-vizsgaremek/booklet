@@ -85,6 +85,7 @@
 	},
 	"navigation": {
 		"back_to_home": "Back to home",
+		"back_to_profile": "Back to profile",
 		"back": "Back"
 	},
 	"greetings": {
@@ -98,9 +99,15 @@
 		"removed_from_cart": "Removed from cart",
 		"add_to_wishlist": "Add to wishlist",
 		"added_to_wishlist": "Added to wishlist",
-		"remove_dialog": {
-			"title": "Remove item",
+		"remove_from_wishlist": "Remove from wishlist",
+		"removed_from_wishlist": "Removed from wishlist",
+		"remove_from_cart_dialog": {
+			"title": "Remove item from cart",
 			"description": "Are you sure you want to remove this item from your cart? \"{title}\""
+		},
+		"remove_from_wishlist_dialog": {
+			"title": "Remove item from wishlist",
+			"description": "Are you sure you want to remove this item from your wishlist? \"{title}\""
 		},
 		"cancel": "Cancel",
 		"remove": "Remove"
@@ -124,6 +131,9 @@
 		"empty": "The cart is empty",
 		"total": "Total",
 		"max_quantity": "You can only add {max} of this item to your cart"
+	},
+	"wishlist": {
+		"empty": "Your wishlist is empty"
 	},
 	"checkout": {
 		"details": "Details",

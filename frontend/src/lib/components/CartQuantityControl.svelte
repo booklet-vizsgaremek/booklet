@@ -81,9 +81,9 @@
 <AlertDialog.Root bind:open={removeDialogOpen}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>{m['actions.remove_dialog.title']()}</AlertDialog.Title>
+			<AlertDialog.Title>{m['actions.remove_from_cart_dialog.title']()}</AlertDialog.Title>
 			<AlertDialog.Description>
-				{m['actions.remove_dialog.description']({ title: book.title })}
+				{m['actions.remove_from_cart_dialog.description']({ title: book.title })}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>

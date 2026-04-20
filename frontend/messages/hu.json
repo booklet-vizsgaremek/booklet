@@ -85,6 +85,7 @@
 	},
 	"navigation": {
 		"back_to_home": "Vissza a főoldalra",
+		"back_to_profile": "Vissza a profilhoz",
 		"back": "Vissza"
 	},
 	"greetings": {
@@ -95,12 +96,18 @@
 	"actions": {
 		"add_to_cart": "Kosárba",
 		"added_to_cart": "Kosárba helyezve",
-		"removed_from_cart": "Kosárból törölve",
+		"removed_from_cart": "Kosárból eltávolítva",
 		"add_to_wishlist": "Kívánságlistára",
-		"added_to_wishlist": "Kivánságlistára helyezve",
-		"remove_dialog": {
-			"title": "Törlés a kosárból",
-			"description": "Biztos benne, hogy törölni szeretné ezt az elemet a kosárból? \"{title}\""
+		"added_to_wishlist": "Kívánságlistára helyezve",
+		"remove_from_wishlist": "Eltávolítás a kívánságlistáról",
+		"removed_from_wishlist": "Kívánságlistáról eltávolítva",
+		"remove_from_cart_dialog": {
+			"title": "Eltávolítás a kosárból",
+			"description": "Biztos benne, hogy el szeretné távolítani ezt az elemet a kosárból? \"{title}\""
+		},
+		"remove_from_wishlist_dialog": {
+			"title": "Eltávolítás a kívánságlistáról",
+			"description": "Biztos benne, hogy el szeretné távolítani ezt az elemet a kívánságlistáról? \"{title}\""
 		},
 		"cancel": "Mégsem",
 		"remove": "Eltávolítás"
@@ -124,6 +131,9 @@
 		"empty": "A kosár üres",
 		"total": "Összesen",
 		"max_quantity": "Ebből a termékből legfeljebb {max} darabot adhat a kosarához"
+	},
+	"wishlist": {
+		"empty": "A kívánságlista üres"
 	},
 	"checkout": {
 		"details": "Adatok",
