@@ -13,13 +13,6 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 
 	let { price, discountedPrice = price, quantity = 0, textSize = 'sm' } = $props();
-
-	export const formatCurrency = (amount: number) =>
-		new Intl.NumberFormat(getLocale(), {
-			style: 'currency',
-			currency: 'HUF',
-			maximumFractionDigits: 0
-		}).format(amount);
 </script>
 
 <div class="flex flex-wrap items-center gap-2">
@@ -30,44 +23,24 @@
 			</span>
 		{/if}
 		<span class={`text-${textSize} text-muted-foreground line-through`}>
-			{new Intl.NumberFormat(getLocale(), {
-				style: 'currency',
-				currency: 'HUF',
-				maximumFractionDigits: 0
-			}).format(price)}
+			{formatCurrency(price)}
 		</span>
 		<span class={`text-${textSize} font-semibold text-foreground`}>
-			{new Intl.NumberFormat(getLocale(), {
-				style: 'currency',
-				currency: 'HUF',
-				maximumFractionDigits: 0
-			}).format(discountedPrice)}
+			{formatCurrency(discountedPrice)}
 		</span>
 		<Badge variant="warning">-{Math.round(((price - discountedPrice) / price) * 100)}%</Badge>
 		{#if quantity > 1}
 			<span class={`text-${textSize} font-semibold text-foreground`}>
-				({new Intl.NumberFormat(getLocale(), {
-					style: 'currency',
-					currency: 'HUF',
-					maximumFractionDigits: 0
-				}).format(quantity * discountedPrice)})
+				({formatCurrency(quantity * discountedPrice)})
 			</span>
 		{/if}
 	{:else}
 		<span class={`text-${textSize} text-foreground`}>
-			{quantity > 0 ? `${quantity} x ` : ''}{new Intl.NumberFormat(getLocale(), {
-				style: 'currency',
-				currency: 'HUF',
-				maximumFractionDigits: 0
-			}).format(price)}
+			{quantity > 0 ? `${quantity} x ` : ''}{formatCurrency(price)}
 		</span>
 		{#if quantity > 1}
 			<span class={`text-${textSize} text-foreground`}>
-				({new Intl.NumberFormat(getLocale(), {
-					style: 'currency',
-					currency: 'HUF',
-					maximumFractionDigits: 0
-				}).format(quantity * price)})
+				({formatCurrency(quantity * price)})
 			</span>
 		{/if}
 	{/if}

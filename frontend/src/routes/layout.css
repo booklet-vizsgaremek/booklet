@@ -22,7 +22,7 @@
 	--accent-foreground: oklch(0.205 0 0);
 	--destructive: oklch(0.577 0.245 27.325);
 	--success: oklch(0.805 0.275 142.51);
-	--warning: oklch(0.875 0.205 120.15);
+	--warning: oklch(65.75% 0.155 120.09);
 	--progress: oklch(0.555 0.205 257.85);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
