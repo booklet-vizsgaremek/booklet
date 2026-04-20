@@ -1,4 +1,4 @@
-import type { User } from '$lib/typess';
+import type { User, Book } from '$lib/typess';
 
 declare global {
 	namespace App {
@@ -6,7 +6,9 @@ declare global {
 		interface Locals {
 			user: User | null;
 		}
-		// interface PageData {}
+		interface PageData {
+			wishlist?: Book[];
+		}
 		// interface PageState {}
 		// interface Platform {}
 	}

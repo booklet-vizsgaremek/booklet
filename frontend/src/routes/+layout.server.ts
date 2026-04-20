@@ -20,8 +20,22 @@ export const load: LayoutServerLoad = async ({ locals, fetch, cookies }) => {
 			c.code === null && new Date(c.starts_at) <= now && new Date(c.ends_at) >= now
 	);
 
+	let wishlist = [];
+	if (locals.user) {
+		const wishlistRes = await fetch(`${API_URL}/wishlists`, {
+			headers: {
+				Authorization: cookies.get('auth_token') ? `Bearer ${cookies.get('auth_token')}` : '',
+				'X-Requested-With': 'XMLHttpRequest'
+			}
+		});
+		if (wishlistRes.ok) {
+			wishlist = (await wishlistRes.json()).data;
+		}
+	}
+
 	return {
 		user: locals.user,
-		discounts
+		discounts,
+		wishlist
 	};
 };

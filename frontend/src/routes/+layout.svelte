@@ -11,8 +11,17 @@
 	import { navigating } from '$app/state';
 	import { browser } from '$app/environment';
 	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
+	import { wishlist } from '$lib/stores/wishlist.svelte';
 
 	let { children, data } = $props();
+
+	$effect(() => {
+		if (data.user) {
+			wishlist.init(data.wishlist ?? []);
+		} else {
+			wishlist.clear();
+		}
+	});
 
 	let w = $state(0);
 	let isMobile = $derived(w < 768);
