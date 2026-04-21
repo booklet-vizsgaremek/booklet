@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/self', [UserController::class, 'self']);
     Route::apiResource('users', UserController::class)->except('store');
     Route::patch('/users/{user}/password', [UserController::class, 'updatePassword']);
-    Route::patch('/users/{user}/role', [UserController::class, 'setRole']);
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole']);
     Route::get('/coupons/validate', [CouponController::class, 'validate']);
     Route::apiResource('books', BookController::class)->except(['index', 'show']);
     Route::apiResource('authors', AuthorController::class)->except(['index', 'show']);
