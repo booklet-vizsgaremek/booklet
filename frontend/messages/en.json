@@ -9,6 +9,9 @@
 		"sign_in": "Sign in",
 		"sign_up": "Sign up",
 		"sign_out": "Sign out",
+		"sign_out_dialog": {
+			"description": "Are you sure you want to sign out?"
+		},
 		"email": "Email address",
 		"full_name": "Full name",
 		"first_name": "First name",
@@ -113,6 +116,7 @@
 		"remove": "Remove"
 	},
 	"messages": {
+		"forbidden": "Access denied. You do not have the required permissions for this action.",
 		"invalid_credentials": "Invalid email or password",
 		"invalid_current_password": "Invalid current password",
 		"successful_signin": "You have signed in successfully",
@@ -126,6 +130,13 @@
 		"terms_not_accepted": "Please accept the terms",
 		"failed_to_place_order": "Failed to place order",
 		"successful_password_change": "Password changed successfully"
+	},
+	"admin": {
+		"session_expiry_alert": {
+			"title": "Session expiring soon",
+			"description_desktop": "Your session will expire in {remaining}. Move your mouse or press any key to stay signed in.",
+			"description_mobile": "Your session will expire in {remaining}. Tap the screen to stay signed in."
+		}
 	},
 	"cart": {
 		"empty": "The cart is empty",

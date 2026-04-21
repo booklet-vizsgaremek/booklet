@@ -9,6 +9,9 @@
 		"sign_in": "Bejelentkezés",
 		"sign_up": "Regisztráció",
 		"sign_out": "Kijelentkezés",
+		"sign_out_dialog": {
+			"description": "Biztosan ki szeretne jelentkezni?"
+		},
 		"email": "Email cím",
 		"full_name": "Teljes név",
 		"first_name": "Keresztnév",
@@ -113,6 +116,7 @@
 		"remove": "Eltávolítás"
 	},
 	"messages": {
+		"forbidden": "Hozzáférés megtagadva. Nem rendelkezik a művelethez szükséges jogosultságokkal.",
 		"invalid_credentials": "Helytelen email cím vagy jelszó",
 		"invalid_current_password": "Helytelen jelenlegi jelszó",
 		"successful_signin": "Sikeres bejelentkezés",
@@ -126,6 +130,13 @@
 		"terms_not_accepted": "Kérjük, fogadja el a rendelés feltételeit",
 		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor",
 		"successful_password_change": "Sikeres jelszóváltoztatás"
+	},
+	"admin": {
+		"session_expiry_alert": {
+			"title": "A munkamenet hamarosan lejár",
+			"description_desktop": "A munkamenet ennyi idő múlva lejár: {remaining}. Mozgassa meg az egeret vagy nyomjon meg egy billentyűt a bejelentkezve maradáshoz.",
+			"description_mobile": "A munkamenet ennyi idő múlva lejár: {remaining}. Érintse meg a képernyőt a bejelentkezve maradáshoz."
+		}
 	},
 	"cart": {
 		"empty": "A kosár üres",
