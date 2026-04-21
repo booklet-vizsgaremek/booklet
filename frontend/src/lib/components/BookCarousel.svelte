@@ -32,7 +32,7 @@
 >
 	<Carousel.Content class="-ms-1 items-stretch">
 		{#each books as book, i}
-			<Carousel.Item class="h-full p-1 md:basis-1/3 lg:basis-1/5">
+			<Carousel.Item class="h-full p-1 md:basis-1/3 lg:basis-1/4">
 				{#if topList}
 					<h1 class="ml-4 text-xl">#{i + 1}</h1>
 				{/if}
