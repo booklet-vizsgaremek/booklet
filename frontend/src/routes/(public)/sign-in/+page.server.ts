@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types.js';
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, message } from 'sveltekit-superforms';
 import { signInSchema } from '$lib/schemas/signIn';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { API_URL } from '$env/static/private';
 import * as m from '$lib/paraglide/messages.js';
 import { dev } from '$app/environment';
@@ -18,12 +18,13 @@ export const load: PageServerLoad = async () => {
 export const actions = {
 	default: async (event) => {
 		const form = await superValidate(event, zod4(signInSchema));
-		if (!form.valid) return fail(400, { form, error: m['messages.invalid_credentials']() });
+		if (!form.valid) return message(form, m['messages.invalid_credentials'](), { status: 400 });
 
 		const response = await event.fetch(`${API_URL}/auth/login`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest'
 			},
 			body: JSON.stringify(form.data)
 		});
@@ -32,16 +33,10 @@ export const actions = {
 			switch (response.status) {
 				case 401:
 				case 422:
-					return fail(response.status, {
-						form,
-						error: m['messages.invalid_credentials']()
-					});
+					return message(form, m['messages.invalid_credentials'](), { status: response.status });
 					break;
 				default:
-					return fail(response.status, {
-						form,
-						error: m['messages.server_error']()
-					});
+					return message(form, m['messages.server_error'](), { status: 500 });
 					break;
 			}
 		}
@@ -56,6 +51,21 @@ export const actions = {
 			secure: !dev
 		});
 
-		return redirect(302, validateRedirect(event.url.searchParams.get('redirect')));
+		const { data } = await event
+			.fetch(`${API_URL}/users/self`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((x) => x.json());
+
+		return redirect(
+			302,
+			validateRedirect(
+				event.url.searchParams.get('redirect'),
+				data.role === 'customer' ? '/' : `/${data.role}`
+			)
+		);
 	}
 };

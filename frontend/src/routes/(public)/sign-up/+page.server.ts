@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types.js';
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, message } from 'sveltekit-superforms';
 import { signUpSchema } from '$lib/schemas/signUp';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { API_URL } from '$env/static/private';
 import * as m from '$lib/paraglide/messages.js';
 import { dev } from '$app/environment';
@@ -18,7 +18,7 @@ export const actions = {
 	default: async (event) => {
 		const form = await superValidate(event, zod4(signUpSchema));
 
-		if (!form.valid) return fail(400, { form });
+		if (!form.valid) return message(form, m['messages.invalid_credentials'](), { status: 400 });
 
 		const response = await event.fetch(`${API_URL}/auth/register`, {
 			method: 'POST',
@@ -31,15 +31,9 @@ export const actions = {
 
 		if (!response.ok) {
 			if (response.status == 422) {
-				return fail(response.status, {
-					form,
-					error: m['messages.email_taken']()
-				});
+				return message(form, m['messages.email_taken'](), { status: response.status });
 			} else {
-				return fail(response.status, {
-					form,
-					error: m['messages.server_error']()
-				});
+				return message(form, m['messages.server_error'](), { status: 500 });
 			}
 		}
 

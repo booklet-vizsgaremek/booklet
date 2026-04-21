@@ -25,11 +25,13 @@
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data.form, {
 		validators: zod4Client(signInSchema),
-		onUpdate: ({ result }) => {
-			if (result.status === 200) {
-				toast.success(m['messages.successful_signin']);
-			} else {
-				toast.error(result.data.error);
+		onUpdate: ({ form }) => {
+			if (form.message) {
+				if (form.valid) {
+					toast.success(form.message);
+				} else {
+					toast.error(form.message);
+				}
 			}
 		}
 	});
