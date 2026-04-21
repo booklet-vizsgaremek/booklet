@@ -3,7 +3,7 @@
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { enhance } from '$app/forms';
 	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
-	import Button, { buttonVariants } from '$lib/components/ui/button/button.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	let open = $state(false);
 	let signingOut = $state(false);
