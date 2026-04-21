@@ -11,6 +11,7 @@
 	let open = $derived(timeLeft <= WARN_MS);
 	let interval: ReturnType<typeof setInterval>;
 	let timeout: ReturnType<typeof setTimeout>;
+	let deadline = Date.now() + TIMEOUT_MS;
 
 	const minutes = $derived(Math.floor(timeLeft / 60000));
 	const seconds = $derived(Math.floor((timeLeft % 60000) / 1000));
@@ -22,17 +23,20 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: ''
+		}).then(() => {
+			goto('/sign-in');
 		});
 	};
 
 	const startTimers = () => {
 		clearInterval(interval);
 		clearTimeout(timeout);
-		timeLeft = TIMEOUT_MS;
+
+		deadline = Date.now() + TIMEOUT_MS;
 
 		interval = setInterval(() => {
-			timeLeft -= 1000;
-		}, 1000);
+			timeLeft = Math.max(0, deadline - Date.now());
+		}, 250);
 
 		timeout = setTimeout(signout, TIMEOUT_MS);
 	};
