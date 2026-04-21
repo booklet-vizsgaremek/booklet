@@ -2,8 +2,11 @@ import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { API_URL } from '$env/static/private';
-import { redirect } from '@sveltejs/kit';
+import { redirect, error } from '@sveltejs/kit';
 import { dev } from '$app/environment';
+import type { User } from '$lib/types';
+
+const ROLE_GROUPS: Exclude<User['role'], null>[] = ['admin', 'staff', 'manager', 'customer'];
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -36,13 +39,31 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	if (event.route.id?.includes('(protected)') && !event.locals.user) {
-		redirect(302, `/sign-in?redirect=${event.url.pathname}`);
-	} else if (
+	const routeId = event.route.id ?? '';
+	const user = event.locals.user;
+
+	const matchedGroup = ROLE_GROUPS.find((role) => routeId.includes(`(${role})`));
+
+	if (matchedGroup) {
+		if (!user) {
+			redirect(302, `/sign-in?redirect=${event.url.pathname}`);
+		} else if (user.role !== matchedGroup) {
+			error(403);
+		}
+	}
+
+	if (
 		(event.url.pathname.startsWith('/sign-in') || event.url.pathname.startsWith('/sign-up')) &&
-		event.locals.user
+		user
 	) {
-		redirect(302, `/profile`);
+		const defaultRoutes: Record<Exclude<User['role'], null>, string> = {
+			admin: '/admin',
+			manager: '/manager',
+			staff: '/staff',
+			customer: '/profile'
+		};
+
+		redirect(302, defaultRoutes[user.role as Exclude<User['role'], null>]);
 	}
 
 	return resolve(event);
