@@ -10,9 +10,26 @@
 >
 	<h1 class="text-8xl">{page.status}</h1>
 	<h3 class="text-center text-2xl">
-		{page.status === 404 ? m['messages.page_not_found']() : m['messages.server_error']()}
+		{(() => {
+			switch (page.status) {
+				case 404:
+					return m['messages.page_not_found']();
+					break;
+				case 403:
+					return m['messages.forbidden']();
+					break;
+				default:
+					return m['messages.server_error']();
+					break;
+			}
+		})()}
 	</h3>
-	<Button class="mt-4 cursor-pointer" onclick={() => goto('/')}>
-		{m['navigation.back_to_home']()}
+	<Button
+		class="mt-4 cursor-pointer"
+		onclick={() => {
+			goto(!page.data.user || page.data.user.role === 'customer' ? '/' : `/${page.data.user.role}`);
+		}}
+	>
+		{page.status === 403 ? m['navigation.back']() : m['navigation.back_to_home']()}
 	</Button>
 </div>
