@@ -1,4 +1,3 @@
-import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { dev } from '$app/environment';
 import { superValidate } from 'sveltekit-superforms';
@@ -8,24 +7,14 @@ import { fail } from '@sveltejs/kit';
 import { API_URL } from '$env/static/private';
 import * as m from '$lib/paraglide/messages.js';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async () => {
 	return {
 		title: m['title.account_settings'](),
-		user: locals.user,
 		form: await superValidate(zod4(passwordChangeSchema))
 	};
 };
 
 export const actions: Actions = {
-	signout: async ({ cookies }) => {
-		cookies.delete('auth_token', {
-			path: '/',
-			httpOnly: true,
-			sameSite: 'lax',
-			secure: !dev
-		});
-		redirect(302, '/sign-in');
-	},
 	passwordChange: async (event) => {
 		const form = await superValidate(event, zod4(passwordChangeSchema));
 		if (!form.valid) return fail(400, { form, error: m['messages.invalid_current_password']() });
