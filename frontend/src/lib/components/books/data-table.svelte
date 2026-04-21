@@ -24,6 +24,7 @@
 	import type { Book, Author, Genre, Publisher } from '$lib/types';
 	import BookItem from '../BookItem.svelte';
 	import { Input, Separator } from '$lib/components/ui';
+	import { columns } from './columns.ts';
 
 	type DataTableProps = {
 		columns: ColumnDef<Book>[];
@@ -36,7 +37,7 @@
 		};
 	};
 
-	let { data, columns }: DataTableProps = $props();
+	let { data }: DataTableProps = $props();
 
 	const FILTER_KEYS = [
 		'search',
@@ -337,7 +338,7 @@
 			{/each}
 		{/if}
 	</div>
-	<div class="hidden rounded-md border md:block">
+	<div class="hidden md:block">
 		<Table.Root>
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
