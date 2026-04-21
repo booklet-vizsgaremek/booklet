@@ -31,7 +31,8 @@
 		"book_lookup": "Könyvböngésző",
 		"orders": "Rendelések",
 		"order": "Rendelés #{id}",
-		"wishlist": "Kívánságlista"
+		"wishlist": "Kívánságlista",
+		"users": "Felhasználók"
 	},
 	"orders": {
 		"empty": "Még nincsen leadott rendelés",
@@ -136,6 +137,35 @@
 			"title": "A munkamenet hamarosan lejár",
 			"description_desktop": "A munkamenet ennyi idő múlva lejár: {remaining}. Mozgassa meg az egeret vagy nyomjon meg egy billentyűt a bejelentkezve maradáshoz.",
 			"description_mobile": "A munkamenet ennyi idő múlva lejár: {remaining}. Érintse meg a képernyőt a bejelentkezve maradáshoz."
+		},
+		"user_table": {
+			"no_results": "Nem található felhasználó.",
+			"columns": "Oszlopok",
+			"name": "Név",
+			"email": "E-mail",
+			"role": "Szerepkör",
+			"orders": "Rendelések",
+			"orders_count": "{count} rendelés",
+			"admin": "Adminisztrátor",
+			"manager": "Menedzser",
+			"staff": "Alkalmazott",
+			"customer": "Vásárló",
+			"all_roles": "Minden szerepkör",
+			"filter_by_name": "Szűrés név vagy e-mail alapján",
+			"filter_by_role": "Szűrés szerepkör alapján",
+			"apply_filters": "Szűrők alkalmazása",
+			"clear_filters": "Szűrők törlése",
+			"actions": {
+				"change_role": "Szerepkör módosítása",
+				"delete": "Felhasználó törlése",
+				"change_role_description": "{name} új szerepkörének kiválasztása",
+				"delete_description": "Biztosan törölni szeretné {name} felhasználót? Ez a művelet nem vonható vissza.",
+				"confirm": "Megerősítés",
+				"cancel": "Mégse",
+				"new_role": "Új szerepkör",
+				"role_change_success": "Szerepkör sikeresen megváltoztatva",
+				"delete_user_success": "Felhasználó sikeresen törölve"
+			}
 		}
 	},
 	"cart": {
@@ -182,5 +212,9 @@
 	"show_more": "Mutass többet",
 	"loading": "Betöltés...",
 	"no_results": "Nincs találat",
-	"book_count": "{count} könyv"
+	"book_count": "{count} könyv",
+	"pagination": {
+		"next": "Következő",
+		"previous": "Előző"
+	}
 }

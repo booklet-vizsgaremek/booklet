@@ -31,7 +31,8 @@
 		"book_lookup": "Book lookup",
 		"orders": "Orders",
 		"order": "Order #{id}",
-		"wishlist": "Wishlist"
+		"wishlist": "Wishlist",
+		"users": "Users"
 	},
 	"orders": {
 		"empty": "There aren't any orders placed yet",
@@ -136,6 +137,44 @@
 			"title": "Session expiring soon",
 			"description_desktop": "Your session will expire in {remaining}. Move your mouse or press any key to stay signed in.",
 			"description_mobile": "Your session will expire in {remaining}. Tap the screen to stay signed in."
+		},
+		"user_table": {
+			"filter_by_name": "Filter by name or email",
+			"filter_by_role": "Filter by role",
+			"no_results": "No users found.",
+			"columns": "Columns",
+			"name": "Name",
+			"email": "Email",
+			"role": "Role",
+			"orders": "Orders",
+			"orders_count": [
+				{
+					"declarations": ["input count", "local countPlural = count: plural"],
+					"selectors": ["countPlural"],
+					"match": {
+						"countPlural=one": "1 order",
+						"countPlural=other": "{count} orders"
+					}
+				}
+			],
+			"admin": "Admin",
+			"manager": "Manager",
+			"staff": "Staff",
+			"customer": "Customer",
+			"all_roles": "All roles",
+			"apply_filters": "Apply filters",
+			"clear_filters": "Clear filters",
+			"actions": {
+				"change_role": "Change role",
+				"delete": "Delete user",
+				"change_role_description": "Select a new role for {name}",
+				"delete_description": "Are you sure you want to delete {name}? This action cannot be undone.",
+				"confirm": "Confirm",
+				"cancel": "Cancel",
+				"new_role": "New role",
+				"role_change_success": "Successfully changed role",
+				"delete_user_success": "Successfully deleted user"
+			}
 		}
 	},
 	"cart": {
@@ -191,5 +230,9 @@
 				"countPlural=other": "{count} books"
 			}
 		}
-	]
+	],
+	"pagination": {
+		"next": "Next",
+		"previous": "Previous"
+	}
 }
