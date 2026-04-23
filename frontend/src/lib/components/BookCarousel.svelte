@@ -4,7 +4,7 @@
 	import Button from './ui/button/button.svelte';
 	import * as m from '$lib/paraglide/messages.js';
 
-	const { books, discounts = [], topList = false } = $props();
+	const { books = [], discounts = [], topList = false } = $props();
 	let showAll = $state(false);
 </script>
 
