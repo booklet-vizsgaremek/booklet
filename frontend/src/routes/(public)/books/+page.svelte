@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DataTable from '$lib/components/books/data-table.svelte';
 	import type { Book, Author, Genre, Publisher } from '$lib/types';
-	import { columns } from '$lib/components/books/columns';
 
 	let {
 		data
@@ -16,4 +15,4 @@
 	} = $props();
 </script>
 
-<DataTable {data} {columns} />
+<DataTable {data} />

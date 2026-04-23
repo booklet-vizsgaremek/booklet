@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -20,14 +21,20 @@
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
+	import * as Command from '$lib/components/ui/command/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as m from '$lib/paraglide/messages.js';
 	import type { Book, Author, Genre, Publisher } from '$lib/types';
 	import BookItem from '../BookItem.svelte';
 	import { Input, Separator } from '$lib/components/ui';
-	import { columns } from './columns.ts';
+	import { getColumns } from './columns.ts';
+	import { onMount } from 'svelte';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import { getLocale } from '$lib/paraglide/runtime.js';
+	import { Search } from '@lucide/svelte';
 
 	type DataTableProps = {
-		columns: ColumnDef<Book>[];
 		data: {
 			books: Book[];
 			authors: Author[];
@@ -38,6 +45,28 @@
 	};
 
 	let { data }: DataTableProps = $props();
+
+	let openAuthor = $state(false);
+	let openGenre = $state(false);
+	let openPublisher = $state(false);
+	let searchAuthor = $state('');
+	let searchGenre = $state('');
+	let searchPublisher = $state('');
+	let isDesktop = $state(false);
+
+	function checkScreenSize() {
+		if (browser) {
+			isDesktop = window.innerWidth >= 768;
+		}
+	}
+
+	onMount(() => {
+		if (browser) {
+			checkScreenSize();
+			window.addEventListener('resize', checkScreenSize);
+			return () => window.removeEventListener('resize', checkScreenSize);
+		}
+	});
 
 	const FILTER_KEYS = [
 		'search',
@@ -108,7 +137,7 @@
 			return data.books;
 		},
 		// svelte-ignore state_referenced_locally
-		columns,
+		columns: getColumns(page.data.user),
 		state: {
 			get pagination() {
 				return pagination;
@@ -150,16 +179,16 @@
 <div class="mx-auto w-full px-4 pt-16 md:w-4/5 md:px-0">
 	<h1 class="mb-6 text-3xl">{m['title.book_lookup']()}</h1>
 	<div class="mb-6">
-		<div class="mb-2 flex flex-col gap-1">
-			<span class="text-xs text-muted-foreground">{m['book_lookup.filter_by_title']()}</span>
+		<div class="relative flex-1 md:w-1/2">
+			<Search class="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
 			<Input
-				placeholder={`${m['book_lookup.title']()}...`}
+				placeholder={`${m['book_lookup.filter_by_title']()}...`}
 				bind:value={filters.search}
 				onkeydown={(e) => e.key === 'Enter' && applyFilters()}
-				class="md:w-1/2"
+				class="mb-4 pl-9"
 			/>
 		</div>
-		<Accordion.Root>
+		<Accordion.Root type="multiple">
 			<Accordion.Item>
 				<Accordion.Trigger>{m['book_lookup.metadata']()}</Accordion.Trigger>
 				<Accordion.Content class="flex flex-col gap-3 pt-2 md:flex-row">
@@ -167,60 +196,301 @@
 						<span class="text-xs text-muted-foreground">
 							{m['book_lookup.author']()}
 						</span>
-						<Select.Root type="single" bind:value={filters.author}>
-							{@const a = data.authors.find((x) => x.id === filters.author)}
-							<Select.Trigger class="w-full md:w-auto">
-								{a?.name ?? m['book_lookup.all_authors']()}
-							</Select.Trigger>
-							<Select.Content>
-								<Select.Item value="">
-									{m['book_lookup.all_authors']()}
-								</Select.Item>
-								{#each data.authors as a}
-									<Select.Item value={a.id}>
-										{a.name}
-									</Select.Item>
-								{/each}
-							</Select.Content>
-						</Select.Root>
+						{#if isDesktop}
+							<Popover.Root bind:open={openAuthor}>
+								<Popover.Trigger>
+									<Button variant="outline" class="w-full justify-start md:w-auto">
+										{data.authors.find((x) => x.id === filters.author)?.name ??
+											m['book_lookup.all_authors']()}
+										<ChevronDown />
+									</Button>
+								</Popover.Trigger>
+								<Popover.Content class="w-50 p-0" align="start">
+									<Command.Root>
+										<Command.Input
+											bind:value={searchAuthor}
+											placeholder={m['book_lookup.author']()}
+										/>
+										<Command.List>
+											<Command.Empty>{m['no_results']()}</Command.Empty>
+											<Command.Group>
+												<Command.Item
+													value=""
+													onSelect={() => {
+														filters.author = '';
+														searchAuthor = '';
+														openAuthor = false;
+													}}
+												>
+													{m['book_lookup.all_authors']()}
+												</Command.Item>
+												{#each data.authors as author (author.id)}
+													<Command.Item
+														value={author.id}
+														keywords={[author.name]}
+														onSelect={() => {
+															filters.author = author.id;
+															searchAuthor = '';
+															openAuthor = false;
+														}}
+													>
+														{author.name}
+													</Command.Item>
+												{/each}
+											</Command.Group>
+										</Command.List>
+									</Command.Root>
+								</Popover.Content>
+							</Popover.Root>
+						{:else}
+							<Drawer.Root bind:open={openAuthor}>
+								<Drawer.Trigger>
+									<Button variant="outline" class="w-full justify-start">
+										{data.authors.find((x) => x.id === filters.author)?.name ??
+											m['book_lookup.all_authors']()}
+										<ChevronDown />
+									</Button>
+								</Drawer.Trigger>
+								<Drawer.Content>
+									<div class="mt-4 border-t">
+										<Command.Root>
+											<Command.Input
+												bind:value={searchAuthor}
+												placeholder={m['book_lookup.author']()}
+											/>
+											<Command.List>
+												<Command.Empty>{m['no_results']()}</Command.Empty>
+												<Command.Group>
+													<Command.Item
+														value=""
+														onSelect={() => {
+															filters.author = '';
+															searchAuthor = '';
+															openAuthor = false;
+														}}
+													>
+														{m['book_lookup.all_authors']()}
+													</Command.Item>
+													{#each data.authors as author (author.id)}
+														<Command.Item
+															value={author.id}
+															keywords={[author.name]}
+															onSelect={() => {
+																filters.author = author.id;
+																searchAuthor = '';
+																openAuthor = false;
+															}}
+														>
+															{author.name}
+														</Command.Item>
+													{/each}
+												</Command.Group>
+											</Command.List>
+										</Command.Root>
+									</div>
+								</Drawer.Content>
+							</Drawer.Root>
+						{/if}
 					</div>
 					<div class="flex flex-col gap-2">
 						<span class="text-xs text-muted-foreground">
 							{m['book_lookup.genre']()}
 						</span>
-						<Select.Root type="single" bind:value={filters.genre}>
-							<Select.Trigger class="w-full md:w-auto">
-								{data.genres.find((x) => x.id === filters.genre)?.name ??
-									m['book_lookup.all_genres']()}
-							</Select.Trigger>
-							<Select.Content>
-								<Select.Item value="">
-									{m['book_lookup.all_genres']()}
-								</Select.Item>
-								{#each data.genres as g}
-									<Select.Item value={g.id}>{g.name}</Select.Item>
-								{/each}
-							</Select.Content>
-						</Select.Root>
+						{#if isDesktop}
+							<Popover.Root bind:open={openGenre}>
+								<Popover.Trigger>
+									<Button variant="outline" class="w-full justify-start md:w-auto">
+										{data.genres.find((x) => x.id === filters.genre)?.[`name_${getLocale()}`] ??
+											m['book_lookup.all_genres']()}
+										<ChevronDown />
+									</Button>
+								</Popover.Trigger>
+								<Popover.Content class="w-50 p-0" align="start">
+									<Command.Root>
+										<Command.Input
+											bind:value={searchGenre}
+											placeholder={m['book_lookup.genre']()}
+										/>
+										<Command.List>
+											<Command.Empty>{m['no_results']()}</Command.Empty>
+											<Command.Group>
+												<Command.Item
+													value=""
+													onSelect={() => {
+														filters.genre = '';
+														searchGenre = '';
+														openGenre = false;
+													}}
+												>
+													{m['book_lookup.all_genres']()}
+												</Command.Item>
+												{#each data.genres as genre (genre.id)}
+													<Command.Item
+														value={genre.id}
+														keywords={[genre[`name_${getLocale()}`]]}
+														onSelect={() => {
+															filters.genre = genre.id;
+															searchGenre = '';
+															openGenre = false;
+														}}
+													>
+														{genre[`name_${getLocale()}`]}
+													</Command.Item>
+												{/each}
+											</Command.Group>
+										</Command.List>
+									</Command.Root>
+								</Popover.Content>
+							</Popover.Root>
+						{:else}
+							<Drawer.Root bind:open={openGenre}>
+								<Drawer.Trigger>
+									<Button variant="outline" class="w-full justify-start">
+										{data.genres.find((x) => x.id === filters.genre)?.[`name_${getLocale()}`] ??
+											m['book_lookup.all_genres']()}
+										<ChevronDown />
+									</Button>
+								</Drawer.Trigger>
+								<Drawer.Content>
+									<div class="mt-4 border-t">
+										<Command.Root>
+											<Command.Input
+												bind:value={searchGenre}
+												placeholder={m['book_lookup.genre']()}
+											/>
+											<Command.List>
+												<Command.Empty>{m['no_results']()}</Command.Empty>
+												<Command.Group>
+													<Command.Item
+														value=""
+														onSelect={() => {
+															filters.genre = '';
+															searchGenre = '';
+															openGenre = false;
+														}}
+													>
+														{m['book_lookup.all_genres']()}
+													</Command.Item>
+													{#each data.genres as genre (genre.id)}
+														<Command.Item
+															value={genre.id}
+															keywords={[genre[`name_${getLocale()}`]]}
+															onSelect={() => {
+																filters.genre = genre.id;
+																searchGenre = '';
+																openGenre = false;
+															}}
+														>
+															{genre[`name_${getLocale()}`]}
+														</Command.Item>
+													{/each}
+												</Command.Group>
+											</Command.List>
+										</Command.Root>
+									</div>
+								</Drawer.Content>
+							</Drawer.Root>
+						{/if}
 					</div>
 					<div class="flex flex-col gap-2">
 						<span class="text-xs text-muted-foreground">
 							{m['book_lookup.publisher']()}
 						</span>
-						<Select.Root type="single" bind:value={filters.publisher}>
-							<Select.Trigger class="w-full md:w-auto">
-								{data.publishers.find((x) => x.id === filters.publisher)?.name ??
-									m['book_lookup.all_publishers']()}
-							</Select.Trigger>
-							<Select.Content>
-								<Select.Item value="">
-									{m['book_lookup.all_publishers']()}
-								</Select.Item>
-								{#each data.publishers as p}
-									<Select.Item value={p.id}>{p.name}</Select.Item>
-								{/each}
-							</Select.Content>
-						</Select.Root>
+						{#if isDesktop}
+							<Popover.Root bind:open={openPublisher}>
+								<Popover.Trigger>
+									<Button variant="outline" class="w-full justify-start md:w-auto">
+										{data.publishers.find((x) => x.id === filters.publisher)?.name ??
+											m['book_lookup.all_publishers']()}
+										<ChevronDown />
+									</Button>
+								</Popover.Trigger>
+								<Popover.Content class="w-50 p-0" align="start">
+									<Command.Root>
+										<Command.Input
+											bind:value={searchPublisher}
+											placeholder={m['book_lookup.publisher']()}
+										/>
+										<Command.List>
+											<Command.Empty>{m['no_results']()}</Command.Empty>
+											<Command.Group>
+												<Command.Item
+													value=""
+													onSelect={() => {
+														filters.publisher = '';
+														searchPublisher = '';
+														openPublisher = false;
+													}}
+												>
+													{m['book_lookup.all_publishers']()}
+												</Command.Item>
+												{#each data.publishers as publisher (publisher.id)}
+													<Command.Item
+														value={publisher.id}
+														keywords={[publisher.name]}
+														onSelect={() => {
+															filters.publisher = publisher.id;
+															searchPublisher = '';
+															openPublisher = false;
+														}}
+													>
+														{publisher.name}
+													</Command.Item>
+												{/each}
+											</Command.Group>
+										</Command.List>
+									</Command.Root>
+								</Popover.Content>
+							</Popover.Root>
+						{:else}
+							<Drawer.Root bind:open={openPublisher}>
+								<Drawer.Trigger>
+									<Button variant="outline" class="w-full justify-start">
+										{data.publishers.find((x) => x.id === filters.publisher)?.name ??
+											m['book_lookup.all_publishers']()}
+										<ChevronDown />
+									</Button>
+								</Drawer.Trigger>
+								<Drawer.Content>
+									<div class="mt-4 border-t">
+										<Command.Root>
+											<Command.Input
+												bind:value={searchPublisher}
+												placeholder={m['book_lookup.publisher']()}
+											/>
+											<Command.List>
+												<Command.Empty>{m['no_results']()}</Command.Empty>
+												<Command.Group>
+													<Command.Item
+														value=""
+														onSelect={() => {
+															filters.publisher = '';
+															searchPublisher = '';
+															openPublisher = false;
+														}}
+													>
+														{m['book_lookup.all_publishers']()}
+													</Command.Item>
+													{#each data.publishers as publisher (publisher.id)}
+														<Command.Item
+															value={publisher.id}
+															keywords={[publisher.name]}
+															onSelect={() => {
+																filters.publisher = publisher.id;
+																searchPublisher = '';
+																openPublisher = false;
+															}}
+														>
+															{publisher.name}
+														</Command.Item>
+													{/each}
+												</Command.Group>
+											</Command.List>
+										</Command.Root>
+									</div>
+								</Drawer.Content>
+							</Drawer.Root>
+						{/if}
 					</div>
 				</Accordion.Content>
 			</Accordion.Item>
@@ -342,7 +612,7 @@
 		<Table.Root>
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-					<Table.Row class="sticky top-0">
+					<Table.Row>
 						{#each headerGroup.headers as header (header.id)}
 							<Table.Head>
 								{#if !header.isPlaceholder}
@@ -373,7 +643,7 @@
 					</Table.Row>
 				{:else}
 					<Table.Row>
-						<Table.Cell colspan={columns.length} class="h-24 text-center">
+						<Table.Cell colspan={getColumns(page.data.user).length} class="h-24 text-center">
 							{m['no_results']()}.
 						</Table.Cell>
 					</Table.Row>
@@ -393,13 +663,7 @@
 				goto(`?${params}`, { keepFocus: true });
 			}}
 		>
-			{#snippet children({
-				pages,
-				currentPage
-			}: {
-				pages: Array<{ key: string | number; type: 'page' | 'ellipsis'; value?: number }>;
-				currentPage: number;
-			})}
+			{#snippet children({ pages, currentPage })}
 				<Pagination.Content>
 					<Pagination.Item><Pagination.PrevButton /></Pagination.Item>
 					{#each pages as page (page.key)}
