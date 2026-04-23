@@ -9,11 +9,22 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
-	let { authors, classes = 'text-sm' }: { authors: Author[]; classes?: string } = $props();
+	let {
+		authors,
+		classes = 'text-sm',
+		truncate = false
+	}: { authors: Author[]; classes?: string; truncate?: boolean } = $props();
+
 	const authorList = $derived(
-		new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
-			authors.map((x) => x.name)
-		)
+		(() => {
+			if (truncate && authors.length > 1) {
+				return `${authors[0].name} +${authors.length - 1}`;
+			} else {
+				return new Intl.ListFormat(getLocale(), { style: 'long', type: 'conjunction' }).format(
+					authors.map((x) => x.name)
+				);
+			}
+		})()
 	);
 
 	let openPopover = $state(false);
