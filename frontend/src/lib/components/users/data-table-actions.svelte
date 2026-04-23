@@ -58,7 +58,7 @@
 					variant="ghost"
 					size="icon"
 					class="size-8 cursor-pointer text-muted-foreground hover:text-foreground"
-					aria-label={m['admin.user_table.actions.change_role']()}
+					aria-label={m['admin.user_table.action.change_role']()}
 				>
 					<PencilIcon class="size-4" />
 				</Button>
@@ -66,14 +66,13 @@
 		</AlertDialog.Trigger>
 		<AlertDialog.Content>
 			<AlertDialog.Header>
-				<AlertDialog.Title>{m['admin.user_table.actions.change_role']()}</AlertDialog.Title>
+				<AlertDialog.Title>{m['admin.user_table.action.change_role']()}</AlertDialog.Title>
 				<AlertDialog.Description>
-					{m['admin.user_table.actions.change_role_description']({ name: fullName })}
+					{m['admin.user_table.action.change_role_description']({ name: fullName })}
 				</AlertDialog.Description>
 			</AlertDialog.Header>
 			<div class="flex flex-col gap-2 py-2">
-				<span class="text-xs text-muted-foreground">{m['admin.user_table.actions.new_role']()}</span
-				>
+				<span class="text-xs text-muted-foreground">{m['admin.user_table.action.new_role']()}</span>
 				<Select.Root type="single" bind:value={selectedRole}>
 					<Select.Trigger class="w-full">
 						{roleLabel(selectedRole)}
@@ -97,7 +96,7 @@
 			<AlertDialog.Footer>
 				{#if !roleLoading}
 					<AlertDialog.Cancel class="cursor-pointer"
-						>{m['admin.user_table.actions.cancel']()}</AlertDialog.Cancel
+						>{m['admin.user_table.action.cancel']()}</AlertDialog.Cancel
 					>
 				{/if}
 				<AlertDialog.Action
@@ -105,14 +104,14 @@
 					onclick={() => {
 						roleLoading = true;
 						onRoleChange?.(user.id, selectedRole);
-						toast.success(m['admin.user_table.actions.role_change_success']());
+						toast.success(m['admin.user_table.action.role_change_success']());
 					}}
 					disabled={roleLoading}
 				>
 					{#if roleLoading}
 						<Spinner />
 					{:else}
-						{m['admin.user_table.actions.confirm']()}
+						{m['admin.user_table.action.confirm']()}
 					{/if}
 				</AlertDialog.Action>
 			</AlertDialog.Footer>
@@ -126,7 +125,7 @@
 					variant="ghost"
 					size="icon"
 					class="size-8 cursor-pointer text-muted-foreground hover:text-destructive"
-					aria-label={m['admin.user_table.actions.delete']()}
+					aria-label={m['admin.user_table.action.delete']()}
 				>
 					<Trash2Icon class="size-4" />
 				</Button>
@@ -134,15 +133,15 @@
 		</AlertDialog.Trigger>
 		<AlertDialog.Content>
 			<AlertDialog.Header>
-				<AlertDialog.Title>{m['admin.user_table.actions.delete']()}</AlertDialog.Title>
+				<AlertDialog.Title>{m['admin.user_table.action.delete']()}</AlertDialog.Title>
 				<AlertDialog.Description>
-					{m['admin.user_table.actions.delete_description']({ name: fullName })}
+					{m['admin.user_table.action.delete_description']({ name: fullName })}
 				</AlertDialog.Description>
 			</AlertDialog.Header>
 			<AlertDialog.Footer>
 				{#if !deleteLoading}
 					<AlertDialog.Cancel class="cursor-pointer"
-						>{m['admin.user_table.actions.cancel']()}</AlertDialog.Cancel
+						>{m['admin.user_table.action.cancel']()}</AlertDialog.Cancel
 					>
 				{/if}
 				<AlertDialog.Action
@@ -150,14 +149,14 @@
 					onclick={() => {
 						deleteLoading = true;
 						onDelete?.(user.id);
-						toast.success(m['admin.user_table.actions.delete_user_success']());
+						toast.success(m['admin.user_table.action.delete_user_success']());
 					}}
 					disabled={deleteLoading}
 				>
 					{#if deleteLoading}
 						<Spinner />
 					{:else}
-						{m['admin.user_table.actions.confirm']()}
+						{m['admin.user_table.action.confirm']()}
 					{/if}
 				</AlertDialog.Action>
 			</AlertDialog.Footer>

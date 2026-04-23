@@ -23,6 +23,7 @@
 	import { columns } from './columns.js';
 	import type { User } from '$lib/types';
 	import UserItem from '../UserItem.svelte';
+	import { Search } from '@lucide/svelte';
 
 	type DataTableProps = {
 		data: {
@@ -120,13 +121,15 @@
 	<h1 class="mb-6 text-2xl">{m['title.users']()}</h1>
 	<div class="mb-6 flex flex-col gap-2">
 		<div class="mb-2 flex flex-col gap-1">
-			<span class="text-xs text-muted-foreground">{m['admin.user_table.filter_by_name']()}</span>
-			<Input
-				placeholder="{m['admin.user_table.filter_by_name']()}..."
-				bind:value={filters.search}
-				onkeydown={(e) => e.key === 'Enter' && applyFilters()}
-				class="md:w-1/2"
-			/>
+			<div class="relative flex-1 md:w-1/2">
+				<Search class="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+				<Input
+					placeholder="{m['admin.user_table.filter_by_name']()}..."
+					bind:value={filters.search}
+					onkeydown={(e) => e.key === 'Enter' && applyFilters()}
+					class="pl-9"
+				/>
+			</div>
 		</div>
 		<div class="flex flex-col gap-1">
 			<span class="text-xs text-muted-foreground">
@@ -134,7 +137,7 @@
 			</span>
 			<div class="flex gap-2 md:w-1/2">
 				<Select.Root type="single" bind:value={filters.role}>
-					<Select.Trigger class="w-full md:w-auto">
+					<Select.Trigger class="w-full cursor-pointer md:w-auto">
 						{#if filters.role === 'admin'}
 							{m['admin.user_table.admin']()}
 						{:else if filters.role === 'manager'}
@@ -148,11 +151,25 @@
 						{/if}
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="">{m['admin.user_table.all_roles']()}</Select.Item>
-						<Select.Item value="admin">{m['admin.user_table.admin']()}</Select.Item>
-						<Select.Item value="manager">{m['admin.user_table.manager']()}</Select.Item>
-						<Select.Item value="staff">{m['admin.user_table.staff']()}</Select.Item>
-						<Select.Item value="customer">{m['admin.user_table.customer']()}</Select.Item>
+						<Select.Item class="cursor-pointer" value="" disabled={filters.role === ''}
+							>{m['admin.user_table.all_roles']()}</Select.Item
+						>
+						<Select.Item class="cursor-pointer" value="admin" disabled={filters.role === 'admin'}
+							>{m['admin.user_table.admin']()}</Select.Item
+						>
+						<Select.Item
+							class="cursor-pointer"
+							value="manager"
+							disabled={filters.role === 'manager'}>{m['admin.user_table.manager']()}</Select.Item
+						>
+						<Select.Item class="cursor-pointer" value="staff" disabled={filters.role === 'staff'}
+							>{m['admin.user_table.staff']()}</Select.Item
+						>
+						<Select.Item
+							class="cursor-pointer"
+							value="customer"
+							disabled={filters.role === 'customer'}>{m['admin.user_table.customer']()}</Select.Item
+						>
 					</Select.Content>
 				</Select.Root>
 			</div>
@@ -160,8 +177,11 @@
 	</div>
 	<div class="mb-6 flex flex-row items-end justify-between">
 		<div class="flex w-full flex-col gap-2 md:w-auto md:flex-row">
-			<Button onclick={applyFilters}>{m['admin.user_table.apply_filters']()}</Button>
-			<Button variant="ghost" onclick={clearFilters}>{m['admin.user_table.clear_filters']()}</Button
+			<Button class="cursor-pointer" onclick={applyFilters}
+				>{m['admin.user_table.apply_filters']()}</Button
+			>
+			<Button class="cursor-pointer" variant="ghost" onclick={clearFilters}
+				>{m['admin.user_table.clear_filters']()}</Button
 			>
 		</div>
 		<DropdownMenu.Root>
@@ -197,7 +217,7 @@
 		<Table.Root>
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-					<Table.Row class="sticky top-0">
+					<Table.Row>
 						{#each headerGroup.headers as header (header.id)}
 							<Table.Head>
 								{#if !header.isPlaceholder}
