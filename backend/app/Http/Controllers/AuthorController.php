@@ -32,9 +32,18 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Author $author): JsonResource
+    public function show(Author $author, Request $request): JsonResource
     {
-        return new AuthorResource($author->load(['books.publisher', 'books.genre', 'books.authors']));
+        return new AuthorResource(
+            $author->load([
+                'books' => function ($query) use ($request) {
+                    $query->limit($request->integer('limit', 3));
+                },
+                'books.publisher',
+                'books.genre',
+                'books.authors',
+            ])
+        );
     }
 
     /**
