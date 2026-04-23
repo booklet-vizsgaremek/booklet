@@ -32,10 +32,11 @@
 		"orders": "Rendelések",
 		"order": "Rendelés #{id}",
 		"wishlist": "Kívánságlista",
-		"users": "Felhasználók"
+		"users": "Felhasználók",
+		"dashboard": "Vezérlőpult"
 	},
 	"orders": {
-		"empty": "Még nincsen leadott rendelés",
+		"empty": "Még nincsen rendelés ezzel a státusszal",
 		"current_status": "Jelenlegi állapot",
 		"order_items": "A rendelés tartalma",
 		"quantity": "Mennyiség: {quantity}",
@@ -44,7 +45,17 @@
 			"ready": "Átvehető",
 			"cancelled": "Lemondva",
 			"completed": "Átvéve"
-		}
+		},
+		"filter_all": "Összes rendelés mutatása",
+		"filter_active": "Csak aktívak mutatása",
+		"customer": "Vásárló",
+		"items": "Tételek",
+		"update_status": "Státusz módosítása",
+		"status_updated": "A rendelés státusza frissítve",
+		"search_placeholder": "Keresés név vagy e-mail alapján",
+		"deleted_user": "Törölt felhasználó",
+		"clear_filters": "Szűrők törlése",
+		"completed_at": "Lezárva: {date}"
 	},
 	"book_lookup": {
 		"filter_by_title": "Szűrés cím szerint",
@@ -57,6 +68,7 @@
 		"pages": "Oldalak száma",
 		"publisher": "Kiadó",
 		"genre": "Műfaj",
+		"stock": "Raktáron",
 		"columns": "Oszlopok",
 		"all_genres": "Összes műfaj",
 		"all_publishers": "Összes kiadó",
@@ -130,7 +142,8 @@
 		"successful_order": "Megrendelés sikeresen leadva",
 		"terms_not_accepted": "Kérjük, fogadja el a rendelés feltételeit",
 		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor",
-		"successful_password_change": "Sikeres jelszóváltoztatás"
+		"successful_password_change": "Sikeres jelszóváltoztatás",
+		"signin_for_action": "Kérjük, jelentkezzen be a művelet végrehajtásához"
 	},
 	"admin": {
 		"session_expiry_alert": {
@@ -145,6 +158,8 @@
 			"email": "E-mail",
 			"role": "Szerepkör",
 			"orders": "Rendelések",
+			"actions": "Műveletek",
+			"receipts": "Rendelések",
 			"orders_count": "{count} rendelés",
 			"admin": "Adminisztrátor",
 			"manager": "Menedzser",
@@ -155,7 +170,7 @@
 			"filter_by_role": "Szűrés szerepkör alapján",
 			"apply_filters": "Szűrők alkalmazása",
 			"clear_filters": "Szűrők törlése",
-			"actions": {
+			"action": {
 				"change_role": "Szerepkör módosítása",
 				"delete": "Felhasználó törlése",
 				"change_role_description": "{name} új szerepkörének kiválasztása",
@@ -203,16 +218,20 @@
 	"home": {
 		"top_10": "Top 10 legtöbbet megvásárolt könyv",
 		"random_category": "Könyvek, melyek érdekesek lehetnek önnek",
-		"discounted": "Jelenleg leárazott könyvek"
+		"discounted": "Jelenleg leárazott könyvek",
+		"no_data": "Nincs adat. Kérjük, az első futtatáskor használja az --init kapcsolót, vagy futtassa a seedereket."
 	},
 	"coming_soon": "Hamarosan...",
 	"out_of_stock": "Nincs raktáron",
+	"in_stock": "{count} raktáron",
 	"pages": "{pages} oldal",
 	"show_all": "Mutasd az összeset",
 	"show_more": "Mutass többet",
 	"loading": "Betöltés...",
 	"no_results": "Nincs találat",
 	"book_count": "{count} könyv",
+	"no_books": "Ez a szerző még nem írt könyvet",
+	"more_books_in_genre": "Még több könyv ebből a műfajból: {genre_hu}",
 	"pagination": {
 		"next": "Következő",
 		"previous": "Előző"
