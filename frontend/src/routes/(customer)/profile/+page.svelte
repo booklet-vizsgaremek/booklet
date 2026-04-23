@@ -32,7 +32,7 @@
 	<h1 class="text-3xl">{getGreeting(page.data.user?.first_name ?? null)}</h1>
 	<h2 class="text-2xl">{m['auth.account']()}</h2>
 	<h3 class="text-xl">{m['auth.general']()}</h3>
-	<div class="flex flex-col gap-4 md:flex-row">
+	<div class="flex flex-row gap-4">
 		<Button onclick={() => goto('/orders')} class="cursor-pointer">
 			{m['title.orders']()}
 		</Button>
