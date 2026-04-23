@@ -21,6 +21,29 @@ class ReceiptController extends Controller
     {
         $user = Auth::user();
         $query = Receipt::with(['user', 'books', 'coupons', 'pickup']);
+
+        $query->when(
+            $request->status,
+            fn($q, $s) => $q->whereHas('pickup', fn($p) => $p->where('status', $s))
+        );
+
+        $query->when(
+            $request->search,
+            function ($q, $s) use ($request) {
+                $locale = $request->header('X-Locale', 'en');
+                $concat = $locale === 'hu'
+                    ? "CONCAT(last_name, ' ', first_name)"
+                    : "CONCAT(first_name, ' ', last_name)";
+
+                $q->whereHas(
+                    'user',
+                    fn($u) =>
+                    $u->whereRaw("$concat LIKE ?", ["%$s%"])
+                    ->orWhere('email', 'like', "%$s%")
+                );
+            }
+        );
+
         if ($user->role === 'customer') $query->where('user_id', $user->id);
         return ReceiptResource::collection($query->latest('date')->paginate($request->integer('per_page', 10)));
     }
@@ -52,9 +75,7 @@ class ReceiptController extends Controller
 
         $receipt->books()->attach($books);
 
-        foreach ($request->books as $book) {
-            Book::where('id', $book['id'])->decrement('stock', $book['quantity']);
-        }
+        foreach ($request->books as $book) Book::where('id', $book['id'])->decrement('stock', $book['quantity']);
 
         if ($request->has('coupons')) $receipt->coupons()->attach($request->coupons);
         $receipt->pickup()->create(['status' => 'pending']);
