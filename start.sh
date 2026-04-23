@@ -1,5 +1,13 @@
 #!/bin/bash
 
+INIT=false
+
+for arg in "$@"; do
+  if [ "$arg" == "--init" ]; then
+    INIT=true
+  fi
+done
+
 if [ -f ".env" ] && [ -f "./frontend/.env" ] && [ -f "./backend/.env" ]; then
     echo "A .env fájlok már léteznek"
 else
@@ -23,6 +31,10 @@ docker compose up -d
 docker compose exec backend composer install
 
 docker compose exec backend php artisan migrate
+
+if [ "$INIT" = true ]; then
+    docker compose exec backend php artisan db:seed
+fi
 
 if [ -z "$(grep 'APP_KEY=base64' ./backend/.env)" ]; then
     docker compose exec backend php artisan key:generate
