@@ -36,7 +36,7 @@
 					signingOut = true;
 				}}
 			>
-				<Button class="cursor-pointer" type="submit" disabled={signingOut}>
+				<Button class="w-full cursor-pointer md:w-max" type="submit" disabled={signingOut}>
 					{#if signingOut}
 						<Spinner />
 					{:else}
