@@ -54,7 +54,13 @@
 				case 'admin':
 				case 'manager':
 				case 'staff':
-					return [];
+					return [
+						{
+							title: m['title.dashboard'](),
+							url: `/${user.role}`,
+							isSpecial: false
+						}
+					];
 					break;
 			}
 		} else {
@@ -129,19 +135,19 @@
 			{/each}
 
 			{#if page.data.user && page.data.user?.role !== 'customer'}
-				<SignOut class={linkClass(false)} />
+				<SignOut class="{linkClass(false)} text-start" />
 			{/if}
 
 			<LocaleSwitcher
-				classes="border-0 bg-transparent md:h-full md:px-8 p-4 md:py-0 hover:bg-background! cursor-pointer"
+				classes="border-0 bg-transparent! w-full md:w-max md:h-full! md:px-8 p-4 md:py-0 hover:bg-background! cursor-pointer"
 			/>
 
 			{#if !page.data.user || page.data.user?.role === 'customer'}
 				<a href="/checkout" class={`${linkClass(false)} flex flex-row justify-between gap-1`}>
 					<ShoppingCart />
-					{#if cart.itemCount > 0}
-						<Badge class="h-5 w-5 text-xs">{cart.itemCount > 99 ? '99+' : cart.itemCount}</Badge>
-					{/if}
+					<Badge class="h-5 w-5 text-xs {cart.itemCount > 0 ? '' : 'md:hidden'}"
+						>{cart.itemCount > 99 ? '99+' : cart.itemCount}</Badge
+					>
 				</a>
 			{/if}
 		</nav>
