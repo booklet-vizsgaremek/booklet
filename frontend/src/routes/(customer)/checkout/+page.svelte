@@ -156,7 +156,7 @@
 								{m['checkout.delivery']()}
 							</Accordion.Trigger>
 							<Accordion.Content class="flex flex-col items-end gap-3">
-								<RadioGroup.Root bind:value={deliveryType}>
+								<RadioGroup.Root bind:value={deliveryType as string}>
 									<Label
 										class="pointer-events-none flex items-start gap-3 rounded-lg border p-3 opacity-50 hover:bg-accent/50 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950"
 									>
@@ -181,7 +181,6 @@
 										<RadioGroup.Item
 											id="pickup"
 											value="pickup"
-											checked
 											class="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
 										/>
 										<div class="grid font-normal">
@@ -209,7 +208,7 @@
 								{m['checkout.payment']()}
 							</Accordion.Trigger>
 							<Accordion.Content class="flex flex-col items-end gap-3">
-								<RadioGroup.Root bind:value={paymentType}>
+								<RadioGroup.Root bind:value={paymentType as string}>
 									<Label
 										class="pointer-events-none flex items-start gap-3 rounded-lg border p-3 opacity-50 hover:bg-accent/50 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950"
 									>
@@ -234,7 +233,6 @@
 										<RadioGroup.Item
 											id="at_location"
 											value="at_location"
-											checked
 											class="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
 										/>
 										<div class="grid font-normal">
