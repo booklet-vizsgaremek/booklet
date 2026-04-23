@@ -2,16 +2,17 @@
 	import * as Item from '$lib/components/ui/item/index.js';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { ChevronRight, ReceiptText } from '@lucide/svelte';
+	import { ChevronLeft, ChevronRight, ReceiptText } from '@lucide/svelte';
 	import * as m from '$lib/paraglide/messages.js';
 	import { goto } from '$app/navigation';
 	import OrderStatusBadge from '$lib/components/OrderStatusBadge.svelte';
 	import { Spinner } from '$lib/components/ui/index.js';
+	import { type Receipt } from '$lib/types';
 	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
 
-	let receipts = $state<{ id: string; pickup: { status: string } }[]>([]);
+	let receipts = $state<Receipt[]>([]);
 	let meta = $state<{ current_page: number; last_page: number }>({
 		current_page: 1,
 		last_page: 1
@@ -34,7 +35,6 @@
 
 			const result = await response.json();
 			receipts = [...receipts, ...result.data];
-			console.log(receipts);
 			meta = result.meta;
 		} catch (e) {
 			toast.error(m['messages.server_error']());
@@ -45,7 +45,10 @@
 </script>
 
 <div class="mx-auto w-full px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24">
-	<h1 class="mb-6 text-3xl">{m['title.orders']()}</h1>
+	<div class="mb-6 flex flex-row items-center gap-2">
+		<button class="cursor-pointer" onclick={() => history.back()}><ChevronLeft /></button>
+		<h1 class="text-3xl">{m['title.orders']()}</h1>
+	</div>
 	{#if !receipts.length}
 		<Empty.Root class="w-full border">
 			<Empty.Media variant="icon">
@@ -75,7 +78,12 @@
 						{@const status = receipt.pickup.status}
 						<a href={`/orders/${receipt.id}`} {...props}>
 							<Item.Content class="gap-1">
-								<Item.Title>{m['title.order']({ id: receipt.id })}</Item.Title>
+								<Item.Title>
+									{m['title.order']({ id: receipt.id })}
+									<span class="ml-1 text-sm font-normal text-muted-foreground">
+										{new Date(receipt.date).toLocaleDateString()}
+									</span>
+								</Item.Title>
 								<Item.Description>
 									<OrderStatusBadge {status} />
 								</Item.Description>
