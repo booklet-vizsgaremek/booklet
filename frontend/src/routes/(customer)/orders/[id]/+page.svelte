@@ -5,12 +5,14 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import { getDiscountedPrice, getCartTotal } from '$lib/stores/coupon.svelte';
 	import Price, { formatCurrency } from '$lib/components/Price.svelte';
+	import { ChevronLeft } from '@lucide/svelte';
 
 	let { data } = $props();
 </script>
 
 <div class="mx-auto w-full px-4 pt-16! pb-56 md:w-4/5 md:px-0">
 	<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:gap-2">
+		<button class="cursor-pointer" onclick={() => history.back()}><ChevronLeft /></button>
 		<h1 class="text-3xl">
 			{m['title.order']({ id: data.receipt.id })}
 		</h1>
