@@ -10,5 +10,10 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
 	const { data: book } = await response.json();
 
-	return { book, title: book.title };
+	return {
+		book,
+		booksFromGenre: (await fetch(`${API_URL}/books?genre=${book.genre.id}`).then((x) => x.json()))
+			.data,
+		title: book.title
+	};
 };
