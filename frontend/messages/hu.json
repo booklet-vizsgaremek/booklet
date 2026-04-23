@@ -219,6 +219,17 @@
 		"top_10": "Top 10 legtöbbet megvásárolt könyv",
 		"random_category": "Könyvek, melyek érdekesek lehetnek önnek",
 		"discounted": "Jelenleg leárazott könyvek",
+		"discounts": {
+			"genre": {
+				"title": "Ebben a műfajban minden könyv kedvezményes áron érhető el, nézze meg még ma!",
+				"description": "Minden könyv ebben a műfajban: {name_hu} - {discount}%-os leárazás alatt áll."
+			},
+			"book": {
+				"title": "Ez a könyv kedvezményes áron érhető el, nézze meg még ma!",
+				"description": "Ez a könyv: \"{title}\" - jelenleg {discount}%-os leárazás alatt áll."
+			},
+			"animation": "Animáció engedélyezése"
+		},
 		"no_data": "Nincs adat. Kérjük, az első futtatáskor használja az --init kapcsolót, vagy futtassa a seedereket."
 	},
 	"coming_soon": "Hamarosan...",
@@ -233,6 +244,15 @@
 	"no_books": "Ez a szerző még nem írt könyvet",
 	"more_books_in_genre": "Még több könyv ebből a műfajból: {genre_hu}",
 	"management": "Ügyintézés",
+	"footer": {
+		"all_rights_reserved": "Minden jog fenntartva",
+		"contact": "Kapcsolat",
+		"contacts": {
+			"phone_number": "Telefonszám: {number}",
+			"location": "Helyszín: {location}",
+			"email": "Email-cím: {email}"
+		}
+	},
 	"pagination": {
 		"next": "Következő",
 		"previous": "Előző"

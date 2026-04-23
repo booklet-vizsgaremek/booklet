@@ -228,6 +228,17 @@
 		"top_10": "Top 10 most purchased books",
 		"random_category": "Books that might interest you",
 		"discounted": "Great deals",
+		"discounts": {
+			"genre": {
+				"title": "All books in this genre are currently discounted, check it out today!",
+				"description": "All books of this genre: {name_en} - are discounted by {discount}%"
+			},
+			"book": {
+				"title": "A book is currently discounted, check it out today!",
+				"description": "The book \"{title}\" is discounted by {discount}%"
+			},
+			"animation": "Enable animation"
+		},
 		"no_data": "No data found. Please initialize the database using the --init flag or run the seeders."
 	},
 	"coming_soon": "Coming soon...",
@@ -251,6 +262,15 @@
 	"no_books": "No books have been written by this author",
 	"more_books_in_genre": "More books in this genre: {genre_en}",
 	"management": "Management",
+	"footer": {
+		"all_rights_reserved": "All rights reserved",
+		"contact": "Contact",
+		"contacts": {
+			"phone_number": "Phone number: {number}",
+			"location": "Location: {location}",
+			"email": "Email address: {email}"
+		}
+	},
 	"pagination": {
 		"next": "Next",
 		"previous": "Previous"
