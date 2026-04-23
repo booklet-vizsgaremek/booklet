@@ -250,6 +250,7 @@
 	],
 	"no_books": "No books have been written by this author",
 	"more_books_in_genre": "More books in this genre: {genre_en}",
+	"management": "Management",
 	"pagination": {
 		"next": "Next",
 		"previous": "Previous"

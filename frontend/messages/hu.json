@@ -232,6 +232,7 @@
 	"book_count": "{count} könyv",
 	"no_books": "Ez a szerző még nem írt könyvet",
 	"more_books_in_genre": "Még több könyv ebből a műfajból: {genre_hu}",
+	"management": "Ügyintézés",
 	"pagination": {
 		"next": "Következő",
 		"previous": "Előző"
