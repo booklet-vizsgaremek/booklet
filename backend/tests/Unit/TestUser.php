@@ -111,6 +111,53 @@ class TestUser extends TestCase
         $this->assertSoftDeleted('users', ['id' => $user->id]);
     }
 
+    public function test_customer_cannot_list_users(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($user, 'sanctum')->getJson('/api/users');
+
+        $response->assertForbidden();
+    }
+
+    public function test_admin_show_returns_one_user(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create([
+            'first_name' => 'Shown',
+            'email' => 'shown@example.com',
+        ]);
+
+        $response = $this->actingAs($admin, 'sanctum')->getJson("/api/users/{$user->id}");
+
+        $response->assertOk()
+            ->assertJsonPath('data.id', $user->id)
+            ->assertJsonPath('data.email', 'shown@example.com');
+    }
+
+    public function test_update_changes_user(): void
+    {
+        $user = User::factory()->create([
+            'first_name' => 'Old',
+            'last_name' => 'Name',
+            'email' => 'old@example.com',
+        ]);
+
+        $response = $this->actingAs($user, 'sanctum')->patchJson("/api/users/{$user->id}", [
+            'first_name' => 'New',
+            'last_name' => 'Name',
+            'email' => 'new@example.com',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.first_name', 'New')
+            ->assertJsonPath('data.email', 'new@example.com');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'first_name' => 'New',
+            'email' => 'new@example.com',
+        ]);
 
 
 
