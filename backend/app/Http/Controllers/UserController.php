@@ -14,6 +14,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -24,16 +25,25 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        $this->authorize('admin', $request->user());
+        if (!Gate::allows('admin')) abort(403);
 
         $query = User::with(['receipts', 'coupons', 'wishlists']);
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('first_name', 'like', "%{$request->search}%")
-                    ->orWhere('last_name', 'like', "%{$request->search}%")
-                    ->orWhere('email', 'like', "%{$request->search}%");
-            });
+            $query->when(
+                $request->search,
+                function ($q, $s) use ($request) {
+                    $locale = $request->header('X-Locale', 'en');
+                    $concat = $locale === 'hu'
+                        ? "CONCAT(last_name, ' ', first_name)"
+                        : "CONCAT(first_name, ' ', last_name)";
+
+                    $q->where(function ($q) use ($concat, $s) {
+                        $q->whereRaw("$concat LIKE ?", ["%$s%"])
+                            ->orWhere('email', 'like', "%$s%");
+                    });
+                }
+            );
         }
 
         if ($request->filled('role')) $query->where('role', $request->role);
