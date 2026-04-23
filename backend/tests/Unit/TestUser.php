@@ -63,4 +63,56 @@ class TestUser extends TestCase
                 'email' => 'listed@example.com',
             ]);
     }
+
+    public function test_update_password_changes_password(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('oldpassword'),
+        ]);
+
+        $response = $this->actingAs($user, 'sanctum')->patchJson("/api/users/{$user->id}/password", [
+            'current_password' => 'oldpassword',
+            'password' => 'newpassword123',
+            'password_confirmation' => 'newpassword123',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('message_en', 'Password successfully updated.');
+
+        $this->assertTrue(Hash::check('newpassword123', $user->fresh()->password));
+    }
+
+    public function test_admin_can_update_user_role(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($admin, 'sanctum')->patchJson("/api/users/{$user->id}/role", [
+            'role' => 'staff',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.id', $user->id)
+            ->assertJsonPath('data.role', 'staff');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'role' => 'staff',
+        ]);
+    }
+
+    public function test_destroy_deletes_own_customer_user(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($user, 'sanctum')->deleteJson("/api/users/{$user->id}");
+
+        $response->assertNoContent();
+        $this->assertSoftDeleted('users', ['id' => $user->id]);
+    }
+
+
+
+
+
 }
