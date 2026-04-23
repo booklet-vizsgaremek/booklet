@@ -12,6 +12,7 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import type { Book, CartItem } from '$lib/types';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import Spinner from './ui/spinner/spinner.svelte';
 
 	const {
 		book,
@@ -30,6 +31,7 @@
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
 	let removeDialogOpen = $state(false);
+	let isLoading = $state(false);
 
 	const handleModification = (quantity: number) => {
 		if (!cartItem) return;
@@ -72,9 +74,11 @@
 	};
 
 	const handleRemove = () => {
+		isLoading = true;
 		cart.removeFromCart(book.id);
 		toast.success(m['actions.removed_from_cart']());
 		removeDialogOpen = false;
+		isLoading = false;
 	};
 </script>
 
@@ -87,16 +91,22 @@
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel class="cursor-pointer">{m['actions.cancel']()}</AlertDialog.Cancel>
-			<AlertDialog.Action class="cursor-pointer" onclick={handleRemove}>
-				{m['actions.remove']()}
+			{#if !isLoading}
+				<AlertDialog.Cancel class="cursor-pointer">{m['actions.cancel']()}</AlertDialog.Cancel>
+			{/if}
+			<AlertDialog.Action class="cursor-pointer" onclick={handleRemove} disabled={isLoading}>
+				{#if isLoading}
+					<Spinner />
+				{:else}
+					{m['actions.remove']()}
+				{/if}
 			</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
 
 {#if cartItem}
-	<div class="mt-4 flex w-full flex-row items-center gap-2 md:m-0 md:w-auto {className}">
+	<div class="mt-4 flex w-full flex-row items-center md:m-0 md:w-auto {className}">
 		<Button
 			variant="outline"
 			size="icon"
@@ -125,7 +135,7 @@
 		<Button
 			variant="ghost"
 			size="icon"
-			class="w-1/4 cursor-pointer text-destructive md:w-9"
+			class="ml-2 w-1/4 cursor-pointer text-destructive md:w-9"
 			onclick={() => (removeDialogOpen = true)}
 		>
 			<Trash size={12} />
@@ -151,8 +161,10 @@
 				</Button>
 			{/snippet}
 		</Tooltip.Trigger>
-		<Tooltip.Content>
-			<p>{m['actions.add_to_cart']()}</p>
-		</Tooltip.Content>
+		{#if !showLabel}
+			<Tooltip.Content>
+				<p>{m['actions.add_to_cart']()}</p>
+			</Tooltip.Content>
+		{/if}
 	</Tooltip.Root>
 {/if}
