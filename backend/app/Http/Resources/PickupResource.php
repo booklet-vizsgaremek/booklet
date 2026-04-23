@@ -16,10 +16,9 @@ class PickupResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'receipt_id' => $this->receipt_id,
+            'receipt' => new ReceiptResource($this->receipt),
             'status' => $this->status,
-            'completed_at' => $this->completed_at,
-            'created_at' => $this->created_at
+            'completed_at' => $this->completed_at
         ];
     }
 }

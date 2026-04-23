@@ -23,7 +23,7 @@ class UpdatePickupRequest extends FormRequest
     {
         return [
             'status' => ['sometimes', 'in:pending,ready,completed,cancelled'],
-            'completed_at' => ['nullable', 'date']
+            'completed_at' => ['sometimes', 'nullable', 'date']
         ];
     }
 }
