@@ -2,7 +2,7 @@
 	import BookItem from '$lib/components/BookItem.svelte';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import { Button } from '$lib/components/ui/button';
-	import { Bookmark } from '@lucide/svelte';
+	import { Bookmark, ChevronLeft } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
 	import { wishlist } from '$lib/stores/wishlist.svelte';
@@ -10,7 +10,10 @@
 </script>
 
 <div class="mx-auto w-full px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24">
-	<h1 class="mb-6 text-3xl">{m['title.wishlist']()}</h1>
+	<div class="mb-6 flex flex-row items-center gap-2">
+		<button class="cursor-pointer" onclick={() => history.back()}><ChevronLeft /></button>
+		<h1 class="text-3xl">{m['title.wishlist']()}</h1>
+	</div>
 	{#if wishlist.items.length === 0}
 		<Empty.Root class="w-full border">
 			<Empty.Media variant="icon">
