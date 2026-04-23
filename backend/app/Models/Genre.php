@@ -14,7 +14,8 @@ class Genre extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name_hu',
+        'name_en',
     ];
 
     public function books(): HasMany
