@@ -5,3 +5,5 @@ export type { Publisher } from './publisher';
 export type { CartItem } from './cartItem';
 export type { Coupon } from './coupon';
 export type { Genre } from './genre';
+export type { Receipt } from './receipt';
+export type { Pickup } from './pickup';
