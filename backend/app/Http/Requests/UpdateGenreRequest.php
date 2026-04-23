@@ -19,7 +19,8 @@ class UpdateGenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:genres,name,' . $this->route('genre')->id]
+            'name_hu' => ['sometimes', 'string', 'max:255', 'unique:genres,name_hu,' . $this->route('genre')->id],
+            'name_en' => ['sometimes', 'string', 'max:255', 'unique:genres,name_en,' . $this->route('genre')->id]
         ];
     }
 }

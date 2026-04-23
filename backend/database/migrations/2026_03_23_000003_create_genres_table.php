@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('genres', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('name_hu');
+            $table->string('name_en');
             $table->timestamps();
             $table->softDeletes();
         });
