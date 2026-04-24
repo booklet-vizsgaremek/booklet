@@ -60,7 +60,7 @@
 	{/if}
 	<div id="app" class={navigating.complete ? 'pointer-events-none opacity-15' : ''}>
 		<Header user={data.user} />
-		<main class="mt-20">
+		<main class="mt-20 min-h-screen">
 			<Tooltip.Provider>
 				{@render children()}
 			</Tooltip.Provider>

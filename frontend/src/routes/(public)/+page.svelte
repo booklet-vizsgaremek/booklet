@@ -18,8 +18,10 @@
 	const { data } = $props();
 </script>
 
-<div class="mx-auto flex w-full flex-col gap-24 px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24">
-	{#if page.data.discounts}
+<div
+	class="mx-auto flex min-h-screen w-full flex-col gap-24 px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24"
+>
+	{#if page.data.discounts.length}
 		<div>
 			<Carousel.Root plugins={[plugin]} opts={{ loop: true }} class="relative mx-auto w-full">
 				<Carousel.Content>
