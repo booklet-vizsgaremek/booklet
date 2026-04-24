@@ -33,6 +33,10 @@ export const passwordChangeSchema = z
 			const error = m['validation.zod_passwords_not_matching']();
 			ctx.addIssue({ code: 'custom', message: error, path: ['password'] });
 			ctx.addIssue({ code: 'custom', message: error, path: ['password_confirmation'] });
+		} else if (data.password === data.current_password) {
+			const error = m['validation.zod_passwords_matching']();
+			ctx.addIssue({ code: 'custom', message: error, path: ['password'] });
+			ctx.addIssue({ code: 'custom', message: error, path: ['current_password'] });
 		}
 	});
 
