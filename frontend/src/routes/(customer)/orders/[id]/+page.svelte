@@ -6,17 +6,90 @@
 	import { getDiscountedPrice, getCartTotal } from '$lib/stores/coupon.svelte';
 	import Price, { formatCurrency } from '$lib/components/Price.svelte';
 	import { ChevronLeft } from '@lucide/svelte';
+	import { navigating } from '$app/state';
+	import { goto, invalidateAll } from '$app/navigation';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { enhance } from '$app/forms';
+	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
+
+	let orderCancelDialogOpen = $state(false);
+	let isOrderCancelLoading = $state(false);
+
+	let fromCheckout = navigating.from?.url.pathname.startsWith('/checkout');
 </script>
 
+<AlertDialog.Root bind:open={orderCancelDialogOpen}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>{m['orders.cancel_order_dialog.title']()}</AlertDialog.Title>
+			<AlertDialog.Description>
+				{m['orders.cancel_order_dialog.description']()}
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			{#if !isOrderCancelLoading}
+				<AlertDialog.Cancel class="cursor-pointer">{m['actions.cancel']()}</AlertDialog.Cancel>
+			{/if}
+			<form
+				method="POST"
+				use:enhance={async ({ formData }) => {
+					isOrderCancelLoading = true;
+					formData.append('pickupId', data.receipt.pickup.id);
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							invalidateAll();
+							toast.success(m['messages.successful_order_cancel']());
+						} else if (result.type === 'failure' && result.data?.error) {
+							toast.error(result.data.error as string);
+						}
+						isOrderCancelLoading = false;
+						orderCancelDialogOpen = false;
+					};
+				}}
+			>
+				<AlertDialog.Action
+					class="w-full cursor-pointer"
+					variant="destructive"
+					disabled={isOrderCancelLoading || data.receipt.pickup.status !== 'pending'}
+				>
+					{#if isOrderCancelLoading}
+						<Spinner />
+					{:else}
+						{m['orders.cancel']()}
+					{/if}
+				</AlertDialog.Action>
+			</form>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
+
 <div class="mx-auto w-full px-4 pt-16! pb-56 md:w-4/5 md:px-0">
-	<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:gap-2">
-		<button class="cursor-pointer" onclick={() => history.back()}><ChevronLeft /></button>
-		<h1 class="text-3xl">
-			{m['title.order']({ id: data.receipt.id })}
-		</h1>
-		<OrderStatusBadge status={data.receipt.pickup.status} />
+	<div class="mb-12 flex flex-col md:mb-0 md:flex-row md:justify-between">
+		<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:gap-2">
+			<button
+				class="cursor-pointer"
+				onclick={() => {
+					if (fromCheckout) goto('/orders');
+					else history.back();
+				}}><ChevronLeft /></button
+			>
+			<h1 class="text-3xl">
+				{m['title.order']({ id: data.receipt.id })}
+			</h1>
+			<OrderStatusBadge status={data.receipt.pickup.status} />
+		</div>
+		<Button
+			onclick={() => (orderCancelDialogOpen = true)}
+			type="submit"
+			class="w-full cursor-pointer md:w-max"
+			disabled={data.receipt.pickup.status !== 'pending'}
+		>
+			{m['orders.cancel']()}
+		</Button>
 	</div>
 	<Item.Group class="gap-0">
 		{#each data.receipt.books as book, i}
