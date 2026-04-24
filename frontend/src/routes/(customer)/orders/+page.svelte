@@ -55,7 +55,7 @@
 				<ReceiptText />
 			</Empty.Media>
 			<Empty.Header>
-				<Empty.Title class="text-xl">{m['orders.empty']()}</Empty.Title>
+				<Empty.Title class="text-xl">{m['orders.user_orders_empty']()}</Empty.Title>
 			</Empty.Header>
 			<Empty.Content>
 				<Button
