@@ -20,6 +20,12 @@
 		"password": "Password",
 		"password_confirmation": "Password confirmation",
 		"change_password": "Change password",
+		"change_user_data": "Change user data",
+		"danger_zone": "Danger zone",
+		"delete_account": "Delete account",
+		"delete_account_dialog": {
+			"description": "Are you sure you want to delete your account? To make sure you want to perform this action, please type your email into this box."
+		},
 		"account": "Account",
 		"general": "General"
 	},
@@ -37,9 +43,15 @@
 	},
 	"orders": {
 		"empty": "There aren't any orders yet with the currently selected status",
+		"user_orders_empty": "You have not placed an order yet",
 		"current_status": "Current status",
 		"order_items": "Items of the order",
 		"quantity": "Quantity: {quantity}",
+		"cancel": "Cancel",
+		"cancel_order_dialog": {
+			"title": "Cancel order",
+			"description": "Are you sure you want to cancel this order?"
+		},
 		"status": {
 			"pending": "Pending",
 			"ready": "Ready for pickup",
@@ -97,7 +109,8 @@
 		"zod_string_too_long": "Must be at most {max} characters",
 		"zod_invalid_email": "Invalid email address",
 		"zod_invalid_type": "Invalid value",
-		"zod_passwords_not_matching": "The password fields must match"
+		"zod_passwords_not_matching": "The password fields must match",
+		"zod_passwords_matching": "The current password cannot match the new password"
 	},
 	"navigation": {
 		"back_to_home": "Back to home",
@@ -142,7 +155,10 @@
 		"successful_order": "Order placed successfully",
 		"terms_not_accepted": "Please accept the terms",
 		"failed_to_place_order": "Failed to place order",
+		"failed_to_cancel_order": "Failed to cancel order",
+		"successful_order_cancel": "Order cancelled successfully",
 		"successful_password_change": "Password changed successfully",
+		"successful_user_data_change": "User data changed successfully",
 		"signin_for_action": "Please sign in to perform this action"
 	},
 	"admin": {

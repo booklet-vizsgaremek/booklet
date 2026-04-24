@@ -20,6 +20,12 @@
 		"password": "Jelszó",
 		"password_confirmation": "Jelszó megerősítés",
 		"change_password": "Jelszóváltoztatás",
+		"change_user_data": "Felhasználói adatváltoztatás",
+		"danger_zone": "Veszélyzóna",
+		"delete_account": "Fiók törlése",
+		"delete_account_dialog": {
+			"description": "Biztos benne, hogy törölni szeretné fiókját? Ahhoz, hogy biztosra menjünk, hogy tényleg el szeretné végezni ezt a műveletet, kérjük írja be az email címét az alábbi dobozba."
+		},
 		"account": "Fiók",
 		"general": "Általános"
 	},
@@ -37,9 +43,15 @@
 	},
 	"orders": {
 		"empty": "Még nincsen rendelés ezzel a státusszal",
+		"user_orders_empty": "Még nem adott le rendelést",
 		"current_status": "Jelenlegi állapot",
 		"order_items": "A rendelés tartalma",
 		"quantity": "Mennyiség: {quantity}",
+		"cancel": "Lemondom",
+		"cancel_order_dialog": {
+			"title": "Rendelés lemondása",
+			"description": "Biztos benne, hogy le szeretné mondani ezt a rendelést?"
+		},
 		"status": {
 			"pending": "Feldolgozás alatt",
 			"ready": "Átvehető",
@@ -97,7 +109,8 @@
 		"zod_string_too_long": "Legfeljebb {max} karakter hosszúnak kell lennie",
 		"zod_invalid_email": "Érvénytelen email cím",
 		"zod_invalid_type": "Érvénytelen érték",
-		"zod_passwords_not_matching": "A két jelszónak meg kell egyeznie"
+		"zod_passwords_not_matching": "A két jelszónak meg kell egyeznie",
+		"zod_passwords_matching": "A jelenlegi jelszó nem egyezhet meg az új jelszóval"
 	},
 	"navigation": {
 		"back_to_home": "Vissza a főoldalra",
@@ -142,7 +155,10 @@
 		"successful_order": "Megrendelés sikeresen leadva",
 		"terms_not_accepted": "Kérjük, fogadja el a rendelés feltételeit",
 		"failed_to_place_order": "Váratlan hiba történt a rendelés leadásakor",
+		"failed_to_cancel_order": "Váratlan hiba történt a rendelés lemondásakor",
+		"successful_order_cancel": "Megrendelés sikeresen lemondva",
 		"successful_password_change": "Sikeres jelszóváltoztatás",
+		"successful_user_data_change": "Sikeres felhasználói adatváltoztatás",
 		"signin_for_action": "Kérjük, jelentkezzen be a művelet végrehajtásához"
 	},
 	"admin": {
@@ -211,7 +227,7 @@
 		"accept_terms": "Megértettem, hogy a rendelés leadása fizetési kötelezettséget von maga után",
 		"payment": "Fizetés",
 		"pay_by_card": "Fizetés bankkártyával",
-		"pay_at_location": "Fizetés a helyszínen",
+		"pay_at_location": "Utánvétes fizetés",
 		"pay_at_location_description": "Rendelését kifizetheti üzletünkben átvételkor",
 		"view_order": "Rendelés megtekintése"
 	},
