@@ -20,8 +20,6 @@ class UserResource extends JsonResource
             'last_name' => $this->last_name,
             'email' => $this->email,
             'role' => $this->role,
-            'xp' => $this->xp,
-            'cr' => $this->cr,
             'receipts' => ReceiptResource::collection($this->whenLoaded('receipts'))
         ];
     }
