@@ -2,31 +2,62 @@
 	import Button, { buttonVariants } from '$lib/components/ui/button/button.svelte';
 	import getGreeting from '$lib/utils/greeting';
 	import * as m from '$lib/paraglide/messages.js';
-	import { Form, Input, Spinner } from '$lib/components/ui';
-	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { passwordChangeSchema, type PasswordChangeSchema } from '$lib/schemas/passwordChange';
-	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import SignOut from '$lib/components/SignOut.svelte';
+	import PasswordChangeForm from '$lib/components/PasswordChangeForm.svelte';
+	import UserDataChangeForm from '$lib/components/UserDataChangeForm.svelte';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import { enhance } from '$app/forms';
 
-	let { data }: { data: { form: SuperValidated<Infer<PasswordChangeSchema>> } } = $props();
+	let accountDeletionDialogOpen = $state(false);
+	let isAccountDeletionLoading = $state(false);
+	let email = $state('');
 
-	// svelte-ignore state_referenced_locally
-	const form = superForm(data.form, {
-		validators: zod4Client(passwordChangeSchema),
-		onUpdate: ({ result }) => {
-			if (result.status === 200) {
-				toast.success(m['messages.successful_password_change']());
-			} else if (result.data?.error) {
-				toast.error(result.data.error);
-			}
-		}
-	});
-
-	const { form: formData, enhance: superFormEnhance, submitting } = form;
+	const { data } = $props();
 </script>
+
+<AlertDialog.Root bind:open={accountDeletionDialogOpen}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>{m['auth.delete_account']()}</AlertDialog.Title>
+			<AlertDialog.Description>
+				{m['auth.delete_account_dialog.description']()}
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<div class="grid gap-3">
+			<Label for="email">{m['auth.email']()}</Label>
+			<Input id="email" name="email" bind:value={email} placeholder={page.data.user?.email} />
+		</div>
+		<AlertDialog.Footer>
+			{#if !isAccountDeletionLoading}
+				<AlertDialog.Cancel class="cursor-pointer">{m['actions.cancel']()}</AlertDialog.Cancel>
+			{/if}
+			<form
+				action="?/deleteAccount"
+				method="POST"
+				use:enhance={async () => {
+					isAccountDeletionLoading = true;
+				}}
+			>
+				<AlertDialog.Action
+					class="cursor-pointer"
+					variant="destructive"
+					disabled={isAccountDeletionLoading || email !== page.data.user?.email}
+				>
+					{#if isAccountDeletionLoading}
+						<Spinner />
+					{:else}
+						{m['auth.delete_account']()}
+					{/if}
+				</AlertDialog.Action>
+			</form>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
 
 <div class="mx-auto flex w-full flex-col gap-8 px-4 pt-16! pb-12 md:w-4/5 md:px-0 md:pb-24">
 	<h1 class="text-3xl">{getGreeting(page.data.user?.first_name ?? null)}</h1>
@@ -41,61 +72,16 @@
 		</Button>
 		<SignOut class={buttonVariants({ variant: 'default' })} />
 	</div>
-	<h3 class="text-xl!">{m['auth.change_password']()}</h3>
-	<form
-		class="flex w-full flex-col gap-4 md:w-1/3"
-		method="POST"
-		action="?/passwordChange"
-		use:superFormEnhance
+	<h3 class="mt-6 text-xl!">{m['auth.change_user_data']()}</h3>
+	<UserDataChangeForm form={data.userDataForm} />
+	<h3 class="mt-6 text-xl!">{m['auth.change_password']()}</h3>
+	<PasswordChangeForm form={data.passwordForm} />
+	<h3 class="mt-6 text-xl!">{m['auth.danger_zone']()}</h3>
+	<Button
+		onclick={() => (accountDeletionDialogOpen = true)}
+		variant="destructive"
+		class="cursor-pointer md:w-1/3"
 	>
-		<Form.Field {form} name="current_password">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>{m['auth.current_password']()}</Form.Label>
-					<Input
-						type="password"
-						{...props}
-						bind:value={$formData.current_password}
-						disabled={$submitting}
-					/>
-				{/snippet}
-			</Form.Control>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="password">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>{m['auth.password']()}</Form.Label>
-					<Input
-						type="password"
-						{...props}
-						bind:value={$formData.password}
-						disabled={$submitting}
-					/>
-				{/snippet}
-			</Form.Control>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Form.Field {form} name="password_confirmation">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>{m['auth.password_confirmation']()}</Form.Label>
-					<Input
-						type="password"
-						{...props}
-						bind:value={$formData.password_confirmation}
-						disabled={$submitting}
-					/>
-				{/snippet}
-			</Form.Control>
-			<Form.FieldErrors />
-		</Form.Field>
-		<Button type="submit" class="mt-4 cursor-pointer" disabled={$submitting}>
-			{#if $submitting}
-				<Spinner />
-			{:else}
-				{m['auth.change_password']()}
-			{/if}
-		</Button>
-	</form>
+		{m['auth.delete_account']()}
+	</Button>
 </div>
