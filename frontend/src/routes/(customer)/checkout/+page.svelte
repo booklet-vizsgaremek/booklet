@@ -19,6 +19,7 @@
 	import type { Coupon, CartItem } from '$lib/types';
 	import { getAllCartCoupons } from '$lib/stores/coupon.svelte.js';
 	import CartQuantityControl from '$lib/components/CartQuantityControl.svelte';
+	import { PUBLIC_LOCATION } from '$env/static/public';
 
 	const { data } = $props();
 
@@ -239,8 +240,11 @@
 											<p class="mb-2! text-sm leading-none font-medium">
 												{m['checkout.pay_at_location']()}
 											</p>
-											<p class="text-sm text-muted-foreground">
+											<p class="mb-0! text-sm text-muted-foreground">
 												{m['checkout.pay_at_location_description']()}
+											</p>
+											<p class="text-sm text-muted-foreground">
+												{m['footer.contacts.location']({ location: PUBLIC_LOCATION })}
 											</p>
 										</div>
 									</Label>
