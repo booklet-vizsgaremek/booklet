@@ -9,6 +9,7 @@ import { goto } from '$app/navigation';
 import type { User } from '$lib/types';
 import { getLocale } from '$lib/paraglide/runtime';
 import DataTableActions from './data-table-actions.svelte';
+import { toast } from 'svelte-sonner';
 
 const roleBadgeVariant: Record<
 	NonNullable<User['role']>,
@@ -152,16 +153,26 @@ export const columns: ColumnDef<User>[] = [
 				return renderComponent(DataTableActions, {
 					user: row.original,
 					onDelete: async (id) => {
-						await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
-						goto(page.url.pathname + page.url.search, { invalidateAll: true });
+						try {
+							await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+							toast.success(m['admin.user_table.action.delete_user_success']());
+							goto(page.url.pathname + page.url.search, { invalidateAll: true });
+						} catch {
+							toast.error(m['messages.server_error']());
+						}
 					},
 					onRoleChange: async (id, role) => {
-						await fetch(`/api/admin/users/${id}`, {
-							method: 'PATCH',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({ role })
-						});
-						goto(page.url.pathname + page.url.search, { invalidateAll: true });
+						try {
+							await fetch(`/api/admin/users/${id}`, {
+								method: 'PATCH',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({ role })
+							});
+							toast.success(m['admin.user_table.action.role_change_success']());
+							goto(page.url.pathname + page.url.search, { invalidateAll: true });
+						} catch {
+							toast.error(m['messages.server_error']());
+						}
 					}
 				});
 			}

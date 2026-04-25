@@ -9,7 +9,6 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import Spinner from '$lib/components/ui/spinner/spinner.svelte';
 	import { beforeNavigate } from '$app/navigation';
-	import { toast } from 'svelte-sonner';
 
 	let {
 		user,
@@ -104,7 +103,6 @@
 					onclick={() => {
 						roleLoading = true;
 						onRoleChange?.(user.id, selectedRole);
-						toast.success(m['admin.user_table.action.role_change_success']());
 					}}
 					disabled={roleLoading}
 				>
@@ -149,7 +147,6 @@
 					onclick={() => {
 						deleteLoading = true;
 						onDelete?.(user.id);
-						toast.success(m['admin.user_table.action.delete_user_success']());
 					}}
 					disabled={deleteLoading}
 				>
