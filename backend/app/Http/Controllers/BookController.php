@@ -107,6 +107,7 @@ class BookController extends Controller
         if ($request->hasFile('cover')) {
             $path = $request->file('cover')->store('books', 'public');
             $book->img_path = $path;
+            $book->save();
         }
 
         $book->authors()->sync($validated['author_ids']);
@@ -128,15 +129,20 @@ class BookController extends Controller
     {
         $this->authorize('manager');
         $validated = $request->validated();
+
+        if (isset($validated['stock'])) {
+            $newStock = $book->stock + $validated['stock'];
+            $validated['stock'] = max(0, $newStock);
+        }
+
         $book->update(collect($validated)->except('author_ids')->toArray());
         if (isset($validated['author_ids'])) $book->authors()->sync($validated['author_ids']);
-
         if ($request->hasFile('cover')) {
             $path = $request->file('cover')->store('books', 'public');
             $book->img_path = $path;
+            $book->save();
         }
 
-        $book->update($validated);
         return new BookResource($book->load(['authors', 'publisher', 'genre']));
     }
 
