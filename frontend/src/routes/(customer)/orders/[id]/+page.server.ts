@@ -2,18 +2,23 @@ import { API_URL } from '$env/static/private';
 import type { Actions, PageServerLoad } from './$types';
 import * as m from '$lib/paraglide/messages.js';
 import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
+	const response = await fetch(`${API_URL}/receipts/${params.id}`, {
+		headers: {
+			Authorization: `Bearer ${cookies.get('auth_token')}`,
+			'X-Requested-With': 'XMLHttpRequest'
+		}
+	});
+
+	if (!response.ok) error(404, m['messages.order_not_found']());
+
+	const { data: receipt } = await response.json();
+
 	return {
 		title: m['title.order']({ id: params.id }),
-		receipt: (
-			await fetch(`${API_URL}/receipts/${params.id}`, {
-				headers: {
-					Authorization: `Bearer ${cookies.get('auth_token')}`,
-					'X-Requested-With': 'XMLHttpRequest'
-				}
-			}).then((x) => x.json())
-		).data
+		receipt
 	};
 };
 
