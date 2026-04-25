@@ -4,7 +4,7 @@
 	import Autoplay from 'embla-carousel-autoplay';
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 
-	const plugin = Autoplay({ delay: 3000, stopOnInteraction: true });
+	const plugin = Autoplay({ delay: 5000, stopOnInteraction: true });
 	let autoplayEnabled = $state(true);
 
 	$effect(() => {
