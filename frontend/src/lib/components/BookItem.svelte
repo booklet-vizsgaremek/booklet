@@ -10,8 +10,10 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import WishlistToggle from './WishlistToggle.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
+	import { PUBLIC_STORAGE_URL } from '$env/static/public';
+	import DataTableActions from './books/data-table-actions.svelte';
 
-	const { book, discounts = [] } = $props();
+	const { book, discounts = [], onDelete = null } = $props();
 
 	const discountedPrice = $derived(
 		getDiscountedPrice(book, discounts, page.data.user?.id as string)
@@ -22,7 +24,7 @@
 	<Item.Header class="hidden cursor-pointer md:block" onclick={() => goto(`/books/${book.id}`)}>
 		{#if book.img_path}
 			<img
-				src={book.img_path}
+				src="{PUBLIC_STORAGE_URL}/{book.img_path}"
 				alt={m['accessibility.book_cover']()}
 				class="aspect-2/3 w-full object-cover"
 			/>
@@ -41,7 +43,7 @@
 	>
 		{#if book.img_path}
 			<img
-				src={book.img_path}
+				src="{PUBLIC_STORAGE_URL}/{book.img_path}"
 				alt={m['accessibility.book_cover']()}
 				class="aspect-2/3 w-full object-cover"
 			/>
@@ -90,6 +92,9 @@
 		{#if !page.data.user || page.data.user?.role === 'customer'}
 			<CartQuantityControl {book} />
 			<WishlistToggle {book} showLabel={new MediaQuery('(max-width: 768px)').current} />
+		{/if}
+		{#if page.data.user && ['manager', 'admin'].includes(page.data.user?.role)}
+			<DataTableActions {book} {onDelete} />
 		{/if}
 	</Item.Actions>
 </Item.Root>
