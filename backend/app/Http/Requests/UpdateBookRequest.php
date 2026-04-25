@@ -29,7 +29,7 @@ class UpdateBookRequest extends FormRequest
             'price' => ['sometimes', 'integer', 'min:0'],
             'pages' => ['sometimes', 'integer', 'min:1'],
             'release_year' => ['sometimes', 'integer', 'min:1800', 'max:' . now()->year],
-            'stock' => ['sometimes', 'integer', 'min:0'],
+            'stock' => ['sometimes', 'integer'],
             'publisher_id' => ['sometimes', 'uuid', 'exists:publishers,id'],
             'genre_id' => ['sometimes', 'uuid', 'exists:genres,id'],
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
