@@ -40,7 +40,7 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	const routeId = event.route.id ?? '';
 	const user = event.locals.user;
 
-	if (!routeId.includes('(public)') && !user) {
+	if (!routeId.includes('(public)') && !routeId.startsWith('/api') && !user) {
 		redirect(302, `/sign-in?redirect=${event.url.pathname}`);
 	}
 
