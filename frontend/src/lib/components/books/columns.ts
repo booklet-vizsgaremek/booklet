@@ -10,9 +10,11 @@ import { goto } from '$app/navigation';
 import { getDiscountedPrice } from '$lib/stores/coupon.svelte';
 import type { Book, User } from '$lib/types';
 import Authors from '../Authors.svelte';
-import { browser } from '$app/environment';
+import DataTableActions from './data-table-actions.svelte';
+import { toast } from 'svelte-sonner';
+import { PUBLIC_STORAGE_URL } from '$env/static/public';
 
-export function getColumns(user: User): ColumnDef<Book>[] {
+export function getColumns(user: User | null): ColumnDef<Book>[] {
 	const columns: ColumnDef<Book>[] = [
 		{
 			accessorKey: 'cover',
@@ -24,7 +26,7 @@ export function getColumns(user: User): ColumnDef<Book>[] {
 						if (book.img_path) {
 							return `
 							<img
-								src="${book.img_path}"
+								src="${PUBLIC_STORAGE_URL}/${book.img_path}"
 								alt="${m['accessibility.book_cover']()}"
 								class="aspect-2/3 h-24 object-cover"
 							/>
@@ -169,6 +171,25 @@ export function getColumns(user: User): ColumnDef<Book>[] {
 			accessorKey: 'stock',
 			header: m['book_lookup.stock']()
 		});
+
+		if (['admin', 'manager'].includes(user.role as string)) {
+			columns.push({
+				id: 'actions',
+				cell: ({ row }) =>
+					renderComponent(DataTableActions, {
+						book: row.original,
+						onDelete: async () => {
+							try {
+								await fetch(`/api/books/${row.original.id}`, { method: 'DELETE' });
+								toast.success(m['book_lookup.action.delete_book_success']());
+								goto(page.url.pathname + page.url.search, { invalidateAll: true });
+							} catch {
+								toast.error(m['messages.server_error']());
+							}
+						}
+					})
+			});
+		}
 	}
 
 	return columns;
