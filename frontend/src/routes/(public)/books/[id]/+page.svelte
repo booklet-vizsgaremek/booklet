@@ -11,6 +11,9 @@
 	import BookCarousel from '$lib/components/BookCarousel.svelte';
 	import WishlistToggle from '$lib/components/WishlistToggle.svelte';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_STORAGE_URL } from '$env/static/public';
+	import DataTableActions from '$lib/components/books/data-table-actions.svelte';
+	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
 	const book = $derived(data.book);
@@ -30,7 +33,7 @@
 		<div class="w-full shrink-0 md:w-1/4">
 			{#if book.img_path}
 				<img
-					src={book.img_path}
+					src="{PUBLIC_STORAGE_URL}/{book.img_path}"
 					alt={m['accessibility.book_cover']()}
 					class="aspect-2/3 w-full object-cover"
 				/>
@@ -76,14 +79,29 @@
 					{book.genre[`name_${getLocale()}`]}
 				</Button>
 			</div>
-			<div class="flex flex-col gap-2 md:flex-row">
-				{#if !page.data.user || page.data.user?.role === 'customer'}
+			{#if !page.data.user || page.data.user?.role === 'customer'}
+				<div class="flex flex-col gap-2 md:flex-row">
 					<CartQuantityControl {book} showLabel={true} />
 					<WishlistToggle {book} showLabel={true} />
-				{:else}
+				</div>
+			{/if}
+			{#if page.data.user && ['manager', 'admin'].includes(page.data.user?.role)}
+				<div class="flex flex-col gap-2">
 					<p>{m['in_stock']({ count: book.stock })}</p>
-				{/if}
-			</div>
+					<DataTableActions
+						{book}
+						onDelete={async () => {
+							try {
+								await fetch(`/api/books/${book.id}`, { method: 'DELETE' });
+								toast.success(m['book_lookup.action.delete_book_success']());
+								goto('/books', { invalidateAll: true });
+							} catch {
+								toast.error(m['messages.server_error']());
+							}
+						}}
+					/>
+				</div>
+			{/if}
 		</div>
 	</div>
 	<div class="mt-24 flex h-max w-full flex-col items-center gap-6 md:items-start">
