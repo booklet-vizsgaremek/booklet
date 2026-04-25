@@ -159,7 +159,11 @@
 									<span class="text-xs text-muted-foreground">
 										{new Date(receipt.pickup.completed_at ?? receipt.date).toLocaleDateString()}
 										·
-										{displayName(receipt.user)} ({receipt.user.email})
+										{#if receipt.user}
+											{displayName(receipt.user)} ({receipt.user.email})
+										{:else}
+											{m['orders.deleted_user']()}
+										{/if}
 									</span>
 									<OrderStatusBadge status={receiptStatus} />
 								</Item.Description>

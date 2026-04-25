@@ -16,7 +16,7 @@
 	const ORDER_STATUSES = ['pending', 'ready', 'completed', 'cancelled'] as const;
 	type OrderStatus = (typeof ORDER_STATUSES)[number];
 
-	let currentStatus = $derived<string>(data.receipt.pickup.status);
+	let currentStatus = $derived(data.receipt.pickup.status);
 
 	const fullName = $derived<string>(
 		(() => {
@@ -100,7 +100,13 @@
 	</div>
 	<p class="mb-2 text-muted-foreground">
 		{m['orders.customer']()}:
-		<span class="font-medium text-foreground">{fullName} ({data.receipt.user.email})</span>
+		<span class="font-medium text-foreground">
+			{#if data.receipt.user}
+				{fullName} ({data.receipt.user.email})
+			{:else}
+				{m['orders.deleted_user']()}
+			{/if}
+		</span>
 	</p>
 	{#if data.receipt.pickup.completed_at}
 		<p class="text-muted-foreground">
