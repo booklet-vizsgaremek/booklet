@@ -16,6 +16,9 @@
 		<Button onclick={() => goto('/staff/orders')} class="cursor-pointer">
 			{m['title.orders']()}
 		</Button>
+		<Button onclick={() => goto('/books/new')} class="cursor-pointer">
+			{m['title.new_book']()}
+		</Button>
 		<Button onclick={() => goto('/books')} class="cursor-pointer">
 			{m['title.book_lookup']()}
 		</Button>
