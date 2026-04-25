@@ -31,7 +31,8 @@ class StoreBookRequest extends FormRequest
             'release_year' => ['required', 'integer', 'min:1800', 'max:' . now()->year],
             'stock' => ['required', 'integer', 'min:0'],
             'publisher_id' => ['required', 'uuid', 'exists:publishers,id'],
-            'genre_id' => ['required', 'uuid', 'exists:genres,id']
+            'genre_id' => ['required', 'uuid', 'exists:genres,id'],
+            'cover' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
         ];
     }
 }

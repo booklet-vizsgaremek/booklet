@@ -10,13 +10,12 @@ use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookController extends Controller
 {
-	use AuthorizesRequests;
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -104,6 +103,12 @@ class BookController extends Controller
         $this->authorize('manager');
         $validated = $request->validated();
         $book = Book::create(collect($validated)->except('author_ids')->toArray());
+
+        if ($request->hasFile('cover')) {
+            $path = $request->file('cover')->store('books', 'public');
+            $book->img_path = $path;
+        }
+
         $book->authors()->sync($validated['author_ids']);
         return new BookResource($book->load(['authors', 'publisher', 'genre']));
     }
@@ -124,9 +129,14 @@ class BookController extends Controller
         $this->authorize('manager');
         $validated = $request->validated();
         $book->update(collect($validated)->except('author_ids')->toArray());
-        if (isset($validated['author_ids'])) {
-            $book->authors()->sync($validated['author_ids']);
+        if (isset($validated['author_ids'])) $book->authors()->sync($validated['author_ids']);
+
+        if ($request->hasFile('cover')) {
+            $path = $request->file('cover')->store('books', 'public');
+            $book->img_path = $path;
         }
+
+        $book->update($validated);
         return new BookResource($book->load(['authors', 'publisher', 'genre']));
     }
 
@@ -196,4 +206,4 @@ class BookController extends Controller
 
         return BookResource::collection($books);
     }
-    }
+}

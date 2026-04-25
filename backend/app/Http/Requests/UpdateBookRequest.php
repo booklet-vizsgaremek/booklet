@@ -31,7 +31,8 @@ class UpdateBookRequest extends FormRequest
             'release_year' => ['sometimes', 'integer', 'min:1800', 'max:' . now()->year],
             'stock' => ['sometimes', 'integer', 'min:0'],
             'publisher_id' => ['sometimes', 'uuid', 'exists:publishers,id'],
-            'genre_id' => ['sometimes', 'uuid', 'exists:genres,id']
+            'genre_id' => ['sometimes', 'uuid', 'exists:genres,id'],
+            'cover' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
         ];
     }
 }
