@@ -12,9 +12,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookController extends Controller
 {
+	use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -99,6 +101,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request): JsonResource
     {
+        $this->authorize('manager');
         $validated = $request->validated();
         $book = Book::create(collect($validated)->except('author_ids')->toArray());
         $book->authors()->sync($validated['author_ids']);
@@ -118,6 +121,7 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book): JsonResource
     {
+        $this->authorize('manager');
         $validated = $request->validated();
         $book->update(collect($validated)->except('author_ids')->toArray());
         if (isset($validated['author_ids'])) {
@@ -131,6 +135,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book): Response
     {
+        $this->authorize('manager');
         return $book->delete() ? response()->noContent() : abort(500);
     }
 
@@ -150,7 +155,6 @@ class BookController extends Controller
     public function randomCategory(): JsonResource
     {
         $genre = Genre::inRandomOrder()->first();
-
         $books = Book::with(['authors', 'publisher', 'genre'])
             ->where('genre_id', $genre->id)
             ->inRandomOrder()
@@ -163,7 +167,6 @@ class BookController extends Controller
     public function discounted(): JsonResource
     {
         $userId = auth('sanctum')->id();
-
         $books = Book::with(['authors', 'publisher', 'genre'])
             ->where(function ($query) use ($userId) {
                 $query->whereHas('coupons', function ($q) use ($userId) {
@@ -193,4 +196,4 @@ class BookController extends Controller
 
         return BookResource::collection($books);
     }
-}
+    }
