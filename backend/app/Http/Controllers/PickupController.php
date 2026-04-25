@@ -42,7 +42,25 @@ class PickupController extends Controller
      */
     public function update(UpdatePickupRequest $request, Pickup $pickup): JsonResource
     {
+        $oldStatus = $pickup->status;
+        $newStatus = $request->input('status', $oldStatus);
+
         $pickup->update($request->validated());
+
+        if ($oldStatus !== $newStatus) {
+            $receipt = $pickup->receipt()->with('books')->first();
+
+            if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
+                foreach ($receipt->books as $book) {
+                    $book->increment('stock', $book->pivot->quantity);
+                }
+            } elseif ($oldStatus === 'cancelled' && $newStatus !== 'cancelled') {
+                foreach ($receipt->books as $book) {
+                    $book->decrement('stock', $book->pivot->quantity);
+                }
+            }
+        }
+
         return new PickupResource($pickup->load('receipt'));
     }
 
