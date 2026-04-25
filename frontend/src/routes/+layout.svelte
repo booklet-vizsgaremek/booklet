@@ -60,7 +60,11 @@
 	{/if}
 	<div id="app" class={navigating.complete ? 'pointer-events-none opacity-15' : ''}>
 		<Header user={data.user} />
-		<main class="mt-20 min-h-screen">
+		<main
+			class="mt-20 {!['/sign-in', '/sign-up', '/checkout'].includes(page.url.pathname)
+				? 'min-h-screen'
+				: ''}"
+		>
 			<Tooltip.Provider>
 				{@render children()}
 			</Tooltip.Provider>

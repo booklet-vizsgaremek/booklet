@@ -16,11 +16,8 @@ export const load: LayoutServerLoad = async ({ locals, fetch, cookies }) => {
 
 	if (response.ok) {
 		const { data: coupons } = await response.json();
-
-		const now = new Date();
 		discounts = coupons.filter(
-			(c: { code: string | null; starts_at: string; ends_at: string }) =>
-				c.code === null && new Date(c.starts_at) <= now && new Date(c.ends_at) >= now
+			(c: { code: string | null; starts_at: string; ends_at: string }) => c.code === null
 		);
 	}
 
