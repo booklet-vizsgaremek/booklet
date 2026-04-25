@@ -39,7 +39,8 @@
 		"order": "Order #{id}",
 		"wishlist": "Wishlist",
 		"users": "Users",
-		"dashboard": "Dashboard"
+		"dashboard": "Dashboard",
+		"new_book": "New book"
 	},
 	"orders": {
 		"empty": "There aren't any orders yet with the currently selected status",
@@ -101,7 +102,15 @@
 		"order_by_pa_desc": "By number of pages (More first)",
 		"order_by_pr_asc": "By price (Cheaper first)",
 		"order_by_pr_desc": "By price (Expensive first)",
-		"actions": "Actions"
+		"actions": "Actions",
+		"action": {
+			"edit": "Edit book details",
+			"delete": "Delete book",
+			"delete_description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+			"confirm": "Confirm",
+			"cancel": "Cancel",
+			"delete_book_success": "Successfully deleted book"
+		}
 	},
 	"validation": {
 		"zod_required": "This field is required",
@@ -110,7 +119,10 @@
 		"zod_invalid_email": "Invalid email address",
 		"zod_invalid_type": "Invalid value",
 		"zod_passwords_not_matching": "The password fields must match",
-		"zod_passwords_matching": "The current password cannot match the new password"
+		"zod_passwords_matching": "The current password cannot match the new password",
+		"zod_array_too_short": "The list must contain at least {min} items",
+		"zod_file_too_large": "The uploaded file is too large",
+		"zod_invalid_file_type": "The uploaded file is not in a valid format"
 	},
 	"navigation": {
 		"back_to_home": "Back to home",
@@ -130,6 +142,7 @@
 		"added_to_wishlist": "Added to wishlist",
 		"remove_from_wishlist": "Remove from wishlist",
 		"removed_from_wishlist": "Removed from wishlist",
+		"save": "Save",
 		"remove_from_cart_dialog": {
 			"title": "Remove item from cart",
 			"description": "Are you sure you want to remove this item from your cart? \"{title}\""
@@ -144,12 +157,14 @@
 	"messages": {
 		"forbidden": "Access denied. You do not have the required permissions for this action.",
 		"invalid_credentials": "Invalid email or password",
+		"invalid_data": "Invalid data",
 		"invalid_current_password": "Invalid current password",
 		"successful_signin": "You have signed in successfully",
 		"successful_signup": "You have signed up successfully",
 		"server_error": "An unexpected error occured",
 		"email_taken": "This email address is already attached to an account",
 		"book_not_found": "Book not found",
+		"order_not_found": "Order not found",
 		"page_not_found": "Page not found",
 		"signin_to_continue": "Please sign in to continue",
 		"successful_order": "Order placed successfully",
@@ -159,6 +174,7 @@
 		"successful_order_cancel": "Order cancelled successfully",
 		"successful_password_change": "Password changed successfully",
 		"successful_user_data_change": "User data changed successfully",
+		"successful_book_save": "Book details saved successfully",
 		"signin_for_action": "Please sign in to perform this action"
 	},
 	"admin": {
@@ -206,6 +222,12 @@
 				"role_change_success": "Successfully changed role",
 				"delete_user_success": "Successfully deleted user"
 			}
+		},
+		"books": {
+			"select_publisher": "Select publisher",
+			"select_authors": "Select author(s)",
+			"select_genre": "Select genre",
+			"selected": "{amount} selected"
 		}
 	},
 	"cart": {

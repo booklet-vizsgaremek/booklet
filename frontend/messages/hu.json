@@ -39,7 +39,8 @@
 		"order": "Rendelés #{id}",
 		"wishlist": "Kívánságlista",
 		"users": "Felhasználók",
-		"dashboard": "Vezérlőpult"
+		"dashboard": "Vezérlőpult",
+		"new_book": "Új könyv"
 	},
 	"orders": {
 		"empty": "Még nincsen rendelés ezzel a státusszal",
@@ -101,16 +102,29 @@
 		"order_by_pa_desc": "Lapok száma alapján (Több elöl)",
 		"order_by_pr_asc": "Ár alapján (Olcsók elöl)",
 		"order_by_pr_desc": "Ár alapján (Drágák elöl)",
-		"actions": "Műveletek"
+		"actions": "Műveletek",
+		"action": {
+			"edit": "Könyv adatainak módosítása",
+			"delete": "Könyv törlése",
+			"delete_description": "Biztosan törölni szeretné ezt a könyvet: \"{title}\"? Ez a művelet nem vonható vissza.",
+			"confirm": "Megerősítés",
+			"cancel": "Mégse",
+			"delete_book_success": "Könyv sikeresen törölve"
+		}
 	},
 	"validation": {
 		"zod_required": "Ez a mezőt kötelező kitölteni",
 		"zod_string_too_short": "Legalább {min} karakter hosszúnak kell lennie",
 		"zod_string_too_long": "Legfeljebb {max} karakter hosszúnak kell lennie",
+		"zod_number_too_low": "Legalább ennyinek kell lennie: {min}",
+		"zod_number_too_high": "Legfeljebb {max} lehet",
 		"zod_invalid_email": "Érvénytelen email cím",
 		"zod_invalid_type": "Érvénytelen érték",
 		"zod_passwords_not_matching": "A két jelszónak meg kell egyeznie",
-		"zod_passwords_matching": "A jelenlegi jelszó nem egyezhet meg az új jelszóval"
+		"zod_passwords_matching": "A jelenlegi jelszó nem egyezhet meg az új jelszóval",
+		"zod_array_too_short": "A listának legalább ennyi elemet kell tartalmaznia: {min}",
+		"zod_file_too_large": "A fájl túl nagy",
+		"zod_invalid_file_type": "A fájl nem megfelelő formátumú"
 	},
 	"navigation": {
 		"back_to_home": "Vissza a főoldalra",
@@ -130,6 +144,7 @@
 		"added_to_wishlist": "Kívánságlistára helyezve",
 		"remove_from_wishlist": "Eltávolítás a kívánságlistáról",
 		"removed_from_wishlist": "Kívánságlistáról eltávolítva",
+		"save": "Mentés",
 		"remove_from_cart_dialog": {
 			"title": "Eltávolítás a kosárból",
 			"description": "Biztos benne, hogy el szeretné távolítani ezt az elemet a kosárból? \"{title}\""
@@ -144,12 +159,14 @@
 	"messages": {
 		"forbidden": "Hozzáférés megtagadva. Nem rendelkezik a művelethez szükséges jogosultságokkal.",
 		"invalid_credentials": "Helytelen email cím vagy jelszó",
+		"invalid_data": "Helytelen adatok",
 		"invalid_current_password": "Helytelen jelenlegi jelszó",
 		"successful_signin": "Sikeres bejelentkezés",
 		"successful_signup": "Sikeres regisztráció",
 		"server_error": "Váratlan hiba történt",
 		"email_taken": "Ezzel az email címmel már hoztak létre fiókot",
 		"book_not_found": "A könyv nem található",
+		"order_not_found": "A rendelés nem található",
 		"page_not_found": "A keresett oldal nem található",
 		"signin_to_continue": "Kérjük, jelentkezzen be a folytatáshoz",
 		"successful_order": "Megrendelés sikeresen leadva",
@@ -159,6 +176,7 @@
 		"successful_order_cancel": "Megrendelés sikeresen lemondva",
 		"successful_password_change": "Sikeres jelszóváltoztatás",
 		"successful_user_data_change": "Sikeres felhasználói adatváltoztatás",
+		"successful_book_save": "A könyv adatai sikeresen mentve",
 		"signin_for_action": "Kérjük, jelentkezzen be a művelet végrehajtásához"
 	},
 	"admin": {
@@ -197,6 +215,12 @@
 				"role_change_success": "Szerepkör sikeresen megváltoztatva",
 				"delete_user_success": "Felhasználó sikeresen törölve"
 			}
+		},
+		"books": {
+			"select_publisher": "Válasszon kiadót",
+			"select_authors": "Válasszon szerző(ke)t",
+			"select_genre": "Válasszon műfajt",
+			"selected": "{amount} kiválasztva"
 		}
 	},
 	"cart": {
